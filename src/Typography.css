@@ -1,0 +1,16 @@
+* {
+  --headerFont: "Garamond", serif;
+  --bodyFont: "Lato", sans-serif;
+}
+
+h1 {
+  font-family: var(--headerFont);
+}
+
+h2 {
+  font-family: var(--headerFont);
+}
+
+p {
+  font-family: var(--bodyFont);
+}
