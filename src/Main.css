@@ -1,0 +1,51 @@
+/* Main section */
+
+.welcomePageDiv {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+.welcomePageDiv form {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+.welcomePageDiv label {
+  font-family: var(--bodyFont);
+  font-weight: bold;
+  padding: var(--spacing);
+}
+.welcomePageDiv input {
+  width: 90%;
+  margin: 0 auto;
+  background-color: var(--input-grey);
+  border: none;
+  padding: var(--spacing);
+  border-radius: 15px;
+}
+.getStartedButton {
+  width: 50%;
+  margin: 0 auto;
+}
+
+.findLocation {
+  font-weight: bold;
+  width: 50%;
+  margin: 0 auto;
+}
+.backButton {
+  background-color: transparent;
+}
+
+.backButton:hover {
+  background-color: transparent;
+}
+
+.backButton a {
+  color: black;
+  transition: 0.3s color;
+}
+
+.backButton a:hover {
+  color: brown;
+}

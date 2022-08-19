@@ -6,9 +6,9 @@
   --spacing: calc(8px + 1.5625vw);
 }
 
-/* html {
+html {
   font-size: 125%;
-} */
+}
 
 .App {
   height: 100vh;

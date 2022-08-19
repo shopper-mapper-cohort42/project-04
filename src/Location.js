@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function Location() {
   const apiKey = "SbABP9Vr89Ox8a38s29QPLUQm51xa784";
@@ -95,13 +96,12 @@ function Location() {
         />
       </form>
 
-      <h2>{displayMessage}</h2>
-
+      <p>{displayMessage}</p>
       <button className="findLocation" onClick={getLocation}>
         Find Location
       </button>
       <button className="backButton">
-        <Link to={"/"}>Back Button</Link>
+        <Link to={"/"}>Return to Main Page</Link>
       </button>
     </>
   );
