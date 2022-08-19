@@ -6,8 +6,6 @@ import { Link, Routes, Route } from "react-router-dom";
 import axios from "axios";
 import homeImage from "./assets/home-image.png";
 
-const apiKey = "SbABP9Vr89Ox8a38s29QPLUQm51xa784";
-
 function App() {
   /*
   // Place Search API Template
