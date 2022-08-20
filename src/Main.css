@@ -1,0 +1,144 @@
+/* Main section */
+
+.getStartedButton {
+  width: 50%;
+  margin: 0 auto;
+}
+
+/* LOCATION POPUP */
+.locationPopup {
+  display: none;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.locationPopup.active {
+  display: block;
+}
+
+.locationPopupContent {
+  width: 90%;
+  margin: 20% auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 15px;
+}
+
+.locationPopup .findLocation {
+  width: 70%;
+  margin: 0 auto;
+}
+
+.popupButtons {
+  display: flex;
+  flex-direction: column;
+}
+.closeLocation {
+  border: none;
+  background-color: transparent;
+  font-family: var(--bodyFont);
+  margin: 20px;
+}
+
+.closeLocation:hover,
+.closeLocation:focus {
+  color: brown;
+  cursor: pointer;
+}
+
+/* INPUT FORM*/
+.userLocationDiv {
+  display: flex;
+  align-items: center;
+  border-radius: 15px;
+}
+.userLocationDiv span {
+  margin: 0 auto;
+  padding: 5px 10px;
+}
+
+.welcomePageDiv {
+  width: 80%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+.welcomePageDiv form {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+.welcomePageDiv label {
+  font-family: var(--bodyFont);
+  font-weight: bold;
+  padding: var(--spacing);
+}
+
+.welcomePageDiv input {
+  width: 90%;
+  margin: 0 auto;
+  background-color: var(--input-grey);
+  border: none;
+  padding: var(--spacing);
+  border-radius: 15px;
+}
+.userLocationDiv {
+  background-color: var(--input-grey);
+}
+
+.findLocation,
+.getStartedButton {
+  background: transparent;
+  border: none;
+}
+
+.findLocation,
+.getStartedButton a {
+  background-color: var(--blue);
+  font-family: var(--bodyFont);
+  transition: 0.3s background-color;
+  border: none;
+  padding: var(--spacing);
+  border-radius: 15px;
+  font-weight: bold;
+  color: white;
+}
+
+.findLocation:hover,
+.findLocation:focus,
+.getStartedButton a:hover,
+.getStartedButton a:focus {
+  cursor: pointer;
+  background-color: rgb(33, 52, 87);
+}
+
+.getStartedButton a {
+  text-decoration: none;
+  color: white;
+}
+
+.backButton {
+  background-color: transparent;
+  border: none;
+  margin: 20px;
+}
+
+.backButton:hover {
+  background-color: transparent;
+}
+
+.backButton a {
+  text-decoration: none;
+  font-family: var(--bodyFont);
+  color: black;
+  transition: 0.3s color;
+}
+
+.backButton a:hover,
+.backButton a:focus {
+  color: brown;
+}
