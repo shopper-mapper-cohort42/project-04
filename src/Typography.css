@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap");
+
 * {
   --headerFont: "Garamond", serif;
   --bodyFont: "Lato", sans-serif;
@@ -5,10 +7,13 @@
 
 h1 {
   font-family: var(--headerFont);
+  text-align: center;
+  font-size: clamp(1.6rem, 4vw, 3rem);
 }
 
 h2 {
   font-family: var(--headerFont);
+  font-size: clamp(1.2rem, 4vw, 1.5rem);
 }
 
 p {

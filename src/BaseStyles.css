@@ -6,9 +6,9 @@
   --spacing: calc(8px + 1.5625vw);
 }
 
-/* html {
+html {
   font-size: 125%;
-} */
+}
 
 .App {
   height: 100vh;
@@ -18,23 +18,4 @@
   max-width: 1280px;
   width: 90%;
   margin: 0 auto;
-}
-
-button {
-  background-color: var(--blue);
-  font-family: var(--bodyFont);
-  transition: 0.3s background-color;
-  border: none;
-  padding: var(--spacing);
-  border-radius: 15px;
-}
-
-button:hover {
-  background-color: #4497c4;
-}
-
-button a {
-  text-decoration: none;
-  font-weight: bold;
-  color: white;
 }

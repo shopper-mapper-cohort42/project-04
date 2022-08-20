@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import mapImage from "./assets/home-location-map.png";
 
 function Location() {
   const apiKey = "SbABP9Vr89Ox8a38s29QPLUQm51xa784";
@@ -67,41 +70,75 @@ function Location() {
   };
 
   const getLocation = () => {
+    console.log("get location");
     navigator.geolocation.getCurrentPosition(
       // if location is enabled by user, otherwise
       // run second call back function
       (pos) => {
         // console.log('pos inside navigator', pos);
+        console.log("hello");
+
         setCurrentLocation(pos.coords);
+        console.log(pos);
         setDisplayMessage("");
       },
       () => {
+        console.log("error mesage");
         setDisplayMessage(
           "We need your location to give you a better experience."
         );
+        togglePopup();
       }
     );
   };
 
+  const togglePopup = () => {
+    console.log("toggle");
+    const locationPopup = document.querySelector(".locationPopup");
+    locationPopup.classList.toggle("active");
+  };
+
   return (
     <>
+      <div className="locationPopup">
+        <div className="locationPopupContent">
+          <h3>Enable Location</h3>
+          <img src={mapImage} alt="" />
+          <p>{displayMessage}</p>
+          <div className="popupButtons">
+            <button className="findLocation" onClick={getLocation}>
+              Enable
+            </button>
+            <button className="closeLocation" onClick={togglePopup}>
+              Not Now
+            </button>
+          </div>
+        </div>
+      </div>
       <form action="" onSubmit={(e) => handleSubmit(e, location)}>
-        <label htmlFor="name">Enter your location</label>
-        <input
-          type="text"
-          id="name"
-          onChange={searchLocation}
-          value={location}
-        />
+        <label htmlFor="name" className="sr-only">
+          Enter your location
+        </label>
+        <div className="userLocationDiv">
+          <span>
+            <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
+          </span>
+          <input
+            type="text"
+            id="name"
+            onChange={searchLocation}
+            value={location}
+            placeholder="Enter Your Location"
+          />
+        </div>
       </form>
 
-      <h2>{displayMessage}</h2>
-
+      <p>OR</p>
       <button className="findLocation" onClick={getLocation}>
-        Find Location
+        Find My Location
       </button>
       <button className="backButton">
-        <Link to={"/"}>Back Button</Link>
+        <Link to={"/"}>Return to Main Page</Link>
       </button>
     </>
   );
