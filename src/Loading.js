@@ -1,6 +1,11 @@
 function Loading (){
   return (
-    <p>This is a loading page..</p>
+    <>
+      <p className="loadingP">Loading...</p>
+      
+      <div class="sp dot-flashing"></div>
+      
+    </>
   )
 }
 
