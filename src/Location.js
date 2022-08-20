@@ -4,13 +4,14 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import mapImage from "./assets/home-location-map.png";
+import Loading from "./Loading";
 
 function Location() {
   const apiKey = "SbABP9Vr89Ox8a38s29QPLUQm51xa784";
   const [location, setLocation] = useState("");
   const [currentLocation, setCurrentLocation] = useState({});
   const [displayMessage, setDisplayMessage] = useState("");
-
+  const [loadingState,setLoadingState]=useState(false);
   const searchLocation = (e) => {
     setLocation(e.target.value);
     setDisplayMessage("");
@@ -19,6 +20,8 @@ function Location() {
   const getGeoLocation = (location) => {
     // we need to set the country, lets strict to canada &  us only
     // String to store for the user's current location
+
+    setTimeout(setLoadingState(true),5000);
     if (location !== "") {
       const geocodingResults = axios({
         url: `https://www.mapquestapi.com/geocoding/v1/address`,
@@ -67,6 +70,7 @@ function Location() {
   const handleSubmit = (e, location) => {
     e.preventDefault();
     getGeoLocation(location);
+    
   };
 
   const getLocation = () => {
@@ -75,12 +79,11 @@ function Location() {
       // if location is enabled by user, otherwise
       // run second call back function
       (pos) => {
-        // console.log('pos inside navigator', pos);
+         console.log('pos inside navigator', pos);
         console.log("hello");
 
         setCurrentLocation(pos.coords);
         console.log(pos);
-        setDisplayMessage("");
       },
       () => {
         console.log("error mesage");
@@ -98,50 +101,111 @@ function Location() {
     locationPopup.classList.toggle("active");
   };
 
+  
+  // if (loadingState)
+  // {
+  //   return (
+  //     <Loading />
+  //   )
+  //  }else{
+  //   return(
+  //   <>
+  //     <div className="locationPopup">
+  //       <div className="locationPopupContent">
+  //         <h3>Enable Location</h3>
+  //         <img src={mapImage} alt="" />
+  //         <p>{displayMessage}</p>
+  //         <div className="popupButtons">
+  //           <button className="findLocation" onClick={getLocation}>
+  //             Enable
+  //           </button>
+  //           <button className="closeLocation" onClick={togglePopup}>
+  //             Not Now
+  //           </button>
+  //         </div>
+  //       </div>
+  //     </div>
+  //     <form action="" onSubmit={(e) => handleSubmit(e, location)}>
+  //       <label htmlFor="name" className="sr-only">
+  //         Enter your location
+  //       </label>
+  //       <div className="userLocationDiv">
+  //         <span>
+  //           <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
+  //         </span>
+  //         <input
+  //           type="text"
+  //           id="name"
+  //           onChange={searchLocation}
+  //           value={location}
+  //           placeholder="Enter Your Location"
+  //         />
+  //       </div>
+  //     </form>
+
+  //     <p>OR</p>
+  //     <button className="findLocation" onClick={getLocation}>
+  //       Find My Location
+  //     </button>
+  //     <button className="backButton">
+  //       <Link to={"/"}>Return to Main Page</Link>
+  //     </button>
+  //   </>
+  // );}
+
+
+
+  //if API is called (loadingState=true), displaying loading page
   return (
     <>
-      <div className="locationPopup">
-        <div className="locationPopupContent">
-          <h3>Enable Location</h3>
-          <img src={mapImage} alt="" />
-          <p>{displayMessage}</p>
-          <div className="popupButtons">
-            <button className="findLocation" onClick={getLocation}>
-              Enable
-            </button>
-            <button className="closeLocation" onClick={togglePopup}>
-              Not Now
-            </button>
-          </div>
-        </div>
-      </div>
-      <form action="" onSubmit={(e) => handleSubmit(e, location)}>
-        <label htmlFor="name" className="sr-only">
-          Enter your location
-        </label>
-        <div className="userLocationDiv">
-          <span>
-            <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
-          </span>
-          <input
-            type="text"
-            id="name"
-            onChange={searchLocation}
-            value={location}
-            placeholder="Enter Your Location"
-          />
-        </div>
-      </form>
-
-      <p>OR</p>
-      <button className="findLocation" onClick={getLocation}>
-        Find My Location
-      </button>
-      <button className="backButton">
-        <Link to={"/"}>Return to Main Page</Link>
-      </button>
+      {loadingState === false?(
+       <>
+       <div className="locationPopup">
+         <div className="locationPopupContent">
+           <h3>Enable Location</h3>
+           <img src={mapImage} alt="" />
+           <p>{displayMessage}</p>
+           <div className="popupButtons">
+             <button className="findLocation" onClick={getLocation}>
+               Enable
+             </button>
+             <button className="closeLocation" onClick={togglePopup}>
+               Not Now
+             </button>
+           </div>
+         </div>
+       </div>
+       <form action="" onSubmit={(e) => handleSubmit(e, location)}>
+         <label htmlFor="name" className="sr-only">
+           Enter your location
+         </label>
+         <div className="userLocationDiv">
+           <span>
+             <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
+           </span>
+           <input
+             type="text"
+             id="name"
+             onChange={searchLocation}
+             value={location}
+             placeholder="Enter Your Location"
+           />
+         </div>
+       </form>
+ 
+       <p>OR</p>
+       <button className="findLocation" onClick={getLocation}>
+         Find My Location
+       </button>
+       <button className="backButton">
+         <Link to={"/"}>Return to Main Page</Link>
+       </button>
+     </>
+       
+      ):(<Loading/>)}
     </>
-  );
+    
+  )
 }
 
 export default Location;

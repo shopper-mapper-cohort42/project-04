@@ -6,6 +6,7 @@ import { Link, Routes, Route } from "react-router-dom";
 import axios from "axios";
 import homeImage from "./assets/home-image.png";
 
+
 function App() {
   /*
   // Place Search API Template
