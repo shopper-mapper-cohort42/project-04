@@ -1,13 +1,14 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import Loading from "./Loading";
 
 function Location() {
   const apiKey = "SbABP9Vr89Ox8a38s29QPLUQm51xa784";
   const [location, setLocation] = useState("");
   const [currentLocation, setCurrentLocation] = useState({});
   const [displayMessage, setDisplayMessage] = useState("");
-
+  const [loadingState,setLoadingState]=useState(false);
   const searchLocation = (e) => {
     setLocation(e.target.value);
     setDisplayMessage("");
@@ -71,9 +72,8 @@ function Location() {
       // if location is enabled by user, otherwise
       // run second call back function
       (pos) => {
-        // console.log('pos inside navigator', pos);
+         console.log('pos inside navigator', pos);
         setCurrentLocation(pos.coords);
-        setDisplayMessage("");
       },
       () => {
         setDisplayMessage(
