@@ -11,61 +11,12 @@ h2::after {
   height: 15px;
   left: 8px;
   bottom: 15px;
-  width: 100%;
+  width: 90%;
   z-index: -1;
-}
-header {
-  border: 2px red solid;
 }
 
 .heroImageDiv {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-/* Main section */
-
-.welcomePageDiv {
-  text-align: center;
-}
-.welcomePageDiv form {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-}
-.welcomePageDiv label {
-  font-family: var(--bodyFont);
-  font-weight: bold;
-  padding: var(--spacing);
-}
-.welcomePageDiv input {
-  width: 90%;
-  margin: 0 auto;
-  background-color: var(--input-grey);
-  border: none;
-  padding: var(--spacing);
-  border-radius: 15px;
-}
-
-.findLocation {
-  font-weight: bold;
-  width: 50%;
-  margin: 0 auto;
-}
-.backButton {
-  background-color: transparent;
-}
-
-.backButton:hover {
-  background-color: transparent;
-}
-
-.backButton a {
-  color: black;
-  transition: 0.3s color;
-}
-
-.backButton a:hover {
-  color: brown;
 }
