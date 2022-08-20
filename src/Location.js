@@ -21,7 +21,14 @@ function Location() {
     // we need to set the country, lets strict to canada &  us only
     // String to store for the user's current location
 
-    setTimeout(setLoadingState(true),5000);
+    setLoadingState(true);
+    setTimeout(
+      () => {
+        setLoadingState(false);
+        console.log("Timeout executed");
+      }
+      ,3000);
+    
     if (location !== "") {
       const geocodingResults = axios({
         url: `https://www.mapquestapi.com/geocoding/v1/address`,
