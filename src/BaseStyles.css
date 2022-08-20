@@ -19,22 +19,3 @@ html {
   width: 90%;
   margin: 0 auto;
 }
-
-button {
-  background-color: var(--blue);
-  font-family: var(--bodyFont);
-  transition: 0.3s background-color;
-  border: none;
-  padding: var(--spacing);
-  border-radius: 15px;
-}
-
-button:hover {
-  background-color: #4497c4;
-}
-
-button a {
-  text-decoration: none;
-  font-weight: bold;
-  color: white;
-}
