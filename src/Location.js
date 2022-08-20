@@ -23,7 +23,7 @@ function Location() {
 
     setLoadingState(true);
     setTimeout(
-      //setLoadingState(false)
+      
       () => {
         setLoadingState(false);
         console.log("Timeout executed");
