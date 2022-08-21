@@ -11,10 +11,65 @@ function Location() {
   const [location, setLocation] = useState("");
   const [currentLocation, setCurrentLocation] = useState({});
   const [displayMessage, setDisplayMessage] = useState("");
-  const [loadingState,setLoadingState]=useState(false);
+  const [loadingState, setLoadingState] = useState(false);
+
   const searchLocation = (e) => {
     setLocation(e.target.value);
+    predictiveText(e.target.value);
+    // as user is typing, we will read their value and call the predictive text
+    // api to predict their text
+
     setDisplayMessage("");
+  };
+
+  const predictiveText = (location) => {
+    axios({
+      url: `http://www.mapquestapi.com/search/v3/prediction`,
+      params: {
+        key: apiKey,
+        q: location,
+        collection: "address",
+      },
+      dataType: "JSON",
+      method: "GET",
+    }).then((response) => {
+      console.log(`the location:${location}`);
+      const locationInput = document.querySelector(
+        ".locationPredictiveResults ul"
+      );
+      locationInput.innerHTML = "";
+
+      if (response.data.results) {
+        const predictiveResults = response.data.results;
+
+        predictiveResults.forEach((result) => {
+          const autoCompleteLi = document.createElement("li");
+          autoCompleteLi.innerHTML += result.displayString;
+          console.log(result.displayString);
+
+          locationInput.append(autoCompleteLi);
+          autoCompleteLi.innerHTML += `<input type='hidden' value='${result.displayString}' />`;
+          autoCompleteLi.addEventListener("click", function (e) {
+            const userSelectedLocation =
+              this.getElementsByTagName("input")[0].value;
+            closeAllLists();
+            setLocation(userSelectedLocation);
+          });
+        });
+      } else {
+        const autoCompleteLi = document.createElement("li");
+        autoCompleteLi.textContent = "No results found";
+        locationInput.append(autoCompleteLi);
+        console.log(response.data.results);
+      }
+    });
+  };
+
+  const closeAllLists = () => {
+    const locationInput = document.querySelector(
+      ".locationPredictiveResults ul"
+    );
+    locationInput.innerHTML = "";
   };
 
   const getGeoLocation = (location) => {
@@ -22,14 +77,11 @@ function Location() {
     // String to store for the user's current location
 
     setLoadingState(true);
-    setTimeout(
-      
-      () => {
-        setLoadingState(false);
-        console.log("Timeout executed");
-      }
-      ,3000);
-    
+    setTimeout(() => {
+      setLoadingState(false);
+      console.log("Timeout executed");
+    }, 3000);
+
     if (location !== "") {
       const geocodingResults = axios({
         url: `https://www.mapquestapi.com/geocoding/v1/address`,
@@ -78,7 +130,6 @@ function Location() {
   const handleSubmit = (e, location) => {
     e.preventDefault();
     getGeoLocation(location);
-    
   };
 
   const getLocation = () => {
@@ -87,7 +138,7 @@ function Location() {
       // if location is enabled by user, otherwise
       // run second call back function
       (pos) => {
-         console.log('pos inside navigator', pos);
+        console.log("pos inside navigator", pos);
         console.log("hello");
 
         setCurrentLocation(pos.coords);
@@ -109,7 +160,6 @@ function Location() {
     locationPopup.classList.toggle("active");
   };
 
-  
   // if (loadingState)
   // {
   //   return (
@@ -161,59 +211,64 @@ function Location() {
   //   </>
   // );}
 
-
-
   //if API is called (loadingState=true), displaying loading page
   return (
     <>
-      {loadingState === false?(
-       <>
-       <div className="locationPopup">
-         <div className="locationPopupContent">
-           <h3>Enable Location</h3>
-           <img src={mapImage} alt="" />
-           <p>{displayMessage}</p>
-           <div className="popupButtons">
-             <button className="findLocation" onClick={getLocation}>
-               Enable
-             </button>
-             <button className="closeLocation" onClick={togglePopup}>
-               Not Now
-             </button>
-           </div>
-         </div>
-       </div>
-       <form action="" onSubmit={(e) => handleSubmit(e, location)}>
-         <label htmlFor="name" className="sr-only">
-           Enter your location
-         </label>
-         <div className="userLocationDiv">
-           <span>
-             <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
-           </span>
-           <input
-             type="text"
-             id="name"
-             onChange={searchLocation}
-             value={location}
-             placeholder="Enter Your Location"
-           />
-         </div>
-       </form>
- 
-       <p>OR</p>
-       <button className="findLocation" onClick={getLocation}>
-         Find My Location
-       </button>
-       <button className="backButton">
-         <Link to={"/"}>Return to Main Page</Link>
-       </button>
-     </>
-       
-      ):(<Loading/>)}
+      {loadingState === false ? (
+        <>
+          <div className="locationPopup">
+            <div className="locationPopupContent">
+              <h3>Enable Location</h3>
+              <img src={mapImage} alt="" />
+              <p>{displayMessage}</p>
+              <div className="popupButtons">
+                <button className="findLocation" onClick={getLocation}>
+                  Enable
+                </button>
+                <button className="closeLocation" onClick={togglePopup}>
+                  Not Now
+                </button>
+              </div>
+            </div>
+          </div>
+          <form autocomplete="off" onSubmit={(e) => handleSubmit(e, location)}>
+            <label htmlFor="name" className="sr-only">
+              Enter your location
+            </label>
+            <div className="userLocationDiv">
+              <span>
+                <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
+              </span>
+              <input
+                type="text"
+                id="name"
+                onChange={searchLocation}
+                value={location}
+                placeholder="Enter Your Location"
+              />
+            </div>
+          </form>
+          <div className="locationPredictiveResults">
+            <ul>
+              {
+                // Render Location Results
+              }
+            </ul>
+          </div>
+
+          <p>OR</p>
+          <button className="findLocation" onClick={getLocation}>
+            Find My Location
+          </button>
+          <button className="backButton">
+            <Link to={"/"}>Return to Main Page</Link>
+          </button>
+        </>
+      ) : (
+        <Loading />
+      )}
     </>
-    
-  )
+  );
 }
 
 export default Location;
