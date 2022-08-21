@@ -6,6 +6,7 @@ import { Link, Routes, Route } from "react-router-dom";
 import axios from "axios";
 import homeImage from "./assets/home-image.png";
 import Results from "./Results";
+import Directions from "./Directions";
 
 function App() {
   /*
@@ -49,6 +50,7 @@ function App() {
       </div>
 
       <Results></Results>
+      <Directions></Directions>
 
     </>
   );

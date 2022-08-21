@@ -33,6 +33,23 @@ export default function Results() {
         setSearchRadius(searchRadiusInput);
     }
 
+
+    // State variable to store information for the selected destination  
+    const [selectedResult, setSelectedResult] = useState({});
+    
+    // Handler to set states when user clicks on a result list item
+    const handleUserSelectedResult = function (selectedResultParam) {
+        setSelectedResult(selectedResultParam)
+
+        // NOTE: These values are placeholders longitude and latitude for the selected destination; we can pass these through the router for Directions.js
+        const selectedResultLon = selectedResultParam.place.geometry.coordinates[0];
+        const selectedResultLat = selectedResultParam.place.geometry.coordinates[1];
+
+        console.log(selectedResult)
+    }
+
+
+
     // Helper Function for calculating straight path distance, from https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
     // NOTE: Not sure if we need this, but it gives the direct distance (ignoring roads, i.e. if you were to fly directly from one point to the other) between two long/lat points in kilometers. Alternatively, we can probably show the actual road distance with the distance API later on.
     const lonLatDistance = function (lon1, lat1, lon2, lat2) {
@@ -46,7 +63,7 @@ export default function Results() {
     // Make axios call when this component is mounted, or when radius changes
     useEffect(() => {
 
-        const placeSearchResults = axios({
+        axios({
             url: `https://www.mapquestapi.com/search/v4/place`,
             params: {
                 location: `${currentLocation.longitude},${currentLocation.latitude}`,
@@ -110,7 +127,9 @@ export default function Results() {
 
                         return (
                             // HIGHLIGHTED RENDERING
-                            <li key={result.id}>
+                            <li key={result.id} onClick={() => {
+                                handleUserSelectedResult(result)
+                            }}>
                                 {
                                     // NOTE: {indicesToHighlight.indexOf(resultIndex) >= 0} being TRUE is used for the highlighted rendering, if you want to put it elsewhere
                                     indicesToHighlight.indexOf(resultIndex) >= 0 ?
