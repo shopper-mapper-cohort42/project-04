@@ -79,6 +79,11 @@ function Location() {
         } else {
           alert("no result found");
         }
+      })
+      .catch((err)=>{
+        console.log(err);
+        setLoadingState(false);
+        alert("Something is wrong...")
       });
     } else {
       alert("please do the location");
