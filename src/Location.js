@@ -23,7 +23,6 @@ function Location() {
 
     setLoadingState(true);
     setTimeout(
-      
       () => {
         setLoadingState(false);
         console.log("Timeout executed");
@@ -39,6 +38,7 @@ function Location() {
         },
       }).then((response) => {
         if (response.data.results) {
+          setLoadingState(false);
           // An array of the possible locations best matching the query
           // console.log(response.data.results[0].locations);
           const locationsArray = response.data.results[0].locations;
