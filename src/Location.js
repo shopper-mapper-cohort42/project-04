@@ -1,84 +1,88 @@
-import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import mapImage from './assets/home-location-map.png';
+import Loading from './Loading';
+import Results from './Results';
+import SearchItems from './SearchItems';
 
-function Location() {
-    const apiKey = 'SbABP9Vr89Ox8a38s29QPLUQm51xa784';
+function Location({ apiKey }) {
+    // location is the string that user input in the field
     const [location, setLocation] = useState('');
-    const [currentLocation, setCurrentLocation] = useState({});
+
+    //locations is the array of location objects that we got from api call
+    const [locations, setLocations] = useState([]);
+
+    //coordinates of location, that user chose. by default its (0, 0)
+    // Assuming that X resembles Longitude, &  Y resembles Latitude
+    const [coordinates, setCoordinates] = useState({ x: 0, y: 0 });
     const [displayMessage, setDisplayMessage] = useState('');
 
-    const searchLocation = (e) => {
-        setLocation(e.target.value);
-        setDisplayMessage('');
-    };
-
-    const getGeoLocation = (location) => {
-        // we need to set the country, lets strict to canada &  us only
-        // String to store for the user's current location
-
-        setLoadingState(true);
-        setTimeout(() => {
-            setLoadingState(false);
-            console.log('Timeout executed');
-        }, 3000);
-
-        if (location !== '') {
-            const geocodingResults = axios({
+    const navigate = useNavigate();
+    //call this function only when the value of location state changes
+    const getGeoLocation = useCallback((location) => {
+        try {
+            axios({
                 url: `https://www.mapquestapi.com/geocoding/v1/address`,
                 params: {
                     key: apiKey,
                     location: location,
                 },
             }).then((response) => {
-                if (response.data.results) {
-                    // An array of the possible locations best matching the query
-                    // console.log(response.data.results[0].locations);
-                    const locationsArray = response.data.results[0].locations;
-                    console.log('response.data.results: ', response.data.results);
-                    console.log('response.data.results[0]: ', response.data.results[0]);
+                // list of locations are returned based on user's location input
+                const locations = response.data.results[0].locations;
 
-                    // Have some way for the user to select the correct result, or a way for the user to adjust their query and remake the axios call
-                    // If there are no results OR the user doesn't like the results, break out of this .then() and prompt for a re-input
-                    // If the user picks one of the locations, take the index of that choice and store it
+                /* Have some way for the user to select the correct result, or a way for the user to adjust their query and remake the axios call
+                 If there are no results OR the user doesn't like the results, break out of this .then() and prompt for a re-input
+                 If the user picks one of the locations, take the index of that choice and store it
+                 may be we can display a dropdown from locations
+                 */
+                setLocations(locations);
 
-                    const selectedLocationIndex = 0; // THIS VARIABLE CAN STORE THE USER'S SELECTED LOCATION INDEX
+                // let user selected first location from the array
+                const selectedLocation = locations[0];
 
-                    if (response.data.results[0].length < 1) {
-                        console.log('invalid search');
-                    } else {
-                        // For the selected location index, retrieve the longitude and latitude of the selected location using the index
-                        // These longitude and latitudes will be passed into the PlaceSearch API
-                        const currentLongitude = locationsArray[selectedLocationIndex].latLng.lng; //rather than .latLng., .displayLatLng also works, not sure of the difference between the two in the returned object since the numbers are the same
-                        const currentLatitutde = locationsArray[selectedLocationIndex].latLng.lat;
-                        setCurrentLocation({ longitude: currentLongitude, latitude: currentLatitutde });
-                        // console.log('current loc is ', currentLocation);
-                    }
-                } else {
-                    alert('no result found');
-                }
+                // extract the coordinates from selected location
+                const longitude = selectedLocation.latLng.lng;
+                const latitude = selectedLocation.latLng.lat;
+
+                //setting the coordinates of location
+                setCoordinates({ x: longitude, y: latitude });
             });
-        } else {
-            alert('please do the location');
+        } catch (error) {
+            alert('something went wrong in Location.js component');
         }
-    };
+    });
 
-    const handleSubmit = (e, location) => {
-        e.preventDefault();
-        getGeoLocation(location);
-    };
+    useEffect(() => {
+        // if location is not empty and has no trailing spaces  and the location changes only then call the api
+        if (location.trim() !== '') {
+            getGeoLocation(location.trim());
+        }
+    }, [location]);
 
-    const getLocation = () => {
+    //get the current location of user,  if user agreed to share his current location
+    const getCurrentLocation = () => {
+        console.log('getting  current Location');
         navigator.geolocation.getCurrentPosition(
-            // if location is enabled by user, otherwise
-            // run second call back function
+            //(pos) will execute, when user give access to his location
             (pos) => {
-                // console.log('pos inside navigator', pos);
-                setCurrentLocation(pos.coords);
-                setDisplayMessage('');
+                //getting user current location's x & y cordinates
+                const latitude = pos.coords.latitude;
+                const longitude = pos.coords.longitude;
+
+                //setting the coordinates of location
+                // Assuming that X resembles Longitude, &  Y resembles Latitude
+                setCoordinates({ x: longitude, y: latitude });
+                navigate(`/location/${longitude},${latitude}`);
             },
-            () => {
+            //() will execute, when user does not give access to his location
+            (error) => {
+                console.log('ERROR:: ', error.message);
                 setDisplayMessage('We need your location to give you a better experience.');
+                togglePopup();
             }
         );
     };
@@ -89,100 +93,54 @@ function Location() {
         locationPopup.classList.toggle('active');
     };
 
-    // if (loadingState)
-    // {
-    //   return (
-    //     <Loading />
-    //   )
-    //  }else{
-    //   return(
-    //   <>
-    //     <div className="locationPopup">
-    //       <div className="locationPopupContent">
-    //         <h3>Enable Location</h3>
-    //         <img src={mapImage} alt="" />
-    //         <p>{displayMessage}</p>
-    //         <div className="popupButtons">
-    //           <button className="findLocation" onClick={getLocation}>
-    //             Enable
-    //           </button>
-    //           <button className="closeLocation" onClick={togglePopup}>
-    //             Not Now
-    //           </button>
-    //         </div>
-    //       </div>
-    //     </div>
-    //     <form action="" onSubmit={(e) => handleSubmit(e, location)}>
-    //       <label htmlFor="name" className="sr-only">
-    //         Enter your location
-    //       </label>
-    //       <div className="userLocationDiv">
-    //         <span>
-    //           <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
-    //         </span>
-    //         <input
-    //           type="text"
-    //           id="name"
-    //           onChange={searchLocation}
-    //           value={location}
-    //           placeholder="Enter Your Location"
-    //         />
-    //       </div>
-    //     </form>
+    const searchLocation = (e) => {
+        const value = e.target.value;
+        setLocation(value);
+        setDisplayMessage('');
+    };
 
-    //     <p>OR</p>
-    //     <button className="findLocation" onClick={getLocation}>
-    //       Find My Location
-    //     </button>
-    //     <button className="backButton">
-    //       <Link to={"/"}>Return to Main Page</Link>
-    //     </button>
-    //   </>
-    // );}
+    const handleSubmit = (e, location) => {
+        e.preventDefault();
+        navigate(`/location/${coordinates.x},${coordinates.y}`);
+    };
 
-    //if API is called (loadingState=true), displaying loading page
     return (
         <>
-            {loadingState === false ? (
-                <>
-                    <div className="locationPopup">
-                        <div className="locationPopupContent">
-                            <h3>Enable Location</h3>
-                            <img src={mapImage} alt="" />
-                            <p>{displayMessage}</p>
-                            <div className="popupButtons">
-                                <button className="findLocation" onClick={getLocation}>
-                                    Enable
-                                </button>
-                                <button className="closeLocation" onClick={togglePopup}>
-                                    Not Now
-                                </button>
-                            </div>
-                        </div>
+            <div className="locationPopup">
+                <div className="locationPopupContent">
+                    <h3>Enable Location</h3>
+                    <img src={mapImage} alt="" />
+                    <p>{displayMessage}</p>
+                    <div className="popupButtons">
+                        <button className="findLocation" onClick={getCurrentLocation}>
+                            Enable
+                        </button>
+                        <button className="closeLocation" onClick={togglePopup}>
+                            Not Now
+                        </button>
                     </div>
-                    <form action="" onSubmit={(e) => handleSubmit(e, location)}>
-                        <label htmlFor="name" className="sr-only">
-                            Enter your location
-                        </label>
-                        <div className="userLocationDiv">
-                            <span>
-                                <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
-                            </span>
-                            <input type="text" id="name" onChange={searchLocation} value={location} placeholder="Enter Your Location" />
-                        </div>
-                    </form>
+                </div>
+            </div>
 
-                    <p>OR</p>
-                    <button className="findLocation" onClick={getLocation}>
-                        Find My Location
-                    </button>
-                    <button className="backButton">
-                        <Link to={'/'}>Return to Main Page</Link>
-                    </button>
-                </>
-            ) : (
-                <Loading />
-            )}
+            <form action="" onSubmit={(e) => handleSubmit(e, location)}>
+                <label htmlFor="name" className="sr-only">
+                    Enter your location
+                </label>
+                <div className="userLocationDiv">
+                    <span>
+                        <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
+                    </span>
+                    <input type="text" id="name" onChange={searchLocation} value={location} placeholder="Enter Your Location" />
+                </div>
+            </form>
+
+            <p>OR</p>
+            <button className="findLocation" onClick={getCurrentLocation}>
+                Find My Location
+            </button>
+            <button className="backButton">
+                <Link to={'/'}>Return to Main Page</Link>
+            </button>
         </>
     );
 }
