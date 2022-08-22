@@ -1,12 +1,9 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import mapImage from './assets/home-location-map.png';
-import Loading from './Loading';
-import Results from './Results';
-import SearchItems from './SearchItems';
 
 function Location({ apiKey }) {
     // location is the string that user input in the field
@@ -22,46 +19,43 @@ function Location({ apiKey }) {
 
     const navigate = useNavigate();
     //call this function only when the value of location state changes
-    const getGeoLocation = useCallback((location) => {
-        try {
-            axios({
-                url: `https://www.mapquestapi.com/geocoding/v1/address`,
-                params: {
-                    key: apiKey,
-                    location: location,
-                },
-            }).then((response) => {
-                // list of locations are returned based on user's location input
-                const locations = response.data.results[0].locations;
-
-                /* Have some way for the user to select the correct result, or a way for the user to adjust their query and remake the axios call
-                 If there are no results OR the user doesn't like the results, break out of this .then() and prompt for a re-input
-                 If the user picks one of the locations, take the index of that choice and store it
-                 may be we can display a dropdown from locations
-                 */
-                setLocations(locations);
-
-                // let user selected first location from the array
-                const selectedLocation = locations[0];
-
-                // extract the coordinates from selected location
-                const longitude = selectedLocation.latLng.lng;
-                const latitude = selectedLocation.latLng.lat;
-
-                //setting the coordinates of location
-                setCoordinates({ x: longitude, y: latitude });
-            });
-        } catch (error) {
-            alert('something went wrong in Location.js component');
-        }
-    });
-
-    useEffect(() => {
-        // if location is not empty and has no trailing spaces  and the location changes only then call the api
+    const getGeoLocation = (location) => {
         if (location.trim() !== '') {
-            getGeoLocation(location.trim());
+            try {
+                axios({
+                    url: `https://www.mapquestapi.com/geocoding/v1/address`,
+                    params: {
+                        key: apiKey,
+                        location: location,
+                    },
+                }).then((response) => {
+                    // list of locations are returned based on user's location input
+                    const locations = response.data.results[0].locations;
+
+                    /* Have some way for the user to select the correct result, or a way for the user to adjust their query and remake the axios call
+                     If there are no results OR the user doesn't like the results, break out of this .then() and prompt for a re-input
+                     If the user picks one of the locations, take the index of that choice and store it
+                     may be we can display a dropdown from locations
+                     */
+                    setLocations(locations);
+
+                    // let user selected first location from the array
+                    const selectedLocation = locations[0];
+
+                    // extract the coordinates from selected location
+                    const longitude = selectedLocation.latLng.lng;
+                    const latitude = selectedLocation.latLng.lat;
+
+                    //setting the coordinates of location
+                    setCoordinates({ x: longitude, y: latitude });
+                });
+            } catch (error) {
+                alert('something went wrong in Location.js component');
+            }
         }
-    }, [location]);
+    };
+
+    getGeoLocation(location.trim());
 
     //get the current location of user,  if user agreed to share his current location
     const getCurrentLocation = () => {
