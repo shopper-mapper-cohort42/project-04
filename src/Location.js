@@ -57,6 +57,7 @@ function Location() {
           });
         });
       } else {
+        /* not really working, need to rework logic */
         const autoCompleteLi = document.createElement("li");
         autoCompleteLi.textContent = "No results found";
         locationInput.append(autoCompleteLi);
