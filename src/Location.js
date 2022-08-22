@@ -12,6 +12,7 @@ function Location() {
   const [currentLocation, setCurrentLocation] = useState({});
   const [displayMessage, setDisplayMessage] = useState("");
   const [loadingState,setLoadingState]=useState(false);
+  const [loadingTimeOut, setLoadingTimeOut] = useState(false);
   const searchLocation = (e) => {
     setLocation(e.target.value);
     setDisplayMessage("");
@@ -21,11 +22,15 @@ function Location() {
     // we need to set the country, lets strict to canada &  us only
     // String to store for the user's current location
 
-    setLoadingState(true);
+    setLoadingState(true);// after clicking enter, loading animation starts
     setTimeout(
       () => {
-        setLoadingState(false);
-        console.log("Timeout executed");
+        if( loadingState === true)
+        {
+          setLoadingState(false);
+          setLoadingTimeOut(true);// make a pop up modal, 'time out, try again..'
+          console.log("Timeout executed");//when displaying pop up, set loadingTimeOut to false..
+        }
       }
       ,3000);
     
@@ -38,7 +43,12 @@ function Location() {
         },
       }).then((response) => {
         if (response.data.results) {
-          setLoadingState(false);
+          setTimeout(
+            () => {
+              setLoadingState(false);
+            }
+            ,500);// loading page time = 0.5s+ api response time 
+
           // An array of the possible locations best matching the query
           // console.log(response.data.results[0].locations);
           const locationsArray = response.data.results[0].locations;
@@ -166,7 +176,7 @@ function Location() {
   //if API is called (loadingState=true), displaying loading page
   return (
     <>
-      {loadingState === false?(
+      {loadingState === false && loadingTimeOut === false ?(
        <>
        <div className="locationPopup">
          <div className="locationPopupContent">
