@@ -29,10 +29,10 @@ function Location() {
         {
           setLoadingState(false);
           setLoadingTimeOut(true);// make a pop up modal, 'time out, try again..'
-          console.log("Timeout executed");//when displaying pop up, set loadingTimeOut to false..
+          //when displaying pop up, set loadingTimeOut to false..
         }
       }
-      ,3000);
+      ,6000);
     
     if (location !== "") {
       const geocodingResults = axios({
@@ -41,13 +41,13 @@ function Location() {
           key: apiKey,
           location: location,
         },
-      }).then((response) => {
+      }).then((response) => { // added catch thing ( setLoadingState= false, error message )
         if (response.data.results) {
           setTimeout(
             () => {
               setLoadingState(false);
             }
-            ,500);// loading page time = 0.5s+ api response time 
+            ,500);// loading page time = 0.5s+ api response time  (<0.2s)
 
           // An array of the possible locations best matching the query
           // console.log(response.data.results[0].locations);
@@ -83,6 +83,7 @@ function Location() {
     } else {
       alert("please do the location");
     }
+
   };
 
   const handleSubmit = (e, location) => {
@@ -118,59 +119,6 @@ function Location() {
     const locationPopup = document.querySelector(".locationPopup");
     locationPopup.classList.toggle("active");
   };
-
-  
-  // if (loadingState)
-  // {
-  //   return (
-  //     <Loading />
-  //   )
-  //  }else{
-  //   return(
-  //   <>
-  //     <div className="locationPopup">
-  //       <div className="locationPopupContent">
-  //         <h3>Enable Location</h3>
-  //         <img src={mapImage} alt="" />
-  //         <p>{displayMessage}</p>
-  //         <div className="popupButtons">
-  //           <button className="findLocation" onClick={getLocation}>
-  //             Enable
-  //           </button>
-  //           <button className="closeLocation" onClick={togglePopup}>
-  //             Not Now
-  //           </button>
-  //         </div>
-  //       </div>
-  //     </div>
-  //     <form action="" onSubmit={(e) => handleSubmit(e, location)}>
-  //       <label htmlFor="name" className="sr-only">
-  //         Enter your location
-  //       </label>
-  //       <div className="userLocationDiv">
-  //         <span>
-  //           <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
-  //         </span>
-  //         <input
-  //           type="text"
-  //           id="name"
-  //           onChange={searchLocation}
-  //           value={location}
-  //           placeholder="Enter Your Location"
-  //         />
-  //       </div>
-  //     </form>
-
-  //     <p>OR</p>
-  //     <button className="findLocation" onClick={getLocation}>
-  //       Find My Location
-  //     </button>
-  //     <button className="backButton">
-  //       <Link to={"/"}>Return to Main Page</Link>
-  //     </button>
-  //   </>
-  // );}
-
 
 
   //if API is called (loadingState=true), displaying loading page
