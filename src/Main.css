@@ -77,6 +77,11 @@
   border-top: 1px rgb(194, 194, 194) solid;
 }
 
+.locationPredictiveResults li:hover {
+  background-color: var(--blue);
+  cursor: pointer;
+}
+
 .welcomePageDiv {
   width: 80%;
   margin: 0 auto;

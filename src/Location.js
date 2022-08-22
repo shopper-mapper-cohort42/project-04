@@ -9,6 +9,7 @@ import Loading from "./Loading";
 function Location() {
   const apiKey = "SbABP9Vr89Ox8a38s29QPLUQm51xa784";
   const [location, setLocation] = useState("");
+  const [predictiveResults, setPredictiveResults] = useState([]);
   const [currentLocation, setCurrentLocation] = useState({});
   const [displayMessage, setDisplayMessage] = useState("");
   const [loadingState, setLoadingState] = useState(false);
@@ -33,44 +34,28 @@ function Location() {
       dataType: "JSON",
       method: "GET",
     }).then((response) => {
-      console.log(`the location:${location}`);
-      const locationInput = document.querySelector(
-        ".locationPredictiveResults ul"
-      );
-      locationInput.innerHTML = "";
+      setPredictiveResults("");
 
       if (response.data.results) {
-        const predictiveResults = response.data.results;
+        // store results in state, and take predictive results and map it
+        const locationResults = response.data.results;
 
-        predictiveResults.forEach((result) => {
-          const autoCompleteLi = document.createElement("li");
-          autoCompleteLi.innerHTML += result.displayString;
-          console.log(result.displayString);
-
-          locationInput.append(autoCompleteLi);
-          autoCompleteLi.innerHTML += `<input type='hidden' value='${result.displayString}' />`;
-          autoCompleteLi.addEventListener("click", function (e) {
-            const userSelectedLocation =
-              this.getElementsByTagName("input")[0].value;
-            closeAllLists();
-            setLocation(userSelectedLocation);
-          });
-        });
+        setPredictiveResults(locationResults);
       } else {
         /* not really working, need to rework logic */
-        const autoCompleteLi = document.createElement("li");
-        autoCompleteLi.textContent = "No results found";
-        locationInput.append(autoCompleteLi);
-        console.log(response.data.results);
+        console.log("asdasd");
       }
     });
   };
 
+  const autoFill = (e) => {
+    setLocation(e.target.textContent);
+    closeAllLists();
+  };
+
   const closeAllLists = () => {
-    const locationInput = document.querySelector(
-      ".locationPredictiveResults ul"
-    );
-    locationInput.innerHTML = "";
+    // trying to fix this, unsure
+    const addressList = document.querySelector(".locationPredictiveResults ul");
   };
 
   const getGeoLocation = (location) => {
@@ -232,7 +217,7 @@ function Location() {
               </div>
             </div>
           </div>
-          <form autocomplete="off" onSubmit={(e) => handleSubmit(e, location)}>
+          <form autoComplete="off" onSubmit={(e) => handleSubmit(e, location)}>
             <label htmlFor="name" className="sr-only">
               Enter your location
             </label>
@@ -251,9 +236,16 @@ function Location() {
           </form>
           <div className="locationPredictiveResults">
             <ul>
-              {
-                // Render Location Results
-              }
+              {predictiveResults.map((result) => {
+                return (
+                  <>
+                    <li key={result.id} onClick={autoFill}>
+                      {result.displayString}
+                    </li>
+                    <input type="hidden" value={result.displayString} />
+                  </>
+                );
+              })}
             </ul>
           </div>
 
