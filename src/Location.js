@@ -123,8 +123,11 @@ function Location() {
           setLoadingState(false);
           alert("Something is wrong...");
         });
+    } else {
+      alert("please do the location");
     }
   };
+
   const handleSubmit = (e, location) => {
     e.preventDefault();
     getGeoLocation(location);
