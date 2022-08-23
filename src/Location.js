@@ -13,6 +13,7 @@ function Location() {
   const [currentLocation, setCurrentLocation] = useState({});
   const [displayMessage, setDisplayMessage] = useState("");
   const [loadingState, setLoadingState] = useState(false);
+  const [loadingTimeOut, setLoadingTimeOut] = useState(false);
 
   const searchLocation = (e) => {
     setLocation(e.target.value);
@@ -56,64 +57,74 @@ function Location() {
   const closeAllLists = () => {
     // trying to fix this, unsure
     const addressList = document.querySelector(".locationPredictiveResults ul");
-
-    console.log("delete things pls");
   };
 
   const getGeoLocation = (location) => {
     // we need to set the country, lets strict to canada &  us only
     // String to store for the user's current location
 
-    setLoadingState(true);
+    setLoadingState(true); // after clicking enter, loading animation starts
     setTimeout(() => {
-      setLoadingState(false);
-      console.log("Timeout executed");
-    }, 3000);
+      if (loadingState === true) {
+        setLoadingState(false);
+        setLoadingTimeOut(true); // make a pop up modal, 'API is busy, try again..'
+        //when displaying pop up, set loadingTimeOut to false..
+      }
+    }, 6000);
 
     if (location !== "") {
-      const geocodingResults = axios({
+      axios({
         url: `https://www.mapquestapi.com/geocoding/v1/address`,
         params: {
           key: apiKey,
           location: location,
         },
-      }).then((response) => {
-        if (response.data.results) {
-          // An array of the possible locations best matching the query
-          // console.log(response.data.results[0].locations);
-          const locationsArray = response.data.results[0].locations;
-          console.log("response.data.results: ", response.data.results);
-          console.log("response.data.results[0]: ", response.data.results[0]);
+      })
+        .then((response) => {
+          // added catch thing ( setLoadingState= false, error message )
+          if (response.data.results) {
+            setTimeout(() => {
+              setLoadingState(false);
+            }, 500); // loading page time = 0.5s+ api response time  (<0.2s)
 
-          // Have some way for the user to select the correct result, or a way for the user to adjust their query and remake the axios call
-          // If there are no results OR the user doesn't like the results, break out of this .then() and prompt for a re-input
-          // If the user picks one of the locations, take the index of that choice and store it
+            // An array of the possible locations best matching the query
+            // console.log(response.data.results[0].locations);
+            const locationsArray = response.data.results[0].locations;
+            console.log("response.data.results: ", response.data.results);
+            console.log("response.data.results[0]: ", response.data.results[0]);
 
-          const selectedLocationIndex = 0; // THIS VARIABLE CAN STORE THE USER'S SELECTED LOCATION INDEX
+            // Have some way for the user to select the correct result, or a way for the user to adjust their query and remake the axios call
+            // If there are no results OR the user doesn't like the results, break out of this .then() and prompt for a re-input
+            // If the user picks one of the locations, take the index of that choice and store it
 
-          if (response.data.results[0].length < 1) {
-            console.log("invalid search");
+            const selectedLocationIndex = 0; // THIS VARIABLE CAN STORE THE USER'S SELECTED LOCATION INDEX
+
+            if (response.data.results[0].length < 1) {
+              console.log("invalid search");
+            } else {
+              // For the selected location index, retrieve the longitude and latitude of the selected location using the index
+              // These longitude and latitudes will be passed into the PlaceSearch API
+              const currentLongitude =
+                locationsArray[selectedLocationIndex].latLng.lng; //rather than .latLng., .displayLatLng also works, not sure of the difference between the two in the returned object since the numbers are the same
+              const currentLatitutde =
+                locationsArray[selectedLocationIndex].latLng.lat;
+              setCurrentLocation({
+                longitude: currentLongitude,
+                latitude: currentLatitutde,
+              });
+              // console.log('current loc is ', currentLocation);
+            }
           } else {
-            // For the selected location index, retrieve the longitude and latitude of the selected location using the index
-            // These longitude and latitudes will be passed into the PlaceSearch API
-            const currentLongitude =
-              locationsArray[selectedLocationIndex].latLng.lng; //rather than .latLng., .displayLatLng also works, not sure of the difference between the two in the returned object since the numbers are the same
-            const currentLatitutde =
-              locationsArray[selectedLocationIndex].latLng.lat;
-            setCurrentLocation({
-              longitude: currentLongitude,
-              latitude: currentLatitutde,
-            });
+            alert("no result found");
           }
-        } else {
-          alert("no result found");
-        }
-      });
-    } else {
-      alert("please do the location");
+        })
+        .catch((err) => {
+          console.log(err);
+          setLoadingState(false);
+          alert("Something is wrong...");
+        });
     }
   };
-
   const handleSubmit = (e, location) => {
     e.preventDefault();
     getGeoLocation(location);
