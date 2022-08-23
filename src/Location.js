@@ -28,7 +28,7 @@ function Location() {
         if( loadingState === true)
         {
           setLoadingState(false);
-          setLoadingTimeOut(true);// make a pop up modal, 'time out, try again..'
+          setLoadingTimeOut(true);// make a pop up modal, 'API is busy, try again..'
           //when displaying pop up, set loadingTimeOut to false..
         }
       }
