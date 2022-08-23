@@ -1,12 +1,11 @@
-function Loading (){
+function Loading() {
   return (
     <>
       <p className="loadingP">Loading...</p>
-      
-      <div class="sp dot-flashing"></div>
-      
+
+      <div className="sp dot-flashing"></div>
     </>
-  )
+  );
 }
 
 export default Loading;
