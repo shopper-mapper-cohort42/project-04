@@ -56,7 +56,7 @@ function Location() {
 
   const closeAllLists = () => {
     // trying to fix this, unsure
-    const addressList = document.querySelector(".locationPredictiveResults ul");
+    setPredictiveResults([]);
   };
 
   const getGeoLocation = (location) => {
