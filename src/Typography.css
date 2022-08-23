@@ -9,13 +9,17 @@ h1 {
   font-family: var(--headerFont);
   text-align: center;
   font-size: clamp(1.6rem, 4vw, 3rem);
+  color: var(--black);
+  letter-spacing: 0.1rem;
 }
 
 h2 {
   font-family: var(--headerFont);
   font-size: clamp(1.2rem, 4vw, 1.5rem);
+  color: var(--black);
 }
 
 p {
   font-family: var(--bodyFont);
+  color: var(--black);
 }

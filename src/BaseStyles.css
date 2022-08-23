@@ -2,6 +2,7 @@
   --green: #c4e39c;
   --blue: #5bc5ff;
   --orange: #ff9d7f;
+  --black: rgb(22, 22, 22);
   --input-grey: #e4e4e4;
   --spacing: calc(8px + 1.5625vw);
 }

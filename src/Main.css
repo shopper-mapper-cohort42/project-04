@@ -1,8 +1,14 @@
 /* Main section */
 
+main {
+  background-color: white;
+  border: 2px red solid;
+  border-radius: 20px;
+}
+
 .getStartedButton {
   width: 50%;
-  margin: 0 auto;
+  margin: 40px auto;
 }
 
 /* LOCATION POPUP */
