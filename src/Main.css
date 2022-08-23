@@ -54,10 +54,32 @@
   display: flex;
   align-items: center;
   border-radius: 15px;
+  background-color: var(--input-grey);
 }
 .userLocationDiv span {
   margin: 0 auto;
   padding: 5px 10px;
+}
+
+/* PREDICTIVE TEXT DROP DOWN */
+.locationPredictiveResults {
+  background-color: var(--input-grey);
+}
+
+.locationPredictiveResults ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.locationPredictiveResults li {
+  padding: 10px;
+  border-top: 1px rgb(194, 194, 194) solid;
+}
+
+.locationPredictiveResults li:hover {
+  background-color: var(--blue);
+  cursor: pointer;
 }
 
 .welcomePageDiv {
@@ -85,9 +107,6 @@
   border: none;
   padding: var(--spacing);
   border-radius: 15px;
-}
-.userLocationDiv {
-  background-color: var(--input-grey);
 }
 
 .findLocation,
@@ -144,7 +163,7 @@
 }
 
 /* Loading animation */
-.loadingP{
+.loadingP {
   font-family: var(--bodyFont);
   font-size: clamp(1.2rem, 4vw, 1.5rem);
 }
@@ -155,22 +174,24 @@
   margin: 20px auto;
 }
 
-
-.dot-flashing,.dot-flashing::before, .dot-flashing::after {
+.dot-flashing,
+.dot-flashing::before,
+.dot-flashing::after {
   width: 50px;
   height: 50px;
   border-radius: 50px;
-  background-color: #5BC5FF;
+  background-color: #5bc5ff;
 }
 
 .dot-flashing {
   position: relative;
   animation: dotFlashing 1s infinite linear alternate;
-  animation-delay: .5s;
+  animation-delay: 0.5s;
 }
 
-.dot-flashing::before, .dot-flashing::after {
-  content: '';
+.dot-flashing::before,
+.dot-flashing::after {
+  content: "";
   display: inline-block;
   position: absolute;
   top: 0;
@@ -189,12 +210,12 @@
 
 @keyframes dotFlashing {
   0% {
-    background-color:#C4E39C;
+    background-color: #c4e39c;
   }
   50% {
-    background-color: #5BC5FF;
+    background-color: #5bc5ff;
   }
   100% {
-    background-color: #FF9D7F;
+    background-color: #ff9d7f;
   }
 }
