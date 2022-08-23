@@ -56,6 +56,8 @@ function Location() {
   const closeAllLists = () => {
     // trying to fix this, unsure
     const addressList = document.querySelector(".locationPredictiveResults ul");
+
+    console.log("delete things pls");
   };
 
   const getGeoLocation = (location) => {
@@ -102,7 +104,6 @@ function Location() {
               longitude: currentLongitude,
               latitude: currentLatitutde,
             });
-            // console.log('current loc is ', currentLocation);
           }
         } else {
           alert("no result found");
@@ -145,57 +146,6 @@ function Location() {
     const locationPopup = document.querySelector(".locationPopup");
     locationPopup.classList.toggle("active");
   };
-
-  // if (loadingState)
-  // {
-  //   return (
-  //     <Loading />
-  //   )
-  //  }else{
-  //   return(
-  //   <>
-  //     <div className="locationPopup">
-  //       <div className="locationPopupContent">
-  //         <h3>Enable Location</h3>
-  //         <img src={mapImage} alt="" />
-  //         <p>{displayMessage}</p>
-  //         <div className="popupButtons">
-  //           <button className="findLocation" onClick={getLocation}>
-  //             Enable
-  //           </button>
-  //           <button className="closeLocation" onClick={togglePopup}>
-  //             Not Now
-  //           </button>
-  //         </div>
-  //       </div>
-  //     </div>
-  //     <form action="" onSubmit={(e) => handleSubmit(e, location)}>
-  //       <label htmlFor="name" className="sr-only">
-  //         Enter your location
-  //       </label>
-  //       <div className="userLocationDiv">
-  //         <span>
-  //           <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
-  //         </span>
-  //         <input
-  //           type="text"
-  //           id="name"
-  //           onChange={searchLocation}
-  //           value={location}
-  //           placeholder="Enter Your Location"
-  //         />
-  //       </div>
-  //     </form>
-
-  //     <p>OR</p>
-  //     <button className="findLocation" onClick={getLocation}>
-  //       Find My Location
-  //     </button>
-  //     <button className="backButton">
-  //       <Link to={"/"}>Return to Main Page</Link>
-  //     </button>
-  //   </>
-  // );}
 
   //if API is called (loadingState=true), displaying loading page
   return (
