@@ -13,6 +13,7 @@ function Location() {
   const [currentLocation, setCurrentLocation] = useState({});
   const [displayMessage, setDisplayMessage] = useState("");
   const [loadingState, setLoadingState] = useState(false);
+  const [loadingTimeOut, setLoadingTimeOut] = useState(false);
 
   const searchLocation = (e) => {
     setLocation(e.target.value);
@@ -62,12 +63,18 @@ function Location() {
     // we need to set the country, lets strict to canada &  us only
     // String to store for the user's current location
 
-    setLoadingState(true);
-    setTimeout(() => {
-      setLoadingState(false);
-      console.log("Timeout executed");
-    }, 3000);
-
+    setLoadingState(true);// after clicking enter, loading animation starts
+    setTimeout(
+      () => {
+        if( loadingState === true)
+        {
+          setLoadingState(false);
+          setLoadingTimeOut(true);// make a pop up modal, 'API is busy, try again..'
+          //when displaying pop up, set loadingTimeOut to false..
+        }
+      }
+      ,6000);
+    
     if (location !== "") {
       axios({
         url: `https://www.mapquestapi.com/geocoding/v1/address`,
@@ -75,8 +82,14 @@ function Location() {
           key: apiKey,
           location: location,
         },
-      }).then((response) => {
+      }).then((response) => { // added catch thing ( setLoadingState= false, error message )
         if (response.data.results) {
+          setTimeout(
+            () => {
+              setLoadingState(false);
+            }
+            ,500);// loading page time = 0.5s+ api response time  (<0.2s)
+
           // An array of the possible locations best matching the query
           // console.log(response.data.results[0].locations);
           const locationsArray = response.data.results[0].locations;
@@ -107,10 +120,16 @@ function Location() {
         } else {
           alert("no result found");
         }
+      })
+      .catch((err)=>{
+        console.log(err);
+        setLoadingState(false);
+        alert("Something is wrong...")
       });
     } else {
       alert("please do the location");
     }
+
   };
 
   const handleSubmit = (e, location) => {
