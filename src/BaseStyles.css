@@ -7,6 +7,10 @@
   --spacing: calc(8px + 1.5625vw);
 }
 
+body {
+  background-color: var(--orange);
+}
+
 html {
   font-size: 125%;
 }

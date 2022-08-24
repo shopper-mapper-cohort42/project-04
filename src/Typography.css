@@ -23,3 +23,14 @@ p {
   font-family: var(--bodyFont);
   color: var(--black);
 }
+
+/* input location */
+.userLocationDiv input {
+  font-family: var(--bodyFont);
+}
+
+/* predictive results drop down*/
+.locationPredictiveResults li {
+  font-size: clamp(0.8rem, 4vw, 1.2rem);
+  font-family: var(--bodyFont);
+}
