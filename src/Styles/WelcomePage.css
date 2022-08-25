@@ -1,0 +1,12 @@
+.subHeaderBox {
+  margin: 20px 0;
+}
+
+.getStartedButtonDiv {
+  text-align: center;
+}
+
+.welcomePageDiv .wrapper {
+  display: flex;
+  flex-direction: column;
+}

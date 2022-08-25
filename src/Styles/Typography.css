@@ -1,0 +1,37 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap");
+
+* {
+  --headerFont: "Garamond", serif;
+  --bodyFont: "Lato", sans-serif;
+}
+
+h1 {
+  font-family: var(--headerFont);
+  text-align: center;
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  color: var(--black);
+  letter-spacing: 0.1rem;
+}
+
+h2 {
+  font-family: var(--headerFont);
+  font-size: clamp(1.2rem, 4vw, 1.5rem);
+  color: var(--black);
+}
+
+p {
+  font-family: var(--bodyFont);
+  color: var(--black);
+}
+
+/* input location */
+.userLocationDiv input {
+  font-family: var(--bodyFont);
+}
+
+/* predictive results drop down*/
+
+.locationPredictiveResults li {
+  font-size: clamp(0.8rem, 4vw, 1.2rem);
+  font-family: var(--bodyFont);
+}

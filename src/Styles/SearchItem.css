@@ -1,0 +1,18 @@
+/* SEARCH ITEM .JS */
+.searchItemSection {
+  display: flex;
+  flex-direction: column;
+}
+.searchItemDiv {
+  margin: 20px 0;
+  height: 100%;
+}
+
+.searchItemDiv h2 {
+  text-align: center;
+}
+
+.backButtonDiv {
+  text-align: center;
+  margin: 40px 0;
+}

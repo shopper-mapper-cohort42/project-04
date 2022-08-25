@@ -1,5 +1,10 @@
-@import url("Setup.css");
-@import url("Typography.css");
-@import url("BaseStyles.css");
-@import url("Header.css");
-@import url("Main.css");
+@import url("./Styles/Setup.css");
+@import url("./Styles/Typography.css");
+@import url("./Styles/BaseStyles.css");
+@import url("./Styles/Header.css");
+@import url("./Styles/Main.css");
+@import url("./Styles/WelcomePage.css");
+@import url("./Styles/Location.css");
+@import url("./Styles/SearchItem.css");
+@import url("./Styles/Results.css");
+@import url("./Styles/Footer.css");
