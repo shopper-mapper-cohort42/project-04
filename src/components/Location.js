@@ -6,14 +6,14 @@ import mapImage from '../assets/home-location-map.png';
 import axios from 'axios';
 import Loading from './Loading';
 
-function Location({ apiKey }) {
-    const [location, setLocation] = useState('');
-    const [predictiveResults, setPredictiveResults] = useState([]);
-    const [currentLocation, setCurrentLocation] = useState({});
-    const [displayMessage, setDisplayMessage] = useState('');
-    const [loadingState, setLoadingState] = useState(false);
-    const [loadingTimeOut, setLoadingTimeOut] = useState(false);
-    const navigate = useNavigate();
+function Location({ apiKey, mapState, geocodingLayer, setGeocodingLayer, geocodingLayerDefined, setGeocodingLayerDefined }) {
+  const [location, setLocation] = useState("");
+  const [predictiveResults, setPredictiveResults] = useState([]);
+  const [currentLocation, setCurrentLocation] = useState({});
+  const [displayMessage, setDisplayMessage] = useState("");
+  const [loadingState, setLoadingState] = useState(false);
+  const [loadingTimeOut, setLoadingTimeOut] = useState(false);
+  const navigate = useNavigate();
 
     const searchLocation = (e) => {
         const { value } = e.target;
@@ -93,6 +93,7 @@ function Location({ apiKey }) {
         }, 6000);
 
         if (location !== '') {
+      
             axios({
                 url: `https://www.mapquestapi.com/geocoding/v1/address`,
                 params: {
@@ -118,27 +119,43 @@ function Location({ apiKey }) {
                         } else {
                             const currentLongitude = locationsArray[selectedLocationIndex].latLng.lng; //
 
-                            const currentLatitutde = locationsArray[selectedLocationIndex].latLng.lat;
-                            setCurrentLocation({
-                                longitude: currentLongitude,
-                                latitude: currentLatitutde,
-                            });
-                            navigate(`/location/${currentLongitude}, ${currentLatitutde}`);
-                        }
-                    } else {
-                        alert('no result found');
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                    setLoadingState(false);
-                    alert('Something is wrong...');
-                });
-        } else {
-            // need to create a popup box for this
-            alert('please do the location');
-        }
-    };
+              const currentLatitutde =
+                locationsArray[selectedLocationIndex].latLng.lat;
+              setCurrentLocation({
+                longitude: currentLongitude,
+                latitude: currentLatitutde,
+              });
+
+              window.L.mapquest.geocoding().geocode(`${currentLatitutde},${currentLongitude}`, (error, response) => {
+                if (!geocodingLayerDefined) {
+                  setGeocodingLayerDefined(true);
+                  setGeocodingLayer(window.L.mapquest.geocodingLayer({
+                    geocodingResponse: response
+                  }).addTo(mapState).on('geocoding_marker_clicked', (e) => {
+                    console.log(e)
+                  }));
+                  console.log('Geocoding, adding new layer', response)
+                } else {
+                  geocodingLayer.setGeocodingResponse(response);
+                  console.log("Geocoding, reusing layer", response);
+                }
+              });
+
+              navigate(`/location/${currentLongitude}, ${currentLatitutde}`);
+            }
+          } else {
+            alert("no result found");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          setLoadingState(false);
+          alert("Something is wrong...");
+        });
+    } else {
+      alert("please do the location");
+    }
+  };
 
     const handleSubmit = (e, location) => {
         e.preventDefault();

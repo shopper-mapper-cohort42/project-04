@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams, Link } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 
 // Mount the Results.js component once we have the user's current location and their search query (e.g. coffee)
 
@@ -14,10 +14,11 @@ let userQuery = "construction";
 
 // NOTE: When we add in props, use the line below instead:
 // export default function Results ({apiKey, currentLocation, userQuery}) {
-export default function Results({ apiKey }) {
+export default function Results({ apiKey, mapState, searchResultsLayer, setSearchResultsLayer, searchResultsLayerDefined, setSearchResultsLayerDefined, destination, setDestination }) {
   //imported from params
   const { coords, searchItem } = useParams();
-
+  const navigate = useNavigate();
+  
   //updating the currentLocation
   currentLocation.longitude = coords.split(",")[0];
   currentLocation.latitude = coords.split(",")[1];
@@ -53,41 +54,61 @@ export default function Results({ apiKey }) {
 
   // Make axios call when this component is mounted, or when radius changes
   useEffect(() => {
-    axios({
-      url: `https://www.mapquestapi.com/search/v4/place`,
-      params: {
-        location: `${currentLocation.longitude},${currentLocation.latitude}`,
-        sort: "relevance",
-        feedback: false,
-        key: apiKey,
-        circle: `${currentLocation.longitude},${currentLocation.latitude},${searchRadius}`,
-        pageSize: 50,
-        q: userQuery,
-      },
-    })
-      .then((response) => {
-        const responseArray = response.data.results;
-        setResultsArray(responseArray);
 
-        // Change which indices in the results list need to be highlighted
-        if (!responseArray.length) {
-          // if there are no results, highlight nothing
-          setIndicesToHighlight([]);
-        } else if (responseArray.length % 2) {
-          // if odd number of results, highlight the middle result
-          setIndicesToHighlight([Math.floor(responseArray.length / 2)]);
-        } else {
-          // if even number of results, highlight the middle two results
-          setIndicesToHighlight([
-            responseArray.length / 2,
-            responseArray.length / 2 - 1,
-          ]);
-        }
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
+    console.log('Results.js useEffect()')
+
+    const options = {
+      sort: "relevance",
+      feedback: false,
+      key: apiKey,
+      circle: `${currentLocation.longitude},${currentLocation.latitude},${searchRadius}`,
+      pageSize: 50,
+      q: userQuery,
+    }
+
+    window.L.mapquest.search().place(options, (error, response) => {
+      if (!searchResultsLayerDefined) {
+        setSearchResultsLayerDefined(true);
+        setSearchResultsLayer(window.L.mapquest.searchLayer({
+          searchResponse: response
+        }).addTo(mapState).on('search_marker_clicked', (e) => {
+          console.log(e)
+          handleSubmitDestination(e)
+        }));
+
+        console.log('Results, adding new layer', response)
+      } else {
+        searchResultsLayer.setSearchResponse(response);
+        console.log("Results, reusing layer", response);
+      }
+
+      const responseArray = response.results;
+      setResultsArray(responseArray);
+
+      if (!responseArray.length) {
+        // if there are no results, highlight nothing
+        setIndicesToHighlight([]);
+      } else if (responseArray.length % 2) {
+        // if odd number of results, highlight the middle result
+        setIndicesToHighlight([Math.floor(responseArray.length / 2)]);
+      } else {
+        // if even number of results, highlight the middle two results
+        setIndicesToHighlight([
+          responseArray.length / 2,
+          responseArray.length / 2 - 1,
+        ]);
+      }
+
+    })
+
   }, [searchRadius]); // SUGGESTION: We can also make the list update live as the user changes the search radius, but it could be more laggy.
+
+  // Brings you to directions component on Result Click or Map Result Click
+  const handleSubmitDestination = (destinationParam) => {
+    console.log(destinationParam)
+    setDestination(destinationParam)
+    navigate(`/location/${coords}/${searchItem}/${destinationParam.displayString}`);
+  }
 
   return (
     <section className="resultsSection">
@@ -110,7 +131,7 @@ export default function Results({ apiKey }) {
           <form onSubmit={handleSubmitSearchRadiusChange}>
             <label htmlFor="searchRadiusInput">Search Radius (meters): </label>
             <input
-              type="text"
+              type="number"
               id="searchRadiusInput"
               value={searchRadiusInput}
               onChange={handleSearchRadiusInputChange}
@@ -128,7 +149,9 @@ export default function Results({ apiKey }) {
 
               return (
                 // HIGHLIGHTED RENDERING
-                <li key={result.id}>
+                <li key={result.id} onClick={() => {
+                  handleSubmitDestination(result)
+                }}>
                   {
                     // NOTE: {indicesToHighlight.indexOf(resultIndex) >= 0} being TRUE is used for the highlighted rendering, if you want to put it elsewhere
                     indicesToHighlight.indexOf(resultIndex) >= 0 ? (
