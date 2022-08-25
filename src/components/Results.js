@@ -17,6 +17,7 @@ let userQuery = "construction";
 
 // NOTE: When we add in props, use the line below instead:
 // export default function Results ({apiKey, currentLocation, userQuery}) {
+
 export default function Results({
   apiKey,
   mapState,
@@ -117,6 +118,7 @@ export default function Results({
     window.L.mapquest.search().place(options, (error, response) => {
       if (!searchResultsLayerDefined) {
         setSearchResultsLayerDefined(true);
+
         setSearchResultsLayer(
           window.L.mapquest
             .searchLayer({
