@@ -16,12 +16,15 @@ function Location({ apiKey }) {
   const navigate = useNavigate();
 
   const searchLocation = (e) => {
-    setLocation(e.target.value);
+    const { value } = e.target;
+    setLocation(value);
+    setDisplayMessage("");
 
     // as user is typing, we will read their value and call the predictive text
     // api to predict their text
-    predictiveText(e.target.value);
-    setDisplayMessage("");
+    if (value.length > 2) {
+      predictiveText(value);
+    }
   };
 
   const predictiveText = (location) => {
@@ -48,13 +51,17 @@ function Location({ apiKey }) {
 
         setPredictiveResults(locationResults);
 
-        document.addEventListener("click", function () {
-          setPredictiveResults([]);
-          document.querySelector(".userLocationDiv").classList.remove("active");
-          document
-            .querySelector(".locationPredictiveResults ul")
-            .classList.remove("active");
-        });
+        if (!location) {
+          document.addEventListener("click", function () {
+            document
+              .querySelector(".locationPredictiveResults ul")
+              .classList.remove("active");
+            setPredictiveResults([]);
+            document
+              .querySelector(".userLocationDiv")
+              .classList.remove("active");
+          });
+        }
       } else {
         /* not really working, need to rework logic */
         console.log("asdasd");
@@ -131,6 +138,7 @@ function Location({ apiKey }) {
           alert("Something is wrong...");
         });
     } else {
+      // need to create a popup box for this
       alert("please do the location");
     }
   };
@@ -165,7 +173,6 @@ function Location({ apiKey }) {
   };
 
   const togglePopup = () => {
-    console.log("toggle");
     const locationPopup = document.querySelector(".locationPopup");
     locationPopup.classList.toggle("active");
   };
