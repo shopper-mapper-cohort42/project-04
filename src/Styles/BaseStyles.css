@@ -1,0 +1,57 @@
+* {
+  --green: #c4e39c;
+  --blue: #5bc5ff;
+  --orange: #ff9d7f;
+  --black: rgb(22, 22, 22);
+  --input-grey: #e4e4e4;
+  --spacing: calc(8px + 1.5625vw);
+}
+
+body {
+  background-color: var(--orange);
+}
+
+html {
+  font-size: 125%;
+}
+
+.App {
+  height: 100vh;
+}
+
+.wrapper {
+  max-width: 1280px;
+  width: 90%;
+  margin: 0 auto;
+}
+
+/* buttons for specific things */
+.blueButton {
+  background-color: var(--blue);
+  font-family: var(--bodyFont);
+  transition: 0.3s background-color;
+  border: none;
+  padding: var(--spacing);
+  border-radius: 15px;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+}
+
+.blueButton:hover,
+.blueButton:focus {
+  cursor: pointer;
+  background-color: rgb(33, 52, 87);
+}
+
+.returnLinks {
+  font-family: var(--bodyFont);
+  text-decoration: none;
+  color: var(--black);
+  transition: 0.3s color;
+}
+
+.returnLinks:hover,
+.returnLinks:focus {
+  color: #5bc5ff;
+}

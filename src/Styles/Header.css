@@ -1,0 +1,75 @@
+h1 {
+  padding: 10px;
+  border-radius: 10px;
+}
+
+header {
+  padding: 10px;
+  background-color: var(--orange);
+}
+
+h2 {
+  position: relative;
+  z-index: 20 !important;
+}
+
+header .wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 45vh;
+}
+
+.heroImageDiv {
+  margin: 20px auto;
+  overflow: hidden;
+}
+
+.heroImageDiv img {
+  align-self: center;
+  width: 100%;
+}
+
+.imageSlide {
+  white-space: nowrap;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background-color: rgb(235, 235, 235);
+}
+
+.image {
+  display: inline-block;
+  width: 100%;
+  animation: slideShow 20s infinite;
+}
+
+@keyframes slideShow {
+  0% {
+    transform: translateX(0);
+  }
+  5% {
+    transform: translateX(-200px);
+  }
+  25% {
+    transform: translateX(-200px);
+  }
+  30% {
+    transform: translateX(-400px);
+  }
+  50% {
+    transform: translateX(-400px);
+  }
+  55% {
+    transform: translateX(-600px);
+  }
+  75% {
+    transform: translateX(-600px);
+  }
+  80% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}

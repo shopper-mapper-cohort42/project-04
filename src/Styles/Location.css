@@ -1,0 +1,158 @@
+.locationSection {
+  display: flex;
+  flex-direction: column;
+}
+
+/* LOCATION POPUP */
+.locationPopup {
+  display: none;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.locationPopup.active {
+  display: block;
+}
+
+.locationPopupContent {
+  width: 90%;
+  margin: 20% auto;
+  padding: 20px;
+  background-color: white;
+  text-align: center;
+  border-radius: 15px;
+}
+
+.locationPopup .findLocation {
+  width: 70%;
+  margin: 0 auto;
+}
+
+.popupButtons {
+  display: flex;
+  flex-direction: column;
+}
+.closeLocation {
+  border: none;
+  background-color: transparent;
+  font-family: var(--bodyFont);
+  margin: 20px;
+}
+
+.closeLocation:hover,
+.closeLocation:focus {
+  color: brown;
+  cursor: pointer;
+}
+
+/* INPUT FORM*/
+.userLocationDiv {
+  display: flex;
+  align-items: center;
+  border-radius: 15px;
+  background-color: var(--input-grey);
+}
+.userLocationDiv span {
+  margin: 0 auto;
+  padding: 5px 10px;
+}
+
+.userLocationDiv form {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+.userLocationDiv label {
+  font-family: var(--bodyFont);
+  font-weight: bold;
+  padding: var(--spacing);
+}
+
+.userLocationDiv input {
+  width: 90%;
+  margin: 0 auto;
+  background-color: var(--input-grey);
+  border: none;
+  padding: var(--spacing);
+  border-top-right-radius: 15px;
+  border-top-left-radius: 0;
+  border-bottom-right-radius: 15px;
+  border-bottom-left-radius: 0;
+}
+.userLocationDiv.active {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+/* PREDICTIVE TEXT DROP DOWN */
+.locationPredictiveResults {
+  background-color: var(--input-grey);
+  position: relative;
+  z-index: 100;
+}
+
+.locationPredictiveResults ul {
+  background-color: var(--input-grey);
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: 300px;
+  overflow: scroll;
+  z-index: 100;
+  width: 100%;
+  display: none;
+}
+
+.locationPredictiveResults ul.active {
+  display: block;
+}
+
+.locationPredictiveResults li {
+  padding: 10px;
+  border-top: 1px rgb(194, 194, 194) solid;
+  transition: 0.1s background-color;
+}
+
+.locationPredictiveResults li:hover,
+.locationPredictiveResults li:focus {
+  background-color: var(--blue);
+  cursor: pointer;
+}
+
+/* LOCATION FORM */
+.locationForm {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  height: 100%;
+  margin: 20px 0;
+}
+
+.locationForm p {
+  text-align: center;
+}
+
+.returnToMain {
+  background-color: transparent;
+  border: none;
+  margin: 20px;
+}
+
+.returnToMain:hover {
+  background-color: transparent;
+}
+
+.returnToMain {
+  text-decoration: none;
+  font-family: var(--bodyFont);
+  color: black;
+  transition: 0.3s color;
+}
+
+.returnToMain:hover,
+.returnToMain:focus {
+  color: brown;
+}
