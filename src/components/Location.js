@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import mapImage from "./assets/home-location-map.png";
+import mapImage from "../assets/home-location-map.png";
 import Loading from "./Loading";
 
 function Location({ apiKey }) {
@@ -17,10 +17,10 @@ function Location({ apiKey }) {
 
   const searchLocation = (e) => {
     setLocation(e.target.value);
-    predictiveText(e.target.value);
+
     // as user is typing, we will read their value and call the predictive text
     // api to predict their text
-
+    predictiveText(e.target.value);
     setDisplayMessage("");
   };
 
@@ -41,7 +41,20 @@ function Location({ apiKey }) {
         // store results in state, and take predictive results and map it
         const locationResults = response.data.results;
 
+        document.querySelector(".userLocationDiv").classList.add("active");
+        document
+          .querySelector(".locationPredictiveResults ul")
+          .classList.add("active");
+
         setPredictiveResults(locationResults);
+
+        document.addEventListener("click", function () {
+          setPredictiveResults([]);
+          document.querySelector(".userLocationDiv").classList.remove("active");
+          document
+            .querySelector(".locationPredictiveResults ul")
+            .classList.remove("active");
+        });
       } else {
         /* not really working, need to rework logic */
         console.log("asdasd");
@@ -52,6 +65,10 @@ function Location({ apiKey }) {
   const autoFill = (e) => {
     setLocation(e.target.textContent);
     setPredictiveResults([]);
+    document.querySelector(".userLocationDiv").classList.remove("active");
+    document
+      .querySelector(".locationPredictiveResults ul")
+      .classList.remove("active");
   };
 
   const getGeoLocation = (location) => {
@@ -124,7 +141,7 @@ function Location({ apiKey }) {
   };
 
   const getLocation = () => {
-    console.log("get location");
+    sessionStorage.removeItem("reloading");
     navigator.geolocation.getCurrentPosition(
       // if location is enabled by user, otherwise
       // run second call back function
@@ -140,7 +157,7 @@ function Location({ apiKey }) {
       () => {
         console.log("error mesage");
         setDisplayMessage(
-          "We need your location to give you a better experience."
+          "We need your location to give you a better experience. Please refresh your browser to enable location settings."
         );
         togglePopup();
       }
@@ -158,67 +175,68 @@ function Location({ apiKey }) {
     <>
       {loadingState === false ? (
         <>
-          <div className="locationPopup">
-            <div className="locationPopupContent">
-              <h3>Enable Location</h3>
-              <img src={mapImage} alt="" />
-              <p>{displayMessage}</p>
-              <div className="popupButtons">
-                <button className="findLocation" onClick={getLocation}>
-                  Enable
-                </button>
-                <button className="closeLocation" onClick={togglePopup}>
-                  Not Now
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="locationForm">
+          <section className="locationSection">
             <div className="wrapper">
-              <form
-                autoComplete="off"
-                onSubmit={(e) => handleSubmit(e, location)}
-              >
-                <label htmlFor="name" className="sr-only">
-                  Enter your location
-                </label>
-                <div className="userLocationDiv">
-                  <span>
-                    <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
-                  </span>
-                  <input
-                    type="text"
-                    id="name"
-                    onChange={searchLocation}
-                    value={location}
-                    placeholder="Enter Your Location"
-                  />
+              <div className="locationPopup">
+                <div className="locationPopupContent">
+                  <h3>Enable Location</h3>
+                  <img src={mapImage} alt="" />
+                  <p>{displayMessage}</p>
+                  <div className="popupButtons">
+                    <button className="findLocation" onClick={togglePopup}>
+                      Ok
+                    </button>
+                  </div>
                 </div>
-              </form>
-              <div className="locationPredictiveResults">
-                <ul>
-                  {predictiveResults.map((result, index) => {
-                    return (
-                      <>
-                        <li key={index} onClick={autoFill}>
-                          {result.displayString}
-                        </li>
-                        <input type="hidden" value={result.displayString} />
-                      </>
-                    );
-                  })}
-                </ul>
               </div>
+              <div className="locationForm">
+                <form
+                  autoComplete="off"
+                  onSubmit={(e) => handleSubmit(e, location)}
+                >
+                  <label htmlFor="name" className="sr-only">
+                    Enter your location
+                  </label>
+                  <div className="userLocationDiv">
+                    <span>
+                      <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
+                    </span>
+                    <input
+                      type="text"
+                      id="name"
+                      onChange={searchLocation}
+                      value={location}
+                      placeholder="Enter Your Location"
+                    />
+                  </div>
+                </form>
+                <div className="locationPredictiveResults">
+                  <ul tabIndex="0">
+                    {predictiveResults.map((result, index) => {
+                      return (
+                        <>
+                          <li key={index} onClick={autoFill} tabIndex="0">
+                            {result.displayString}
+                          </li>
+                        </>
+                      );
+                    })}
+                  </ul>
+                </div>
 
-              <p>OR</p>
-              <button className="findLocation" onClick={getLocation}>
-                Find My Location
-              </button>
-              <button className="backButton">
-                <Link to={"/"}>Return to Main Page</Link>
-              </button>
+                <p>OR</p>
+                <button
+                  className="findLocation blueButton"
+                  onClick={getLocation}
+                >
+                  Find My Location
+                </button>
+                <Link to={"/"} className="returnToMain returnLinks blueButton">
+                  Return to Main Page
+                </Link>
+              </div>
             </div>
-          </div>
+          </section>
         </>
       ) : (
         <Loading />

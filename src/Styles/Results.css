@@ -1,0 +1,49 @@
+.resultsSection {
+  display: flex;
+  flex-direction: column;
+}
+
+.resultsSection .wrapper {
+  width: 100%;
+}
+
+.resultsDiv {
+  margin: 20px 0;
+  font-family: var(--bodyFont);
+}
+
+.resultsDiv h2 {
+  text-align: center;
+  font-family: var(--bodyFont);
+}
+
+.resultsDiv h3 {
+  font-size: clamp(1rem, 4vw, 1.4rem);
+  margin: 0;
+}
+
+.resultsDiv ol {
+  padding: 0;
+  list-style: none;
+}
+
+.resultsDiv li {
+  padding: 10px 20px;
+}
+ol {
+  overflow: scroll;
+  max-height: 500px;
+}
+ol p {
+  margin: 0;
+}
+
+ol li:nth-child(odd) {
+  background-color: var(--input-grey);
+}
+ol li:nth-child(even) {
+  background-color: white;
+}
+.resultsDistance {
+  font-size: clamp(0.9rem, 4vw, 1rem);
+}

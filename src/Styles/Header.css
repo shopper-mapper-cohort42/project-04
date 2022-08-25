@@ -5,7 +5,6 @@ h1 {
 
 header {
   padding: 10px;
-  height: 45vh;
   background-color: var(--orange);
 }
 
@@ -18,6 +17,7 @@ header .wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 45vh;
 }
 
 .heroImageDiv {
@@ -32,8 +32,8 @@ header .wrapper {
 
 .imageSlide {
   white-space: nowrap;
-  width: 300px;
-  height: 300px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   background-color: rgb(235, 235, 235);
 }
@@ -49,22 +49,22 @@ header .wrapper {
     transform: translateX(0);
   }
   5% {
-    transform: translateX(-300px);
+    transform: translateX(-200px);
   }
   25% {
-    transform: translateX(-300px);
+    transform: translateX(-200px);
   }
   30% {
-    transform: translateX(-600px);
+    transform: translateX(-400px);
   }
   50% {
-    transform: translateX(-600px);
+    transform: translateX(-400px);
   }
   55% {
-    transform: translateX(-900px);
+    transform: translateX(-600px);
   }
   75% {
-    transform: translateX(-900px);
+    transform: translateX(-600px);
   }
   80% {
     transform: translateX(0);

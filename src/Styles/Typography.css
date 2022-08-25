@@ -8,7 +8,7 @@
 h1 {
   font-family: var(--headerFont);
   text-align: center;
-  font-size: clamp(1.6rem, 4vw, 3rem);
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
   color: var(--black);
   letter-spacing: 0.1rem;
 }
@@ -30,6 +30,7 @@ p {
 }
 
 /* predictive results drop down*/
+
 .locationPredictiveResults li {
   font-size: clamp(0.8rem, 4vw, 1.2rem);
   font-family: var(--bodyFont);
