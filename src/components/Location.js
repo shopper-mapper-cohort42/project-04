@@ -6,7 +6,7 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import mapImage from "../assets/home-location-map.png";
 import Loading from "./Loading";
 
-function Location({ apiKey }) {
+function Location({ apiKey, mapState, geocodingLayer, setGeocodingLayer, geocodingLayerDefined, setGeocodingLayerDefined }) {
   const [location, setLocation] = useState("");
   const [predictiveResults, setPredictiveResults] = useState([]);
   const [currentLocation, setCurrentLocation] = useState({});
@@ -50,14 +50,18 @@ function Location({ apiKey }) {
 
         document.addEventListener("click", function () {
           setPredictiveResults([]);
-          document.querySelector(".userLocationDiv").classList.remove("active");
-          document
-            .querySelector(".locationPredictiveResults ul")
-            .classList.remove("active");
+          try {
+            document.querySelector(".userLocationDiv").classList.remove("active");
+            document
+              .querySelector(".locationPredictiveResults ul")
+              .classList.remove("active");
+          } catch {
+            console.log('the annoying error')
+          }
         });
       } else {
         /* not really working, need to rework logic */
-        console.log("asdasd");
+        console.log("Placeholder");
       }
     });
   };
@@ -85,6 +89,7 @@ function Location({ apiKey }) {
     }, 6000);
 
     if (location !== "") {
+      
       axios({
         url: `https://www.mapquestapi.com/geocoding/v1/address`,
         params: {
@@ -119,6 +124,22 @@ function Location({ apiKey }) {
                 longitude: currentLongitude,
                 latitude: currentLatitutde,
               });
+
+              window.L.mapquest.geocoding().geocode(`${currentLatitutde},${currentLongitude}`, (error, response) => {
+                if (!geocodingLayerDefined) {
+                  setGeocodingLayerDefined(true);
+                  setGeocodingLayer(window.L.mapquest.geocodingLayer({
+                    geocodingResponse: response
+                  }).addTo(mapState).on('geocoding_marker_clicked', (e) => {
+                    console.log(e)
+                  }));
+                  console.log('Geocoding, adding new layer', response)
+                } else {
+                  geocodingLayer.setGeocodingResponse(response);
+                  console.log("Geocoding, reusing layer", response);
+                }
+              });
+
               navigate(`/location/${currentLongitude}, ${currentLatitutde}`);
             }
           } else {
