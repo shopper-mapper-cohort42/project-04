@@ -182,12 +182,23 @@ function Location({
 
   const getLocation = () => {
     sessionStorage.removeItem("reloading");
+    setTimeout(() => {
+        if (loadingState === true) {
+          setLoadingState(false);
+          setLoadingTimeOut(true); // make a pop up modal, 'API is busy, try again..'
+          //when displaying pop up, set loadingTimeOut to false..
+        }
+      }, 6000);
     navigator.geolocation.getCurrentPosition(
       // if location is enabled by user, otherwise
       // run second call back function
       (pos) => {
         console.log("pos inside navigator", pos);
         console.log("hello");
+        if (response.data.results) {
+            setTimeout(() => {
+              setLoadingState(false);
+            }, 500);} // loading page time = 0.5s+ api response time  (<0.2s)
 
         setCurrentLocation(pos.coords);
         console.log("POOS COORDS: ", pos.coords.latitude);
