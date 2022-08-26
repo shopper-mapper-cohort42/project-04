@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import mapImage from '../assets/home-location-map.png';
@@ -11,7 +11,6 @@ function Location({ apiKey, mapState,
     geocodingLayerDefined, setGeocodingLayerDefined }) {
     const [location, setLocation] = useState("");
     const [predictiveResults, setPredictiveResults] = useState([]);
-    const [currentLocation, setCurrentLocation] = useState({});
     const [displayMessage, setDisplayMessage] = useState("");
     const [loadingState, setLoadingState] = useState(false);
     const [loadingTimeOut, setLoadingTimeOut] = useState(false);
@@ -26,8 +25,12 @@ function Location({ apiKey, mapState,
 
         // as user is typing, we will read their value and call the predictive text
         // api to predict their text
-        if (value.length > 2) {
+        if (value.length > 1) {
             predictiveText(value);
+        } else {
+            setPredictiveResults([]);
+            document.querySelector('.userLocationDiv').classList.remove('active');
+            document.querySelector('.locationPredictiveResults ul').classList.remove('active');
         }
     };
 
@@ -53,8 +56,6 @@ function Location({ apiKey, mapState,
 
                 setPredictiveResults(locationResults);
 
-                
-
                 if (!location) {
                     document.addEventListener('click', function () {
                         document.querySelector('.locationPredictiveResults ul').classList.remove('active');
@@ -64,7 +65,7 @@ function Location({ apiKey, mapState,
                 }
             } else {
                 /* not really working, need to rework logic */
-                console.log('asdasd');
+                console.log('No autopredict results available');
             }
         });
     };
@@ -81,18 +82,18 @@ function Location({ apiKey, mapState,
     {
         console.log("setLocationMarker: ",`${latitude},${longtitude}`)
         window.L.mapquest.geocoding().geocode(`${latitude},${longtitude}`, (error, response) => {
-            if (!geocodingLayerDefined) {
-              setGeocodingLayerDefined(true);
-              setGeocodingLayer(window.L.mapquest.geocodingLayer({
-                geocodingResponse: response
-              }).addTo(mapState));
-              console.log('Geocoding, adding new layer', response)
-            } else {
-              geocodingLayer.setGeocodingResponse(response);
-              console.log("Geocoding, reusing layer", response);
-            }
-          });
-    };
+                if (!geocodingLayerDefined) {
+                    setGeocodingLayerDefined(true);
+                    setGeocodingLayer(window.L.mapquest.geocodingLayer({
+                        geocodingResponse: response
+                    }).addTo(mapState));
+                    console.log('Geocoding, adding new layer', response)
+                } else {
+                    geocodingLayer.setGeocodingResponse(response);
+                    console.log("Geocoding, reusing layer", response);
+                }
+            });
+        };
 
     const getGeoLocation = (location) => {
         // we need to set the country, lets strict to canada &  us only
@@ -108,7 +109,7 @@ function Location({ apiKey, mapState,
         }, 6000);
 
         if (location !== '') {
-      
+        
             axios({
                 url: `https://www.mapquestapi.com/geocoding/v1/address`,
                 params: {
@@ -116,48 +117,40 @@ function Location({ apiKey, mapState,
                     location: location,
                 },
             })
-                .then((response) => {
+            .then((response) => {
                     
-                    if (response.data.results) {
-                        setTimeout(() => {
-                            setLoadingState(false);
-                        }, 500); // loading page time = 0.5s+ api response time  (<0.2s)
+                if (response.data.results) {
+                    setTimeout(() => {
+                        setLoadingState(false);
+                    }, 500); // loading page time = 0.5s+ api response time  (<0.2s)
 
-                        // An array of the possible locations best matching the query
-                        
-                        const locationsArray = response.data.results[0].locations;
+                    // An array of the possible locations best matching the query
+                    
+                    const locationsArray = response.data.results[0].locations;
 
-                        const selectedLocationIndex = 0; // THIS VARIABLE CAN STORE THE USER'S SELECTED LOCATION INDEX
+                    const selectedLocationIndex = 0; // THIS VARIABLE CAN STORE THE USER'S SELECTED LOCATION INDEX
 
-                        if (response.data.results[0].length < 1) {
-                            console.log('invalid search');
-                        } else {
-                            const currentLongitude = locationsArray[selectedLocationIndex].latLng.lng; //
-
-                const currentLatitutde =
-                    locationsArray[selectedLocationIndex].latLng.lat;
-                setCurrentLocation({
-                    longitude: currentLongitude,
-                    latitude: currentLatitutde,
-                });
-              setLocationMarker(currentLatitutde,currentLongitude);
-           
-
-              navigate(`/location/${currentLongitude}, ${currentLatitutde}`);
-            }
-          } else {
-            alert("no result found");
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          setLoadingState(false);
-          alert("Something is wrong...");
-        });
-    } else {
-      alert("please do the location");
-    }
-  };
+                    if (response.data.results[0].length < 1) {
+                        console.log('invalid search');
+                    } else {
+                        const currentLongitude = locationsArray[selectedLocationIndex].latLng.lng; //
+                        const currentLatitutde = locationsArray[selectedLocationIndex].latLng.lat;
+                        setLocationMarker(currentLatitutde,currentLongitude);
+                        navigate(`/location/${currentLongitude}, ${currentLatitutde}`);
+                    }
+                } else {
+                    alert("no result found");
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+                setLoadingState(false);
+                alert("Something is wrong with connecting to the API...");
+            });
+        } else {
+            alert("Error, please search for a location.");
+        }
+    };
 
     const handleSubmit = (e, location) => {
         e.preventDefault();
@@ -173,7 +166,6 @@ function Location({ apiKey, mapState,
                 console.log('pos inside navigator', pos);
                 console.log('hello');
 
-                setCurrentLocation(pos.coords);
                 console.log('POOS COORDS: ', pos.coords.latitude);
                 navigate(`/location/${pos.coords.longitude}, ${pos.coords.latitude}`);
                 console.log(pos);
@@ -220,7 +212,7 @@ function Location({ apiKey, mapState,
                                         <span>
                                             <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
                                         </span>
-                                        <input type="text" id="name" onChange={searchLocation} value={location} placeholder="Enter Your Location" />
+                                        <input type="text" id="name" onChange={searchLocation} value={location} placeholder="Enter Your Location" required/>
                                     </div>
                                 </form>
                                 <div className="locationPredictiveResults">
