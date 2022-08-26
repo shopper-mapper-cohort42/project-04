@@ -53,14 +53,7 @@ function Location({ apiKey, mapState,
 
                 setPredictiveResults(locationResults);
 
-                //working on keys
-                // const copyLocationResults = [];
-                // locationResults.forEach((item) => {
-                //     const address = item.displayString;
-                //     const key = item.id;
-                //     copyLocationResults.push({ key, address });
-                // });
-                // setPredictiveResults(copyLocationResults);
+                
 
                 if (!location) {
                     document.addEventListener('click', function () {
@@ -83,6 +76,7 @@ function Location({ apiKey, mapState,
         document.querySelector('.locationPredictiveResults ul').classList.remove('active');
     };
 
+    // 
     function setLocationMarker(latitude, longtitude)
     {
         console.log("setLocationMarker: ",`${latitude},${longtitude}`)
@@ -123,14 +117,14 @@ function Location({ apiKey, mapState,
                 },
             })
                 .then((response) => {
-                    // added catch thing ( setLoadingState= false, error message )
+                    
                     if (response.data.results) {
                         setTimeout(() => {
                             setLoadingState(false);
                         }, 500); // loading page time = 0.5s+ api response time  (<0.2s)
 
                         // An array of the possible locations best matching the query
-                        // console.log(response.data.results[0].locations);
+                        
                         const locationsArray = response.data.results[0].locations;
 
                         const selectedLocationIndex = 0; // THIS VARIABLE CAN STORE THE USER'S SELECTED LOCATION INDEX
@@ -147,20 +141,7 @@ function Location({ apiKey, mapState,
                     latitude: currentLatitutde,
                 });
               setLocationMarker(currentLatitutde,currentLongitude);
-            //   window.L.mapquest.geocoding().geocode(`${currentLatitutde},${currentLongitude}`, (error, response) => {
-            //     if (!geocodingLayerDefined) {
-            //       setGeocodingLayerDefined(true);
-            //       setGeocodingLayer(window.L.mapquest.geocodingLayer({
-            //         geocodingResponse: response
-            //       }).addTo(mapState).on('geocoding_marker_clicked', (e) => {
-            //         console.log("geocoding_marker_clicked",e)
-            //       }));
-            //       console.log('Geocoding, adding new layer', response)
-            //     } else {
-            //       geocodingLayer.setGeocodingResponse(response);
-            //       console.log("Geocoding, reusing layer", response);
-            //     }
-            //   });
+           
 
               navigate(`/location/${currentLongitude}, ${currentLatitutde}`);
             }
