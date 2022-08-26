@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import mapImage from "../assets/home-location-map.png";
@@ -19,7 +19,6 @@ function Location({
   const [currentLocation, setCurrentLocation] = useState({});
   const [displayMessage, setDisplayMessage] = useState("");
   const [loadingState, setLoadingState] = useState(false);
-  const [loadingTimeOut, setLoadingTimeOut] = useState(false);
   const navigate = useNavigate();
 
   const searchLocation = (e) => {
@@ -115,13 +114,9 @@ function Location({
     // String to store for the user's current location
 
     setLoadingState(true); // after clicking enter, loading animation starts
-    setTimeout(() => {
-      if (loadingState === true) {
-        setLoadingState(false);
-        setLoadingTimeOut(true); // make a pop up modal, 'API is busy, try again..'
-        //when displaying pop up, set loadingTimeOut to false..
-      }
-    }, 6000);
+   
+
+
 
     if (location !== "") {
       axios({
@@ -185,25 +180,25 @@ function Location({
     getGeoLocation(location);
   };
 
+  
+
+  
   const getLocation = () => {
+    console.log("getLocation2")
     sessionStorage.removeItem("reloading");
-    setTimeout(() => {
-        if (loadingState === true) {
-          setLoadingState(false);
-          setLoadingTimeOut(true); // make a pop up modal, 'API is busy, try again..'
-          //when displaying pop up, set loadingTimeOut to false..
-        }
-      }, 6000);
+    setLoadingState(true);
+    console.log("getLocation2: 1", loadingState)
+
+
     navigator.geolocation.getCurrentPosition(
       // if location is enabled by user, otherwise
       // run second call back function
       (pos) => {
         console.log("pos inside navigator", pos);
         console.log("hello");
-        if (response.data.results) {
-            setTimeout(() => {
-              setLoadingState(false);
-            }, 500);} // loading page time = 0.5s+ api response time  (<0.2s)
+        setTimeout(() => {
+            setLoadingState(false);
+          }, 500); // loading page time = 0.5s+ api response time  (<0.2s)
 
         setCurrentLocation(pos.coords);
         console.log("POOS COORDS: ", pos.coords.latitude);
@@ -217,6 +212,7 @@ function Location({
           "We need your location to give you a better experience. Please refresh your browser to enable location settings."
         );
         togglePopup();
+        setLoadingState(false);
       }
     );
   };
