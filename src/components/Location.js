@@ -6,14 +6,18 @@ import mapImage from '../assets/home-location-map.png';
 import axios from 'axios';
 import Loading from './Loading';
 
-function Location({ apiKey, mapState, geocodingLayer, setGeocodingLayer, geocodingLayerDefined, setGeocodingLayerDefined }) {
-  const [location, setLocation] = useState("");
-  const [predictiveResults, setPredictiveResults] = useState([]);
-  const [currentLocation, setCurrentLocation] = useState({});
-  const [displayMessage, setDisplayMessage] = useState("");
-  const [loadingState, setLoadingState] = useState(false);
-  const [loadingTimeOut, setLoadingTimeOut] = useState(false);
-  const navigate = useNavigate();
+function Location({ apiKey, mapState, 
+    geocodingLayer, setGeocodingLayer, 
+    geocodingLayerDefined, setGeocodingLayerDefined }) {
+    const [location, setLocation] = useState("");
+    const [predictiveResults, setPredictiveResults] = useState([]);
+    const [currentLocation, setCurrentLocation] = useState({});
+    const [displayMessage, setDisplayMessage] = useState("");
+    const [loadingState, setLoadingState] = useState(false);
+    const [loadingTimeOut, setLoadingTimeOut] = useState(false);
+    const navigate = useNavigate();
+
+
 
     const searchLocation = (e) => {
         const { value } = e.target;
@@ -79,6 +83,23 @@ function Location({ apiKey, mapState, geocodingLayer, setGeocodingLayer, geocodi
         document.querySelector('.locationPredictiveResults ul').classList.remove('active');
     };
 
+    function setLocationMarker(latitude, longtitude)
+    {
+        console.log("setLocationMarker: ",`${latitude},${longtitude}`)
+        window.L.mapquest.geocoding().geocode(`${latitude},${longtitude}`, (error, response) => {
+            if (!geocodingLayerDefined) {
+              setGeocodingLayerDefined(true);
+              setGeocodingLayer(window.L.mapquest.geocodingLayer({
+                geocodingResponse: response
+              }).addTo(mapState));
+              console.log('Geocoding, adding new layer', response)
+            } else {
+              geocodingLayer.setGeocodingResponse(response);
+              console.log("Geocoding, reusing layer", response);
+            }
+          });
+    };
+
     const getGeoLocation = (location) => {
         // we need to set the country, lets strict to canada &  us only
         // String to store for the user's current location
@@ -119,27 +140,27 @@ function Location({ apiKey, mapState, geocodingLayer, setGeocodingLayer, geocodi
                         } else {
                             const currentLongitude = locationsArray[selectedLocationIndex].latLng.lng; //
 
-              const currentLatitutde =
-                locationsArray[selectedLocationIndex].latLng.lat;
-              setCurrentLocation({
-                longitude: currentLongitude,
-                latitude: currentLatitutde,
-              });
-
-              window.L.mapquest.geocoding().geocode(`${currentLatitutde},${currentLongitude}`, (error, response) => {
-                if (!geocodingLayerDefined) {
-                  setGeocodingLayerDefined(true);
-                  setGeocodingLayer(window.L.mapquest.geocodingLayer({
-                    geocodingResponse: response
-                  }).addTo(mapState).on('geocoding_marker_clicked', (e) => {
-                    console.log(e)
-                  }));
-                  console.log('Geocoding, adding new layer', response)
-                } else {
-                  geocodingLayer.setGeocodingResponse(response);
-                  console.log("Geocoding, reusing layer", response);
-                }
-              });
+                const currentLatitutde =
+                    locationsArray[selectedLocationIndex].latLng.lat;
+                setCurrentLocation({
+                    longitude: currentLongitude,
+                    latitude: currentLatitutde,
+                });
+              setLocationMarker(currentLatitutde,currentLongitude);
+            //   window.L.mapquest.geocoding().geocode(`${currentLatitutde},${currentLongitude}`, (error, response) => {
+            //     if (!geocodingLayerDefined) {
+            //       setGeocodingLayerDefined(true);
+            //       setGeocodingLayer(window.L.mapquest.geocodingLayer({
+            //         geocodingResponse: response
+            //       }).addTo(mapState).on('geocoding_marker_clicked', (e) => {
+            //         console.log("geocoding_marker_clicked",e)
+            //       }));
+            //       console.log('Geocoding, adding new layer', response)
+            //     } else {
+            //       geocodingLayer.setGeocodingResponse(response);
+            //       console.log("Geocoding, reusing layer", response);
+            //     }
+            //   });
 
               navigate(`/location/${currentLongitude}, ${currentLatitutde}`);
             }
@@ -175,6 +196,7 @@ function Location({ apiKey, mapState, geocodingLayer, setGeocodingLayer, geocodi
                 console.log('POOS COORDS: ', pos.coords.latitude);
                 navigate(`/location/${pos.coords.longitude}, ${pos.coords.latitude}`);
                 console.log(pos);
+                setLocationMarker(pos.coords.latitude,pos.coords.longitude);
             },
             () => {
                 console.log('error mesage');
