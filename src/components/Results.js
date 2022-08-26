@@ -42,12 +42,12 @@ export default function Results({
   // Controlled input for radius changing and form submit handler
   const [searchRadiusInput, setSearchRadiusInput] = useState(10000);
   const handleSearchRadiusInputChange = function (e) {
-    const removeNonDigits = e.target.value.replace(/\D/g, "");
-    setSearchRadiusInput(removeNonDigits);
+    const { value } = e.target;
+    setSearchRadiusInput(value);
   };
   const handleSubmitSearchRadiusChange = function (e) {
     e.preventDefault();
-    setSearchRadius(searchRadiusInput);
+    setSearchRadius(searchRadiusInput * 1000);
   };
 
   // Helper Function for calculating straight path distance, from https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
@@ -98,8 +98,6 @@ export default function Results({
 
   // Make axios call when this component is mounted, or when radius changes
   useEffect(() => {
-    console.log("Results.js useEffect()");
-
     const options = {
       sort: "relevance",
       feedback: false,
@@ -178,13 +176,27 @@ export default function Results({
             Another way we could handle it is to have the result's distance conditionally display in meters or kilometers, depending if the distance exceeds a certain amount (e.g. it'll show up as 500m, 999m, 1.00km, etc.).
             */}
           <form onSubmit={handleSubmitSearchRadiusChange}>
-            <label htmlFor="searchRadiusInput">Search Radius (meters): </label>
+            <label
+              className="sr-only"
+              htmlFor="searchRadiusInput"
+            >{`${searchRadiusInput}km`}</label>
             <input
-              type="number"
+              type="range"
               id="searchRadiusInput"
+              list="tickmarks"
+              min="0"
+              max="20"
+              step="5"
               value={searchRadiusInput}
               onChange={handleSearchRadiusInputChange}
             />
+            <datalist className="radiusLabel">
+              <option value="0" label="0 km"></option>
+              <option value="5" label="5 km"></option>
+              <option value="10" label="10 km"></option>
+              <option value="15" label="15 km"></option>
+              <option value="20" label="20 km"></option>
+            </datalist>
             <button>Update Search Radius</button>
           </form>
           <h2>Results</h2>

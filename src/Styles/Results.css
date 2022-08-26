@@ -4,6 +4,14 @@
   position: relative;
 }
 
+.resultsSection form {
+  text-align: center;
+}
+
+.resultsSection input {
+  width: 50%;
+}
+
 .resultsSection .wrapper {
   width: 100%;
 }
@@ -91,4 +99,15 @@ ol li:nth-child(even) {
 
 .directionIcon {
   font-size: clamp(1.2rem, 4vw, 1.5rem);
+}
+
+/* range input */
+.radiusLabel {
+  width: 50%;
+  font-size: clamp(0.6rem, 4vw, 0.8rem);
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
+  margin: 0 auto;
+  border: 2px red solid;
 }
