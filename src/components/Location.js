@@ -27,9 +27,16 @@ function Location({
     setLocation(value);
     setDisplayMessage("");
 
-    // since the predictive text requires more than 2 letters to run, only runs when there are more than 2 characters
-    if (value.length > 2) {
+    // as user is typing, we will read their value and call the predictive text
+    // api to predict their text
+    if (value.length > 1) {
       predictiveText(value);
+    } else {
+      setPredictiveResults([]);
+      document.querySelector(".userLocationDiv").classList.remove("active");
+      document
+        .querySelector(".locationPredictiveResults ul")
+        .classList.remove("active");
     }
   };
 
@@ -87,7 +94,7 @@ function Location({
       .classList.remove("active");
   };
 
-  // a function which enables users to find their current location
+  //
   function setLocationMarker(latitude, longtitude) {
     console.log("setLocationMarker: ", `${latitude},${longtitude}`);
     window.L.mapquest
@@ -249,6 +256,7 @@ function Location({
                       onChange={searchLocation}
                       value={location}
                       placeholder="Enter Your Location"
+                      required
                     />
                   </div>
                 </form>
