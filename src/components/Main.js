@@ -6,6 +6,7 @@ import WelcomePage from "./WelcomePage";
 import Results from "./Results";
 import SearchItems from "./SearchItems";
 import Directions from "./Directions"
+import MapComponent from "./MapComponent";
 const apiKey = "SbABP9Vr89Ox8a38s29QPLUQm51xa784";
 
 function Main() {
@@ -52,9 +53,9 @@ function Main() {
     // Mapquest/API Key
     window.L.mapquest.key = 'SbABP9Vr89Ox8a38s29QPLUQm51xa784';
     let map = window.L.mapquest.map('map', {
-      center: [40, -80],
+      center: [56.1304, -106.3468],
       layers: window.L.mapquest.tileLayer('map'),
-      zoom: 12
+      zoom: 4
     });
     //map.addControl(window.L.mapquest.control({position: 'topleft'}));
 
@@ -72,9 +73,12 @@ function Main() {
         <button onClick={() => { clearDirectionsLayer(mapState, directionsLayer) }}>Clear Directions Layer</button>
         <button onClick={() => { clearAllLayers(mapState, geocodingLayer, searchResultsLayer, directionsLayer)}}></button>
       </div>
+      
+      <MapComponent mapState={mapState} />
 
       <main id="mainContent">
         <Routes>
+
           <Route path="/" element={<WelcomePage />} />
           <Route path="/location" element={<Location
             apiKey={apiKey}
