@@ -109,6 +109,7 @@ export default function Results({
       q: userQuery,
     };
 
+    window.L.mapquest.key = apiKey;
     window.L.mapquest.search().place(options, (error, response) => {
       if (!searchResultsLayerDefined) {
         setSearchResultsLayerDefined(true);

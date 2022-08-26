@@ -27,11 +27,16 @@ function Location({
     setLocation(value);
     setDisplayMessage("");
 
-    // since the predictive text requires more than 2 letters to run, only runs when there are more than 2 characters
-    if (value.length > 2) {
-      predictiveText(value);
-    }
-  };
+        // as user is typing, we will read their value and call the predictive text
+        // api to predict their text
+        if (value.length > 1) {
+            predictiveText(value);
+        } else {
+            setPredictiveResults([]);
+            document.querySelector('.userLocationDiv').classList.remove('active');
+            document.querySelector('.locationPredictiveResults ul').classList.remove('active');
+        }
+    };
 
   // API call for predictive text
   const predictiveText = (location) => {
@@ -87,23 +92,23 @@ function Location({
       .classList.remove("active");
   };
 
-  // a function which enables users to find their current location 
-  function setLocationMarker(latitude, longtitude)
-  {
-      console.log("setLocationMarker: ",`${latitude},${longtitude}`)
-      window.L.mapquest.geocoding().geocode(`${latitude},${longtitude}`, (error, response) => {
-          if (!geocodingLayerDefined) {
-            setGeocodingLayerDefined(true);
-            setGeocodingLayer(window.L.mapquest.geocodingLayer({
-              geocodingResponse: response
-            }).addTo(mapState));
-            console.log('Geocoding, adding new layer', response)
-          } else {
-            geocodingLayer.setGeocodingResponse(response);
-            console.log("Geocoding, reusing layer", response);
-          }
-        });
-  };
+    // 
+    function setLocationMarker(latitude, longtitude)
+    {
+        console.log("setLocationMarker: ",`${latitude},${longtitude}`)
+        window.L.mapquest.geocoding().geocode(`${latitude},${longtitude}`, (error, response) => {
+                if (!geocodingLayerDefined) {
+                    setGeocodingLayerDefined(true);
+                    setGeocodingLayer(window.L.mapquest.geocodingLayer({
+                        geocodingResponse: response
+                    }).addTo(mapState));
+                    console.log('Geocoding, adding new layer', response)
+                } else {
+                    geocodingLayer.setGeocodingResponse(response);
+                    console.log("Geocoding, reusing layer", response);
+                }
+            });
+        };
 
   const getGeoLocation = (location) => {
     // we need to set the country, lets strict to canada &  us only
@@ -247,7 +252,7 @@ function Location({
                       onChange={searchLocation}
                       value={location}
                       placeholder="Enter Your Location"
-                    />
+                    required/>
                   </div>
                 </form>
                 <div className="locationPredictiveResults">
