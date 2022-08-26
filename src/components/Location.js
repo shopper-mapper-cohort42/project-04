@@ -87,23 +87,28 @@ function Location({
       .classList.remove("active");
   };
 
-  // a function which enables users to find their current location 
-  function setLocationMarker(latitude, longtitude)
-  {
-      console.log("setLocationMarker: ",`${latitude},${longtitude}`)
-      window.L.mapquest.geocoding().geocode(`${latitude},${longtitude}`, (error, response) => {
-          if (!geocodingLayerDefined) {
-            setGeocodingLayerDefined(true);
-            setGeocodingLayer(window.L.mapquest.geocodingLayer({
-              geocodingResponse: response
-            }).addTo(mapState));
-            console.log('Geocoding, adding new layer', response)
-          } else {
-            geocodingLayer.setGeocodingResponse(response);
-            console.log("Geocoding, reusing layer", response);
-          }
-        });
-  };
+  // a function which enables users to find their current location
+  function setLocationMarker(latitude, longtitude) {
+    console.log("setLocationMarker: ", `${latitude},${longtitude}`);
+    window.L.mapquest
+      .geocoding()
+      .geocode(`${latitude},${longtitude}`, (error, response) => {
+        if (!geocodingLayerDefined) {
+          setGeocodingLayerDefined(true);
+          setGeocodingLayer(
+            window.L.mapquest
+              .geocodingLayer({
+                geocodingResponse: response,
+              })
+              .addTo(mapState)
+          );
+          console.log("Geocoding, adding new layer", response);
+        } else {
+          geocodingLayer.setGeocodingResponse(response);
+          console.log("Geocoding, reusing layer", response);
+        }
+      });
+  }
 
   const getGeoLocation = (location) => {
     // we need to set the country, lets strict to canada &  us only
@@ -152,9 +157,7 @@ function Location({
                 latitude: currentLatitutde,
               });
 
-            
-
-            setLocationMarker(currentLatitutde,currentLongitude);
+              setLocationMarker(currentLatitutde, currentLongitude);
 
               navigate(`/location/${currentLongitude}, ${currentLatitutde}`);
             }
@@ -169,7 +172,6 @@ function Location({
         });
     } else {
       setLoadingState(false);
-      // create a popup request that user submits a location
       setDisplayMessage("Please enter your address.");
       togglePopup();
     }
@@ -193,7 +195,7 @@ function Location({
         console.log("POOS COORDS: ", pos.coords.latitude);
         navigate(`/location/${pos.coords.longitude}, ${pos.coords.latitude}`);
         console.log(pos);
-        setLocationMarker(pos.coords.latitude,pos.coords.longitude);
+        setLocationMarker(pos.coords.latitude, pos.coords.longitude);
       },
       () => {
         console.log("error mesage");

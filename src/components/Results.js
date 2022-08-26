@@ -91,7 +91,6 @@ export default function Results({
           squarePhotos.push(image);
         }
       });
-      console.log(squarePhotos);
       setStorePhotos(squarePhotos);
     });
   }, [searchRadius]);
@@ -117,7 +116,6 @@ export default function Results({
             })
             .addTo(mapState)
             .on("search_marker_clicked", (e) => {
-              console.log(e);
               handleSubmitDestination(e);
             })
         );
@@ -129,20 +127,29 @@ export default function Results({
       }
 
       const responseArray = response.results;
+      console.log(responseArray);
       setResultsArray(responseArray);
+      const indices = [];
 
       if (!responseArray.length) {
         // if there are no results, highlight nothing
-        setIndicesToHighlight([]);
+        // setIndicesToHighlight([]);
       } else if (responseArray.length % 2) {
         // if odd number of results, highlight the middle result
-        setIndicesToHighlight([Math.floor(responseArray.length / 2)]);
+        // setIndicesToHighlight([Math.floor(responseArray.length / 2)]);
+        indices.push(Math.floor(responseArray.length / 2));
+        console.log("EVEN INDCE", responseArray[indices]);
+        responseArray.unshift(indices);
+        console.log("RESPONSE INDICE", responseArray);
       } else {
         // if even number of results, highlight the middle two results
         setIndicesToHighlight([
           responseArray.length / 2,
           responseArray.length / 2 - 1,
         ]);
+        indices.push(responseArray.length / 2);
+        indices.push(responseArray.length / 2 - 1);
+        console.log("INDICES:", indices);
       }
     });
   }, [searchRadius]); // SUGGESTION: We can also make the list update live as the user changes the search radius, but it could be more laggy.
@@ -167,36 +174,17 @@ export default function Results({
           >
             BACK
           </Link>
-
-          {/* Form to handle changing the radius */}
-          {/* SUGGESTION: The API takes a search radius in meters, but the results currently render with distance given as kilometers. We should adjust it to be either METERS for both, or KILOMETERS for both for consistency.
-
-            Either divide the lonLatDistance() function result by 1000 to convert it to meters, or change the ${searchRadius} in the axios call to ${searchRadius * 1000} to convert km to m.
-
-            Another way we could handle it is to have the result's distance conditionally display in meters or kilometers, depending if the distance exceeds a certain amount (e.g. it'll show up as 500m, 999m, 1.00km, etc.).
-            */}
           <form onSubmit={handleSubmitSearchRadiusChange}>
-            <label
-              className="sr-only"
-              htmlFor="searchRadiusInput"
-            >{`${searchRadiusInput}km`}</label>
+            <p>Change Search Radius</p>
             <input
               type="range"
               id="searchRadiusInput"
-              list="tickmarks"
               min="0"
               max="20"
-              step="5"
               value={searchRadiusInput}
               onChange={handleSearchRadiusInputChange}
             />
-            <datalist className="radiusLabel">
-              <option value="0" label="0 km"></option>
-              <option value="5" label="5 km"></option>
-              <option value="10" label="10 km"></option>
-              <option value="15" label="15 km"></option>
-              <option value="20" label="20 km"></option>
-            </datalist>
+            <label htmlFor="searchRadiusInput">{`${searchRadiusInput}km`}</label>
             <button>Update Search Radius</button>
           </form>
           <h2>Results</h2>
@@ -230,7 +218,9 @@ export default function Results({
                     {
                       // NOTE: {indicesToHighlight.indexOf(resultIndex) >= 0} being TRUE is used for the highlighted rendering, if you want to put it elsewhere
                       indicesToHighlight.indexOf(resultIndex) >= 0 ? (
-                        <h2>THIS IS THE HIGHLIGHTED RENDERING</h2>
+                        <h3 className="mostAverageTitle">
+                          Top Most Average Shop
+                        </h3>
                       ) : null // null is the NON-HIGHLIGHTED RESULT
                     }
                     <h3>{result.name}</h3>
