@@ -5,6 +5,13 @@ main {
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
   height: 50vh;
+  transition: all 0.5s;
+  border: 2px red solid;
+}
+
+#mainContent.active {
+  border: 2px red solid;
+  transform: translateY(-45vh);
 }
 
 /* Loading animation */

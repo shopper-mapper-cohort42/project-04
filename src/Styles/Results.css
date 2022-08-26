@@ -1,10 +1,23 @@
 .resultsSection {
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .resultsSection .wrapper {
   width: 100%;
+}
+
+.expandResults {
+  content: "";
+  width: 50px;
+  height: 5px;
+  background-color: red;
+  position: absolute;
+  top: 10px;
+  left: 45%;
+  border-radius: 20px;
+  cursor: pointer;
 }
 
 .resultsDiv {
@@ -28,13 +41,41 @@
 }
 
 .resultsDiv li {
-  padding: 10px 20px;
+  padding: 10px 0;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
 }
-ol {
+
+.shopImageDiv {
+  display: flex;
+  justify-content: center;
+  width: 30%;
+}
+
+.shopImageContainer {
+  width: 100px;
+  height: 100px;
+
+  overflow: hidden;
+  border-radius: 50%;
+}
+.shopTextDiv {
+  width: 50%;
+}
+.shopImageDiv img {
+  width: 100%;
+}
+.resultsOrderList {
+  background-color: white;
   overflow: scroll;
-  max-height: 500px;
+  height: 300px;
+}
+.resultsOrderList.active {
+  height: 70vh;
 }
 ol p {
+  font-size: clamp(0.85rem, 4vw, 1.2rem);
   margin: 0;
 }
 
@@ -45,5 +86,9 @@ ol li:nth-child(even) {
   background-color: white;
 }
 .resultsDistance {
-  font-size: clamp(0.9rem, 4vw, 1rem);
+  font-size: clamp(0.7rem, 4vw, 1rem);
+}
+
+.directionIcon {
+  font-size: clamp(1.2rem, 4vw, 1.5rem);
 }
