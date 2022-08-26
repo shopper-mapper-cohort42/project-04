@@ -179,7 +179,7 @@ export default function Results({
           <form onSubmit={handleSubmitSearchRadiusChange}>
             <label htmlFor="searchRadiusInput">{searchRadiusInput}</label>
             <input
-              type="radio"
+              type="range"
               id="searchRadiusInput"
               name="searchRadiusRadio"
               min="0"
