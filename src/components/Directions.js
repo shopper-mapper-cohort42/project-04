@@ -104,12 +104,13 @@ export default function Directions({ apiKey, mapState, destination, directionsLa
     
 
     useEffect(() => {
+        window.L.mapquest.key = apiKey;
         window.L.mapquest.directions().route(routeOptions, (error, response) => {
             if (!directionsLayerDefined) {
                 setDirectionsLayerDefined(true);
                 setDirectionsLayer(window.L.mapquest.directionsLayer({
                     directionsResponse: response
-                }).addTo(mapState));
+                }).addTo(mapState))
                 console.log('Directions, adding new layer', response)
             } else {
                 directionsLayer.setDirectionsResponse(response);
@@ -122,27 +123,17 @@ export default function Directions({ apiKey, mapState, destination, directionsLa
         })
 
 
-
-        // Directions API: https://developer.mapquest.com/documentation/directions-api/route/get
-        // axios({
-        //     url: `http://www.mapquestapi.com/directions/v2/route`,
-        //     params: {
-        //         key: apiKey,
-        //         from: `${currentLocation.latitude},${currentLocation.longitude}`,
-        //         to: `${destinationLocation.latitude},${destinationLocation.longitude}`,
-        //         unit: 'k', // use kilometers
-        //         routeType: routeTypeInput,
-        //         // NOTE: Stretch goal for more user choices, to avoid highways, toll roads, ferries, etc. (see documentation for 'avoids' or 'disallows'), but not sure how to format the axios parameter for them
-        //     }
-        // }).then((response) => {
-
-        //     setRouteObject(response.data.route) 
-        //     setDirectionObjectsArray(response.data.route.legs[0].maneuvers);
-
-        // }).catch((error) => {
-        //     console.log(error.message)
-        // })
     }, [routeTypeInput]) //Update the directions when mounted and whenever the destination changes
+
+    useEffect(() => {
+        if (directionsLayerDefined) {
+            directionsLayer.on('directions_changed', function (response) {
+                console.log(response);
+                setRouteObject(response.route);
+                setDirectionObjectsArray(response.route.legs[0].maneuvers)
+            });
+        }
+    }, [directionsLayerDefined])
 
 
     return (

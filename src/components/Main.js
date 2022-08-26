@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Location from "./Location";
 import WelcomePage from "./WelcomePage";
@@ -8,7 +8,7 @@ import SearchItems from "./SearchItems";
 import Directions from "./Directions"
 const apiKey = "SbABP9Vr89Ox8a38s29QPLUQm51xa784";
 
-function Main({ mapState }) {
+function Main() {
   
   // Geocoding Layer States and Clear Function
   const [geocodingLayer, setGeocodingLayer] = useState({});
@@ -45,6 +45,22 @@ function Main({ mapState }) {
     clearSearchResultsLayer(mapStateParam, searchResultsLayerParam)
     clearDirectionsLayer(mapStateParam, directionsLayerParam)
   }
+
+    // Create and mount the map state
+  const [mapState, setMapState] = useState({});
+  useEffect(() => {
+    // Mapquest/API Key
+    window.L.mapquest.key = 'SbABP9Vr89Ox8a38s29QPLUQm51xa784';
+    let map = window.L.mapquest.map('map', {
+      center: [40, -80],
+      layers: window.L.mapquest.tileLayer('map'),
+      zoom: 12
+    });
+    //map.addControl(window.L.mapquest.control({position: 'topleft'}));
+
+    setMapState(map);
+
+  }, [])
 
 
   return (
