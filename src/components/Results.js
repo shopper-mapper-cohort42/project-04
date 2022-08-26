@@ -128,38 +128,24 @@ export default function Results({
       }
 
       const responseArray = response.results;
-      const averageArray = [];
-      const indices = [];
 
       if (!responseArray.length) {
         // if there are no results, highlight nothing
-        // setIndicesToHighlight([]);
+        setIndicesToHighlight([]);
       } else if (responseArray.length % 2) {
         // if odd number of results, highlight the middle result
-        indices.push(Math.floor(responseArray.length / 2));
-        averageArray.push(responseArray[indices[0]]);
-        responseArray.splice([indices[0]], 1);
-        averageArray.push(...responseArray);
-        // setIndicesToHighlight([Math.floor(responseArray.length / 2)]);
+
+        setIndicesToHighlight([Math.floor(responseArray.length / 2)]);
       } else {
         // if even number of results, highlight the middle two results
-        indices.push(responseArray.length / 2);
-        indices.push(responseArray.length / 2 - 1);
 
-        averageArray.push(responseArray[indices[0]]);
-        averageArray.push(responseArray[indices[1]]);
-        console.log(averageArray);
-
-        responseArray.splice([indices[0]], 2);
-        averageArray.push(...responseArray);
-        console.log("average", averageArray);
         setIndicesToHighlight([
           responseArray.length / 2,
           responseArray.length / 2 - 1,
         ]);
       }
 
-      setResultsArray(averageArray);
+      setResultsArray(responseArray);
     });
   }, [searchRadius]); // SUGGESTION: We can also make the list update live as the user changes the search radius, but it could be more laggy.
 
@@ -228,7 +214,7 @@ export default function Results({
                       // NOTE: {indicesToHighlight.indexOf(resultIndex) >= 0} being TRUE is used for the highlighted rendering, if you want to put it elsewhere
                       indicesToHighlight.indexOf(resultIndex) >= 0 ? (
                         <h3 className="mostAverageTitle">
-                          Top Most Average Shop
+                          ⭐Top Most Average Shop⭐
                         </h3>
                       ) : null // null is the NON-HIGHLIGHTED RESULT
                     }
