@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDirections } from "@fortawesome/free-solid-svg-icons";
 import { Link, useParams, useNavigate } from "react-router-dom";
 
 // Mount the Results.js component once we have the user's current location and their search query (e.g. coffee)
@@ -16,7 +14,6 @@ let userQuery = "construction";
 
 // NOTE: When we add in props, use the line below instead:
 // export default function Results ({apiKey, currentLocation, userQuery}) {
-
 export default function Results({
   apiKey,
   mapState,
@@ -35,7 +32,6 @@ export default function Results({
   currentLocation.longitude = coords.split(",")[0];
   currentLocation.latitude = coords.split(",")[1];
   userQuery = searchItem;
-  console.log(searchItem);
 
   // State variables that don't need to become prop/route params
   const [searchRadius, setSearchRadius] = useState(10000); // For getting the search radius
@@ -46,8 +42,7 @@ export default function Results({
   // Controlled input for radius changing and form submit handler
   const [searchRadiusInput, setSearchRadiusInput] = useState(10000);
   const handleSearchRadiusInputChange = function (e) {
-    const { value } = e.target;
-    const removeNonDigits = value * 1000;
+    const removeNonDigits = e.target.value.replace(/\D/g, "");
     setSearchRadiusInput(removeNonDigits);
   };
   const handleSubmitSearchRadiusChange = function (e) {
@@ -117,7 +112,6 @@ export default function Results({
     window.L.mapquest.search().place(options, (error, response) => {
       if (!searchResultsLayerDefined) {
         setSearchResultsLayerDefined(true);
-
         setSearchResultsLayer(
           window.L.mapquest
             .searchLayer({
@@ -176,22 +170,26 @@ export default function Results({
             BACK
           </Link>
 
+          {/* Form to handle changing the radius */}
+          {/* SUGGESTION: The API takes a search radius in meters, but the results currently render with distance given as kilometers. We should adjust it to be either METERS for both, or KILOMETERS for both for consistency.
+
+            Either divide the lonLatDistance() function result by 1000 to convert it to meters, or change the ${searchRadius} in the axios call to ${searchRadius * 1000} to convert km to m.
+
+            Another way we could handle it is to have the result's distance conditionally display in meters or kilometers, depending if the distance exceeds a certain amount (e.g. it'll show up as 500m, 999m, 1.00km, etc.).
+            */}
           <form onSubmit={handleSubmitSearchRadiusChange}>
-            <label htmlFor="searchRadiusInput">{searchRadiusInput}</label>
+            <label htmlFor="searchRadiusInput">Search Radius (meters): </label>
             <input
-              type="range"
+              type="number"
               id="searchRadiusInput"
-              name="searchRadiusRadio"
-              min="0"
-              step="5"
-              max="20"
+              value={searchRadiusInput}
               onChange={handleSearchRadiusInputChange}
             />
             <button>Update Search Radius</button>
           </form>
           <h2>Results</h2>
           {/* Ordered list to display the results by relevance */}
-          <ol className="resultsOrderList">
+          <ol>
             {resultsArray.map((result, resultIndex) => {
               const resultLocation = {
                 longitude: result.place.geometry.coordinates[0],
@@ -202,7 +200,12 @@ export default function Results({
               );
               return (
                 // HIGHLIGHTED RENDERING
-                <li key={result.id}>
+                <li
+                  key={result.id}
+                  onClick={() => {
+                    handleSubmitDestination(result);
+                  }}
+                >
                   <div className="shopImageDiv">
                     <div className="shopImageContainer">
                       <img
@@ -215,7 +218,7 @@ export default function Results({
                     {
                       // NOTE: {indicesToHighlight.indexOf(resultIndex) >= 0} being TRUE is used for the highlighted rendering, if you want to put it elsewhere
                       indicesToHighlight.indexOf(resultIndex) >= 0 ? (
-                        <h2>Most Average Shop</h2>
+                        <h2>THIS IS THE HIGHLIGHTED RENDERING</h2>
                       ) : null // null is the NON-HIGHLIGHTED RESULT
                     }
                     <h3>{result.name}</h3>
@@ -229,12 +232,6 @@ export default function Results({
                       ).toFixed(2)}{" "}
                       km away
                     </p>
-                  </div>
-                  <div className="shopDirectionDiv">
-                    <FontAwesomeIcon
-                      className="directionIcon"
-                      icon={faDirections}
-                    />
                   </div>
                 </li>
               );
