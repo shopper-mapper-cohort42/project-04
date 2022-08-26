@@ -128,8 +128,7 @@ export default function Results({
       }
 
       const responseArray = response.results;
-      console.log(responseArray);
-      setResultsArray(responseArray);
+      const averageArray = [];
       const indices = [];
 
       if (!responseArray.length) {
@@ -137,21 +136,30 @@ export default function Results({
         // setIndicesToHighlight([]);
       } else if (responseArray.length % 2) {
         // if odd number of results, highlight the middle result
-        // setIndicesToHighlight([Math.floor(responseArray.length / 2)]);
         indices.push(Math.floor(responseArray.length / 2));
-        console.log("EVEN INDCE", responseArray[indices]);
-        responseArray.unshift(indices);
-        console.log("RESPONSE INDICE", responseArray);
+        averageArray.push(responseArray[indices[0]]);
+        responseArray.splice([indices[0]], 1);
+        averageArray.push(...responseArray);
+        // setIndicesToHighlight([Math.floor(responseArray.length / 2)]);
       } else {
         // if even number of results, highlight the middle two results
+        indices.push(responseArray.length / 2);
+        indices.push(responseArray.length / 2 - 1);
+
+        averageArray.push(responseArray[indices[0]]);
+        averageArray.push(responseArray[indices[1]]);
+        console.log(averageArray);
+
+        responseArray.splice([indices[0]], 2);
+        averageArray.push(...responseArray);
+        console.log("average", averageArray);
         setIndicesToHighlight([
           responseArray.length / 2,
           responseArray.length / 2 - 1,
         ]);
-        indices.push(responseArray.length / 2);
-        indices.push(responseArray.length / 2 - 1);
-        console.log("INDICES:", indices);
       }
+
+      setResultsArray(averageArray);
     });
   }, [searchRadius]); // SUGGESTION: We can also make the list update live as the user changes the search radius, but it could be more laggy.
 
