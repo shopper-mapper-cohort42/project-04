@@ -177,31 +177,16 @@ export default function Results({
           </Link>
 
           <form onSubmit={handleSubmitSearchRadiusChange}>
-            <label htmlFor="searchRadiusInput">5km</label>
+            <label htmlFor="searchRadiusInput">{searchRadiusInput}</label>
             <input
               type="radio"
               id="searchRadiusInput"
               name="searchRadiusRadio"
-              value="5"
+              min="0"
+              step="5"
+              max="20"
               onChange={handleSearchRadiusInputChange}
             />
-            <label htmlFor="searchRadiusInput">10km</label>
-            <input
-              type="radio"
-              id="searchRadiusInput"
-              name="searchRadiusRadio"
-              value="10"
-              onChange={handleSearchRadiusInputChange}
-            />
-            <label htmlFor="searchRadiusInput">20km</label>
-            <input
-              type="radio"
-              id="searchRadiusInput"
-              name="searchRadiusRadio"
-              value="20"
-              onChange={handleSearchRadiusInputChange}
-            />
-
             <button>Update Search Radius</button>
           </form>
           <h2>Results</h2>
