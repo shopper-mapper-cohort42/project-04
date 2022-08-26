@@ -26,16 +26,18 @@ function Location({
     setLocation(value);
     setDisplayMessage("");
 
-        // as user is typing, we will read their value and call the predictive text
-        // api to predict their text
-        if (value.length > 1) {
-            predictiveText(value);
-        } else {
-            setPredictiveResults([]);
-            document.querySelector('.userLocationDiv').classList.remove('active');
-            document.querySelector('.locationPredictiveResults ul').classList.remove('active');
-        }
-    };
+    // as user is typing, we will read their value and call the predictive text
+    // api to predict their text
+    if (value.length > 1) {
+      predictiveText(value);
+    } else {
+      setPredictiveResults([]);
+      document.querySelector(".userLocationDiv").classList.remove("active");
+      document
+        .querySelector(".locationPredictiveResults ul")
+        .classList.remove("active");
+    }
+  };
 
   // API call for predictive text
   const predictiveText = (location) => {
@@ -91,23 +93,28 @@ function Location({
       .classList.remove("active");
   };
 
-    // 
-    function setLocationMarker(latitude, longtitude)
-    {
-        console.log("setLocationMarker: ",`${latitude},${longtitude}`)
-        window.L.mapquest.geocoding().geocode(`${latitude},${longtitude}`, (error, response) => {
-                if (!geocodingLayerDefined) {
-                    setGeocodingLayerDefined(true);
-                    setGeocodingLayer(window.L.mapquest.geocodingLayer({
-                        geocodingResponse: response
-                    }).addTo(mapState));
-                    console.log('Geocoding, adding new layer', response)
-                } else {
-                    geocodingLayer.setGeocodingResponse(response);
-                    console.log("Geocoding, reusing layer", response);
-                }
-            });
-        };
+  //
+  function setLocationMarker(latitude, longtitude) {
+    console.log("setLocationMarker: ", `${latitude},${longtitude}`);
+    window.L.mapquest
+      .geocoding()
+      .geocode(`${latitude},${longtitude}`, (error, response) => {
+        if (!geocodingLayerDefined) {
+          setGeocodingLayerDefined(true);
+          setGeocodingLayer(
+            window.L.mapquest
+              .geocodingLayer({
+                geocodingResponse: response,
+              })
+              .addTo(mapState)
+          );
+          console.log("Geocoding, adding new layer", response);
+        } else {
+          geocodingLayer.setGeocodingResponse(response);
+          console.log("Geocoding, reusing layer", response);
+        }
+      });
+  }
 
   const getGeoLocation = (location) => {
     // we need to set the country, lets strict to canada &  us only
@@ -152,9 +159,7 @@ function Location({
                 latitude: currentLatitutde,
               });
 
-            
-
-            setLocationMarker(currentLatitutde,currentLongitude);
+              setLocationMarker(currentLatitutde, currentLongitude);
 
               navigate(`/location/${currentLongitude}, ${currentLatitutde}`);
             }
@@ -169,7 +174,6 @@ function Location({
         });
     } else {
       setLoadingState(false);
-      // create a popup request that user submits a location
       setDisplayMessage("Please enter your address.");
       togglePopup();
     }
@@ -204,7 +208,7 @@ function Location({
         console.log("POOS COORDS: ", pos.coords.latitude);
         navigate(`/location/${pos.coords.longitude}, ${pos.coords.latitude}`);
         console.log(pos);
-        setLocationMarker(pos.coords.latitude,pos.coords.longitude);
+        setLocationMarker(pos.coords.latitude, pos.coords.longitude);
       },
       () => {
         console.log("error mesage");
@@ -259,7 +263,8 @@ function Location({
                       onChange={searchLocation}
                       value={location}
                       placeholder="Enter Your Location"
-                    required/>
+                      required
+                    />
                   </div>
                 </form>
                 <div className="locationPredictiveResults">

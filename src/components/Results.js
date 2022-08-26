@@ -42,12 +42,12 @@ export default function Results({
   // Controlled input for radius changing and form submit handler
   const [searchRadiusInput, setSearchRadiusInput] = useState(10000);
   const handleSearchRadiusInputChange = function (e) {
-    const removeNonDigits = e.target.value.replace(/\D/g, "");
-    setSearchRadiusInput(removeNonDigits);
+    const { value } = e.target;
+    setSearchRadiusInput(value);
   };
   const handleSubmitSearchRadiusChange = function (e) {
     e.preventDefault();
-    setSearchRadius(searchRadiusInput);
+    setSearchRadius(searchRadiusInput * 1000);
   };
 
   // Helper Function for calculating straight path distance, from https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
@@ -91,15 +91,12 @@ export default function Results({
           squarePhotos.push(image);
         }
       });
-      console.log(squarePhotos);
       setStorePhotos(squarePhotos);
     });
   }, [searchRadius]);
 
   // Make axios call when this component is mounted, or when radius changes
   useEffect(() => {
-    console.log("Results.js useEffect()");
-
     const options = {
       sort: "relevance",
       feedback: false,
@@ -120,7 +117,6 @@ export default function Results({
             })
             .addTo(mapState)
             .on("search_marker_clicked", (e) => {
-              console.log(e);
               handleSubmitDestination(e);
             })
         );
@@ -132,21 +128,24 @@ export default function Results({
       }
 
       const responseArray = response.results;
-      setResultsArray(responseArray);
 
       if (!responseArray.length) {
         // if there are no results, highlight nothing
         setIndicesToHighlight([]);
       } else if (responseArray.length % 2) {
         // if odd number of results, highlight the middle result
+
         setIndicesToHighlight([Math.floor(responseArray.length / 2)]);
       } else {
         // if even number of results, highlight the middle two results
+
         setIndicesToHighlight([
           responseArray.length / 2,
           responseArray.length / 2 - 1,
         ]);
       }
+
+      setResultsArray(responseArray);
     });
   }, [searchRadius]); // SUGGESTION: We can also make the list update live as the user changes the search radius, but it could be more laggy.
 
@@ -170,22 +169,17 @@ export default function Results({
           >
             BACK
           </Link>
-
-          {/* Form to handle changing the radius */}
-          {/* SUGGESTION: The API takes a search radius in meters, but the results currently render with distance given as kilometers. We should adjust it to be either METERS for both, or KILOMETERS for both for consistency.
-
-            Either divide the lonLatDistance() function result by 1000 to convert it to meters, or change the ${searchRadius} in the axios call to ${searchRadius * 1000} to convert km to m.
-
-            Another way we could handle it is to have the result's distance conditionally display in meters or kilometers, depending if the distance exceeds a certain amount (e.g. it'll show up as 500m, 999m, 1.00km, etc.).
-            */}
           <form onSubmit={handleSubmitSearchRadiusChange}>
-            <label htmlFor="searchRadiusInput">Search Radius (meters): </label>
+            <p>Change Search Radius</p>
             <input
-              type="number"
+              type="range"
               id="searchRadiusInput"
+              min="0"
+              max="20"
               value={searchRadiusInput}
               onChange={handleSearchRadiusInputChange}
             />
+            <label htmlFor="searchRadiusInput">{`${searchRadiusInput}km`}</label>
             <button>Update Search Radius</button>
           </form>
           <h2>Results</h2>
@@ -219,7 +213,9 @@ export default function Results({
                     {
                       // NOTE: {indicesToHighlight.indexOf(resultIndex) >= 0} being TRUE is used for the highlighted rendering, if you want to put it elsewhere
                       indicesToHighlight.indexOf(resultIndex) >= 0 ? (
-                        <h2>THIS IS THE HIGHLIGHTED RENDERING</h2>
+                        <h3 className="mostAverageTitle">
+                          ⭐Top Most Average Shop⭐
+                        </h3>
                       ) : null // null is the NON-HIGHLIGHTED RESULT
                     }
                     <h3>{result.name}</h3>
