@@ -102,6 +102,7 @@
   list-style: none;
   max-height: 300px;
   overflow: scroll;
+  overflow-x: hidden;
   z-index: 100;
   width: 100%;
   display: none;

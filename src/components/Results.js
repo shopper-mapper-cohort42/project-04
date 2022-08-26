@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useParams, useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faDirections } from "@fortawesome/free-solid-svg-icons";
 
 // Mount the Results.js component once we have the user's current location and their search query (e.g. coffee)
 
@@ -34,20 +36,20 @@ export default function Results({
   userQuery = searchItem;
 
   // State variables that don't need to become prop/route params
-  const [searchRadius, setSearchRadius] = useState(10000); // For getting the search radius
+  const [searchRadius, setSearchRadius] = useState(10); // For getting the search radius
   const [resultsArray, setResultsArray] = useState([]); // For displaying search results
   const [indicesToHighlight, setIndicesToHighlight] = useState([]); // For highlighting specific search results
   const [storePhotos, setStorePhotos] = useState([]);
 
   // Controlled input for radius changing and form submit handler
-  const [searchRadiusInput, setSearchRadiusInput] = useState(10000);
+  const [searchRadiusInput, setSearchRadiusInput] = useState(10);
   const handleSearchRadiusInputChange = function (e) {
     const { value } = e.target;
     setSearchRadiusInput(value);
   };
   const handleSubmitSearchRadiusChange = function (e) {
     e.preventDefault();
-    setSearchRadius(searchRadiusInput * 1000);
+    setSearchRadius(searchRadiusInput);
   };
 
   // Helper Function for calculating straight path distance, from https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
@@ -101,7 +103,7 @@ export default function Results({
       sort: "relevance",
       feedback: false,
       key: apiKey,
-      circle: `${currentLocation.longitude},${currentLocation.latitude},${searchRadius}`,
+      circle: `${currentLocation.longitude},${currentLocation.latitude},${searchRadius * 1000}`,
       pageSize: 50,
       q: userQuery,
     };
@@ -229,6 +231,12 @@ export default function Results({
                       ).toFixed(2)}{" "}
                       km away
                     </p>
+                  </div>
+                  <div className="shopDirectionDiv">
+                    <FontAwesomeIcon
+                      className="directionIcon"
+                      icon={faDirections}
+                    />
                   </div>
                 </li>
               );
