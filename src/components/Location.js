@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import mapImage from "../assets/home-location-map.png";
 import axios from "axios";
 import Loading from "./Loading";
@@ -19,6 +19,7 @@ function Location({
   const [currentLocation, setCurrentLocation] = useState({});
   const [displayMessage, setDisplayMessage] = useState("");
   const [loadingState, setLoadingState] = useState(false);
+  const [changeIcon, setChangeIcon] = useState(false);
   const navigate = useNavigate();
 
   const searchLocation = (e) => {
@@ -121,9 +122,6 @@ function Location({
     // String to store for the user's current location
 
     setLoadingState(true); // after clicking enter, loading animation starts
-   
-
-
 
     if (location !== "") {
       axios({
@@ -184,15 +182,11 @@ function Location({
     getGeoLocation(location);
   };
 
-  
-
-  
   const getLocation = () => {
-    console.log("getLocation2")
+    console.log("getLocation2");
     sessionStorage.removeItem("reloading");
     setLoadingState(true);
-    console.log("getLocation2: 1", loadingState)
-
+    console.log("getLocation2: 1", loadingState);
 
     navigator.geolocation.getCurrentPosition(
       // if location is enabled by user, otherwise
@@ -201,8 +195,8 @@ function Location({
         console.log("pos inside navigator", pos);
         console.log("hello");
         setTimeout(() => {
-            setLoadingState(false);
-          }, 500); // loading page time = 0.5s+ api response time  (<0.2s)
+          setLoadingState(false);
+        }, 500); // loading page time = 0.5s+ api response time  (<0.2s)
 
         setCurrentLocation(pos.coords);
         console.log("POOS COORDS: ", pos.coords.latitude);
@@ -226,6 +220,10 @@ function Location({
     locationPopup.classList.toggle("active");
   };
 
+  const swapFocus = () => setChangeIcon(true);
+
+  const swapBlur = () => setChangeIcon(false);
+
   //if API is called (loadingState=true), displaying loading page
   return (
     <>
@@ -246,6 +244,16 @@ function Location({
                 </div>
               </div>
               <div className="locationForm">
+                <div className="locationFormHeader">
+                  <Link to={"/"} className="returnToMain returnLinks">
+                    <FontAwesomeIcon icon={faAngleLeft} />
+                    &nbsp;Return to Main Page
+                  </Link>
+                  <button className="findLocation" onClick={getLocation}>
+                    Find My Location
+                  </button>
+                </div>
+
                 <form
                   autoComplete="off"
                   onSubmit={(e) => handleSubmit(e, location)}
@@ -255,15 +263,20 @@ function Location({
                   </label>
                   <div className="userLocationDiv">
                     <span>
-                      <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
+                      <FontAwesomeIcon
+                        icon={!changeIcon ? faSearch : faAngleLeft}
+                      ></FontAwesomeIcon>
                     </span>
                     <input
                       type="text"
                       id="name"
+                      className="userLocationInput"
                       onChange={searchLocation}
                       value={location}
                       placeholder="Enter Your Location"
                       required
+                      onBlur={swapBlur}
+                      onFocus={swapFocus}
                     />
                   </div>
                 </form>
@@ -278,17 +291,6 @@ function Location({
                     })}
                   </ul>
                 </div>
-
-                <p>OR</p>
-                <button
-                  className="findLocation blueButton"
-                  onClick={getLocation}
-                >
-                  Find My Location
-                </button>
-                <Link to={"/"} className="returnToMain returnLinks blueButton">
-                  Return to Main Page
-                </Link>
               </div>
             </div>
           </section>
