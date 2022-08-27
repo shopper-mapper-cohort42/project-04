@@ -10,31 +10,22 @@ import Loading from "./Loading";
 // NOTE: We can pass that information into this component either through router or props
 // For now, I've left that information as these placeholder variables
 let currentLocation = {
-  longitude: -79.3832,
-  latitude: 43.6532,
+    longitude: -79.3832,
+    latitude: 43.6532,
 };
-let userQuery = "construction";
+let userQuery = 'construction';
 
 // NOTE: When we add in props, use the line below instead:
 // export default function Results ({apiKey, currentLocation, userQuery}) {
-export default function Results({
-  apiKey,
-  mapState,
-  searchResultsLayer,
-  setSearchResultsLayer,
-  searchResultsLayerDefined,
-  setSearchResultsLayerDefined,
-  destination,
-  setDestination,
-}) {
-  //imported from params
-  const { coords, searchItem } = useParams();
-  const navigate = useNavigate();
+export default function Results({ apiKey, mapState, searchResultsLayer, setSearchResultsLayer, searchResultsLayerDefined, setSearchResultsLayerDefined, destination, setDestination }) {
+    //imported from params
+    const { coords, searchItem } = useParams();
+    const navigate = useNavigate();
 
-  //updating the currentLocation
-  currentLocation.longitude = coords.split(",")[0];
-  currentLocation.latitude = coords.split(",")[1];
-  userQuery = searchItem;
+    //updating the currentLocation
+    currentLocation.longitude = coords.split(',')[0];
+    currentLocation.latitude = coords.split(',')[1];
+    userQuery = searchItem;
 
   // loading state for api call
 
@@ -108,21 +99,20 @@ export default function Results({
       q: userQuery,
     };
 
-    window.L.mapquest.key = apiKey;
-    window.L.mapquest.search().place(options, (error, response) => {
-      if (!searchResultsLayerDefined) {
-        setSearchResultsLayerDefined(true);
-        setSearchResultsLayer(
-          window.L.mapquest
-            .searchLayer({
-              searchResponse: response,
-            })
-            .addTo(mapState)
-            .on("search_marker_clicked", (e) => {
-              
-              handleSubmitDestination(e);
-            })
-        );
+        window.L.mapquest.key = apiKey;
+        window.L.mapquest.search().place(options, (error, response) => {
+            if (!searchResultsLayerDefined) {
+                setSearchResultsLayerDefined(true);
+                setSearchResultsLayer(
+                    window.L.mapquest
+                        .searchLayer({
+                            searchResponse: response,
+                        })
+                        .addTo(mapState)
+                        .on('search_marker_clicked', (e) => {
+                            handleSubmitDestination(e);
+                        })
+                );
 
         console.log("Results, adding new layer", response);
       } else {
