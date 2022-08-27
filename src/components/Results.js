@@ -81,21 +81,13 @@ export default function Results({
       params: {
         client_id: unsplashApiKey,
         query: userQuery,
-        per_page: 50,
+        per_page: 30,
       },
     }).then((response) => {
       const photos = response.data.results;
-      const squarePhotos = [];
-      photos.map((image) => {
-        const ratio = image.width / image.height;
-
-        if (ratio > 0.75 && ratio < 1.2) {
-          squarePhotos.push(image);
-        }
-      });
-      setStorePhotos(squarePhotos);
+      setStorePhotos(photos);
     });
-  }, [searchRadius]);
+  }, []);
 
   // Make axios call when this component is mounted, or when radius changes
   useEffect(() => {
@@ -103,7 +95,9 @@ export default function Results({
       sort: "relevance",
       feedback: false,
       key: apiKey,
-      circle: `${currentLocation.longitude},${currentLocation.latitude},${searchRadius * 1000}`,
+      circle: `${currentLocation.longitude},${currentLocation.latitude},${
+        searchRadius * 1000
+      }`,
       pageSize: 50,
       q: userQuery,
     };
@@ -182,32 +176,24 @@ export default function Results({
               onChange={handleSearchRadiusInputChange}
             />
             <label htmlFor="searchRadiusInput">{`${searchRadiusInput}km`}</label>
-            <button>Update Search Radius</button>
+            <button>Update Search Results</button>
           </form>
           <h2>Results</h2>
           {/* Ordered list to display the results by relevance */}
-          <ol>
+          <ol className="resultsOrderList">
             {resultsArray.map((result, resultIndex) => {
               const resultLocation = {
                 longitude: result.place.geometry.coordinates[0],
                 latitude: result.place.geometry.coordinates[1],
               };
-              const randomImage = Math.floor(
-                Math.random() * storePhotos.length
-              );
               return (
                 // HIGHLIGHTED RENDERING
-                <li
-                  key={result.id}
-                  onClick={() => {
-                    handleSubmitDestination(result);
-                  }}
-                >
+                <li key={result.id}>
                   <div className="shopImageDiv">
                     <div className="shopImageContainer">
                       <img
-                        src={storePhotos[randomImage].urls.small}
-                        alt={storePhotos[randomImage].alt_description}
+                        src={storePhotos[0].urls.small}
+                        alt={storePhotos[0].alt_description}
                       />
                     </div>
                   </div>
@@ -233,9 +219,14 @@ export default function Results({
                     </p>
                   </div>
                   <div className="shopDirectionDiv">
+                    <span className="sr-only">Directions to {result.name}</span>
                     <FontAwesomeIcon
                       className="directionIcon"
+                      tabIndex="0"
                       icon={faDirections}
+                      onClick={() => {
+                        handleSubmitDestination(result);
+                      }}
                     />
                   </div>
                 </li>

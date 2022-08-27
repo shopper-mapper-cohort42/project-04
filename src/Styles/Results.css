@@ -1,7 +1,13 @@
 .resultsSection {
   display: flex;
   flex-direction: column;
-  position: relative;
+  height: 50%;
+  position: fixed;
+  bottom: 0;
+  z-index: 9999;
+  background-color: white;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
 }
 /* range input */
 .radiusLabel {
@@ -14,7 +20,7 @@
   border: 2px red solid;
 }
 /* range slider*/
-input[type="range"] {
+/* input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
   background-color: transparent;
@@ -27,24 +33,24 @@ input[type="range"]::-moz-range-track {
   background-color: red;
   height: 10px;
   border-radius: 10px;
-}
+} */
 /* range thumbs */
-input[type="range"]::-webkit-slider-thumb {
+/* input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
 }
 input[type="range"]::-moz-range-thumb {
   border: none;
   background-color: var(--input-grey);
-}
+} */
 /* range focus */
-input[type="range"]:focus {
+/* input[type="range"]:focus {
   outline: none;
 }
 
 input[type="range"]:focus::-webkit-slider-thumb,
 input[type="range"]:focus::-moz-range-thumb {
   border: 2px solid var(--blue);
-}
+} */
 
 .resultsSection form {
   display: flex;
@@ -79,6 +85,7 @@ input[type="range"]:focus::-moz-range-thumb {
 .resultsDiv {
   margin: 20px 0;
   font-family: var(--bodyFont);
+  text-align: center;
 }
 
 .resultsDiv h2 {
@@ -103,6 +110,9 @@ input[type="range"]:focus::-moz-range-thumb {
   align-items: center;
 }
 
+.resultsDiv label {
+  font-size: clamp(0.8rem, 4vw, 1rem);
+}
 .shopImageDiv {
   display: flex;
   justify-content: center;
@@ -110,11 +120,15 @@ input[type="range"]:focus::-moz-range-thumb {
 }
 
 .shopImageContainer {
-  width: 100px;
-  height: 100px;
-
   overflow: hidden;
-  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+}
+
+.shopImageContainer img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .mostAverageTitle {
@@ -131,7 +145,7 @@ input[type="range"]:focus::-moz-range-thumb {
 .resultsOrderList {
   background-color: white;
   overflow: scroll;
-  height: 300px;
+  height: 200px;
 }
 .resultsOrderList.active {
   height: 70vh;
@@ -153,4 +167,12 @@ ol li:nth-child(even) {
 
 .directionIcon {
   font-size: clamp(1.2rem, 4vw, 1.5rem);
+  color: var(--black);
+  cursor: pointer;
+  transition: 0.3s color;
+}
+
+.directionIcon:hover,
+.directionIcon:focus {
+  color: var(--blue);
 }
