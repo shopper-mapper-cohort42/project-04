@@ -159,7 +159,8 @@ function Location({
 
               setLocationMarker(currentLatitutde, currentLongitude);
 
-              navigate(`/location/${currentLongitude}, ${currentLatitutde}`);
+             // navigate(`/location/${currentLongitude}, ${currentLatitutde}`);
+              navigate(`/location/${currentLocation}`);
             }
           } else {
             alert("no result found");
