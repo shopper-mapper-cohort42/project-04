@@ -1,4 +1,7 @@
 .locationSection {
+  position: absolute;
+  z-index: 9999;
+  width: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -50,32 +53,38 @@
 }
 
 /* INPUT FORM*/
-.userLocationDiv {
+.userLocationDiv,
+.searchShopDiv {
   display: flex;
   align-items: center;
   border-radius: 15px;
-  background-color: var(--input-grey);
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
-.userLocationDiv span {
+.userLocationDiv span,
+.searchShopDiv span {
   margin: 0 auto;
   padding: 5px 10px;
 }
 
-.userLocationDiv form {
+.userLocationDiv form,
+.searchShopDiv form {
   display: flex;
   flex-direction: column;
   text-align: center;
 }
-.userLocationDiv label {
+.userLocationDiv label,
+.searchShopDiv label {
   font-family: var(--bodyFont);
   font-weight: bold;
   padding: var(--spacing);
 }
 
-.userLocationDiv input {
+.userLocationDiv input,
+.searchShopDiv input {
   width: 90%;
   margin: 0 auto;
-  background-color: var(--input-grey);
+  background-color: white;
   border: none;
   padding: var(--spacing);
   border-top-right-radius: 15px;
@@ -102,6 +111,7 @@
   list-style: none;
   max-height: 300px;
   overflow: scroll;
+  overflow-x: hidden;
   z-index: 100;
   width: 100%;
   display: none;
@@ -127,33 +137,38 @@
 .locationForm {
   display: flex;
   flex-direction: column;
-  text-align: center;
   height: 100%;
   margin: 20px 0;
+}
+
+.locationFormHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
 }
 
 .locationForm p {
   text-align: center;
 }
 
-.returnToMain {
-  background-color: transparent;
+.returnToMain,
+.findLocation {
+  background-color: white;
   border: none;
-  margin: 20px;
-}
-
-.returnToMain:hover {
-  background-color: transparent;
-}
-
-.returnToMain {
+  width: calc((100% / 2)-20px);
+  padding: 5px 10px;
+  border-radius: 20px;
+  transition: 0.3s color;
   text-decoration: none;
+  font-size: clamp(0.8rem, 4vw, 1.2rem);
   font-family: var(--bodyFont);
   color: black;
-  transition: 0.3s color;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
 
 .returnToMain:hover,
-.returnToMain:focus {
-  color: brown;
+.returnToMain:focus,
+.findLocation:hover,
+.findLocation:focus {
+  color: var(--blue);
 }

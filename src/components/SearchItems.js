@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import Results from "./Results";
@@ -23,12 +23,17 @@ const SearchItems = ({ apiKey }) => {
       <section className="searchItemSection">
         <div className="wrapper">
           <div className="searchItemDiv">
-            <h2>Where do you want to go?</h2>
+            <div className="backButtonDiv">
+              <Link to={`/location`} className="returnToMain returnLinks">
+                <FontAwesomeIcon icon={faAngleLeft} />
+                &nbsp;BACK
+              </Link>
+            </div>
             <form action="" onSubmit={(e) => handleSubmit(e, searchItem)}>
               <label htmlFor="name" className="sr-only">
                 Enter your search item
               </label>
-              <div className="userLocationDiv">
+              <div className="searchShopDiv">
                 <span>
                   <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
                 </span>
@@ -37,18 +42,10 @@ const SearchItems = ({ apiKey }) => {
                   id="name"
                   onChange={search}
                   value={searchItem}
-                  placeholder="Ex: Coffee, Museum, Pizza"
+                  placeholder="Where do you want to go?"
                 />
               </div>
             </form>
-            <div className="backButtonDiv">
-              <Link
-                to={`/location`}
-                className="backButton returnLinks blueButton"
-              >
-                BACK
-              </Link>
-            </div>
           </div>
         </div>
       </section>

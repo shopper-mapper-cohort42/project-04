@@ -1,7 +1,69 @@
 .resultsSection {
   display: flex;
   flex-direction: column;
-  position: relative;
+  height: 50%;
+  position: fixed;
+  bottom: 0;
+  z-index: 9999;
+  background-color: white;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+/* range input */
+.radiusLabel {
+  width: 50%;
+  font-size: clamp(0.6rem, 4vw, 0.8rem);
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
+  margin: 0 auto;
+  border: 2px red solid;
+}
+/* range slider*/
+/* input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: transparent;
+  cursor: pointer;
+  width: 15rem;
+}
+
+input[type="range"]::-webkit-slider-runnable-track,
+input[type="range"]::-moz-range-track {
+  background-color: red;
+  height: 10px;
+  border-radius: 10px;
+} */
+/* range thumbs */
+/* input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+}
+input[type="range"]::-moz-range-thumb {
+  border: none;
+  background-color: var(--input-grey);
+} */
+/* range focus */
+/* input[type="range"]:focus {
+  outline: none;
+}
+
+input[type="range"]:focus::-webkit-slider-thumb,
+input[type="range"]:focus::-moz-range-thumb {
+  border: 2px solid var(--blue);
+} */
+
+.resultsSection form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+.resultsSection label {
+  text-align: center;
+}
+.resultsSection input {
+  width: 50%;
+  margin: 0 auto;
 }
 
 .resultsSection .wrapper {
@@ -23,6 +85,7 @@
 .resultsDiv {
   margin: 20px 0;
   font-family: var(--bodyFont);
+  text-align: center;
 }
 
 .resultsDiv h2 {
@@ -47,6 +110,9 @@
   align-items: center;
 }
 
+.resultsDiv label {
+  font-size: clamp(0.8rem, 4vw, 1rem);
+}
 .shopImageDiv {
   display: flex;
   justify-content: center;
@@ -54,11 +120,21 @@
 }
 
 .shopImageContainer {
-  width: 100px;
-  height: 100px;
-
   overflow: hidden;
-  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+}
+
+.shopImageContainer img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mostAverageTitle {
+  font-size: clamp(0.9rem, 4vw, 1.2rem);
+  font-style: italic;
+  color: var(--orange);
 }
 .shopTextDiv {
   width: 50%;
@@ -69,7 +145,7 @@
 .resultsOrderList {
   background-color: white;
   overflow: scroll;
-  height: 300px;
+  height: 200px;
 }
 .resultsOrderList.active {
   height: 70vh;
@@ -91,4 +167,12 @@ ol li:nth-child(even) {
 
 .directionIcon {
   font-size: clamp(1.2rem, 4vw, 1.5rem);
+  color: var(--black);
+  cursor: pointer;
+  transition: 0.3s color;
+}
+
+.directionIcon:hover,
+.directionIcon:focus {
+  color: var(--blue);
 }

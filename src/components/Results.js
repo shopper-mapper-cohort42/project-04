@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useParams, useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faDirections } from "@fortawesome/free-solid-svg-icons";
 
 // Mount the Results.js component once we have the user's current location and their search query (e.g. coffee)
 
@@ -34,16 +36,16 @@ export default function Results({
   userQuery = searchItem;
 
   // State variables that don't need to become prop/route params
-  const [searchRadius, setSearchRadius] = useState(10000); // For getting the search radius
+  const [searchRadius, setSearchRadius] = useState(10); // For getting the search radius
   const [resultsArray, setResultsArray] = useState([]); // For displaying search results
   const [indicesToHighlight, setIndicesToHighlight] = useState([]); // For highlighting specific search results
   const [storePhotos, setStorePhotos] = useState([]);
 
   // Controlled input for radius changing and form submit handler
-  const [searchRadiusInput, setSearchRadiusInput] = useState(10000);
+  const [searchRadiusInput, setSearchRadiusInput] = useState(10);
   const handleSearchRadiusInputChange = function (e) {
-    const removeNonDigits = e.target.value.replace(/\D/g, "");
-    setSearchRadiusInput(removeNonDigits);
+    const { value } = e.target;
+    setSearchRadiusInput(value);
   };
   const handleSubmitSearchRadiusChange = function (e) {
     e.preventDefault();
@@ -79,32 +81,23 @@ export default function Results({
       params: {
         client_id: unsplashApiKey,
         query: userQuery,
-        per_page: 50,
+        per_page: 30,
       },
     }).then((response) => {
       const photos = response.data.results;
-      const squarePhotos = [];
-      photos.map((image) => {
-        const ratio = image.width / image.height;
-
-        if (ratio > 0.75 && ratio < 1.2) {
-          squarePhotos.push(image);
-        }
-      });
-      console.log(squarePhotos);
-      setStorePhotos(squarePhotos);
+      setStorePhotos(photos);
     });
-  }, [searchRadius]);
+  }, []);
 
   // Make axios call when this component is mounted, or when radius changes
   useEffect(() => {
-    console.log("Results.js useEffect()");
-
     const options = {
       sort: "relevance",
       feedback: false,
       key: apiKey,
-      circle: `${currentLocation.longitude},${currentLocation.latitude},${searchRadius}`,
+      circle: `${currentLocation.longitude},${currentLocation.latitude},${
+        searchRadius * 1000
+      }`,
       pageSize: 50,
       q: userQuery,
     };
@@ -120,7 +113,6 @@ export default function Results({
             })
             .addTo(mapState)
             .on("search_marker_clicked", (e) => {
-              console.log(e);
               handleSubmitDestination(e);
             })
         );
@@ -132,21 +124,24 @@ export default function Results({
       }
 
       const responseArray = response.results;
-      setResultsArray(responseArray);
 
       if (!responseArray.length) {
         // if there are no results, highlight nothing
         setIndicesToHighlight([]);
       } else if (responseArray.length % 2) {
         // if odd number of results, highlight the middle result
+
         setIndicesToHighlight([Math.floor(responseArray.length / 2)]);
       } else {
         // if even number of results, highlight the middle two results
+
         setIndicesToHighlight([
           responseArray.length / 2,
           responseArray.length / 2 - 1,
         ]);
       }
+
+      setResultsArray(responseArray);
     });
   }, [searchRadius]); // SUGGESTION: We can also make the list update live as the user changes the search radius, but it could be more laggy.
 
@@ -170,48 +165,35 @@ export default function Results({
           >
             BACK
           </Link>
-
-          {/* Form to handle changing the radius */}
-          {/* SUGGESTION: The API takes a search radius in meters, but the results currently render with distance given as kilometers. We should adjust it to be either METERS for both, or KILOMETERS for both for consistency.
-
-            Either divide the lonLatDistance() function result by 1000 to convert it to meters, or change the ${searchRadius} in the axios call to ${searchRadius * 1000} to convert km to m.
-
-            Another way we could handle it is to have the result's distance conditionally display in meters or kilometers, depending if the distance exceeds a certain amount (e.g. it'll show up as 500m, 999m, 1.00km, etc.).
-            */}
           <form onSubmit={handleSubmitSearchRadiusChange}>
-            <label htmlFor="searchRadiusInput">Search Radius (meters): </label>
+            <p>Change Search Radius</p>
             <input
-              type="number"
+              type="range"
               id="searchRadiusInput"
+              min="0"
+              max="20"
               value={searchRadiusInput}
               onChange={handleSearchRadiusInputChange}
             />
-            <button>Update Search Radius</button>
+            <label htmlFor="searchRadiusInput">{`${searchRadiusInput}km`}</label>
+            <button>Update Search Results</button>
           </form>
           <h2>Results</h2>
           {/* Ordered list to display the results by relevance */}
-          <ol>
+          <ol className="resultsOrderList">
             {resultsArray.map((result, resultIndex) => {
               const resultLocation = {
                 longitude: result.place.geometry.coordinates[0],
                 latitude: result.place.geometry.coordinates[1],
               };
-              const randomImage = Math.floor(
-                Math.random() * storePhotos.length
-              );
               return (
                 // HIGHLIGHTED RENDERING
-                <li
-                  key={result.id}
-                  onClick={() => {
-                    handleSubmitDestination(result);
-                  }}
-                >
+                <li key={result.id}>
                   <div className="shopImageDiv">
                     <div className="shopImageContainer">
                       <img
-                        src={storePhotos[randomImage].urls.small}
-                        alt={storePhotos[randomImage].alt_description}
+                        src={storePhotos[0].urls.small}
+                        alt={storePhotos[0].alt_description}
                       />
                     </div>
                   </div>
@@ -219,7 +201,9 @@ export default function Results({
                     {
                       // NOTE: {indicesToHighlight.indexOf(resultIndex) >= 0} being TRUE is used for the highlighted rendering, if you want to put it elsewhere
                       indicesToHighlight.indexOf(resultIndex) >= 0 ? (
-                        <h2>THIS IS THE HIGHLIGHTED RENDERING</h2>
+                        <h3 className="mostAverageTitle">
+                          ⭐Top Most Average Shop⭐
+                        </h3>
                       ) : null // null is the NON-HIGHLIGHTED RESULT
                     }
                     <h3>{result.name}</h3>
@@ -233,6 +217,17 @@ export default function Results({
                       ).toFixed(2)}{" "}
                       km away
                     </p>
+                  </div>
+                  <div className="shopDirectionDiv">
+                    <span className="sr-only">Directions to {result.name}</span>
+                    <FontAwesomeIcon
+                      className="directionIcon"
+                      tabIndex="0"
+                      icon={faDirections}
+                      onClick={() => {
+                        handleSubmitDestination(result);
+                      }}
+                    />
                   </div>
                 </li>
               );
