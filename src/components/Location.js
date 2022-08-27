@@ -47,89 +47,101 @@ function Location({ apiKey, mapState, geocodingLayer, setGeocodingLayer, geocodi
         setLocation(value);
         setDisplayMessage('');
 
-        // as user is typing, we will read their value and call the predictive text
-        // api to predict their text
-        if (value.length > 1) {
-            predictiveText(value);
-        } else {
-            setPredictiveResults([]);
-            document.querySelector('.userLocationDiv').classList.remove('active');
-            document.querySelector('.locationPredictiveResults ul').classList.remove('active');
-        }
-    };
-
-    // API call for predictive text
-    const predictiveText = (location) => {
-        axios({
-            url: `http://www.mapquestapi.com/search/v3/prediction`,
-            params: {
-                key: apiKey,
-                q: location,
-                collection: 'address',
-            },
-            dataType: 'JSON',
-            method: 'GET',
-        }).then((response) => {
-            setPredictiveResults('');
-
-            if (response.data.results) {
-                // store results in state, and take predictive results and map it
-                const locationResults = response.data.results;
-
-                //adds classlist of active for the predictive text results so it has appropriate display property
-                document.querySelector('.userLocationDiv').classList.add('active');
-                document.querySelector('.locationPredictiveResults ul').classList.add('active');
-
-                setPredictiveResults(locationResults);
-
-                if (!location) {
-                    document.addEventListener('click', function () {
-                        document.querySelector('.locationPredictiveResults ul').classList.remove('active');
-                        setPredictiveResults([]);
-                        document.querySelector('.userLocationDiv').classList.remove('active');
-                    });
-                }
-            } else {
-                /* not really working, need to rework logic */
-                console.log('asdasd');
-            }
-        });
-    };
-
-    // if user selects an address from the drop down, auto fills the input field for them
-    const autoFill = (e) => {
-        setLocation(e.target.textContent);
-        setPredictiveResults([]);
-        document.querySelector('.userLocationDiv').classList.remove('active');
-        document.querySelector('.locationPredictiveResults ul').classList.remove('active');
-    };
-
-    //
-    function setLocationMarker(latitude, longtitude) {
-        console.log('setLocationMarker: ', `${latitude},${longtitude}`);
-        window.L.mapquest.geocoding().geocode(`${latitude},${longtitude}`, (error, response) => {
-            if (!geocodingLayerDefined) {
-                setGeocodingLayerDefined(true);
-                setGeocodingLayer(
-                    window.L.mapquest
-                        .geocodingLayer({
-                            geocodingResponse: response,
-                        })
-                        .addTo(mapState)
-                );
-                console.log('Geocoding, adding new layer', response);
-            } else {
-                geocodingLayer.setGeocodingResponse(response);
-                console.log('Geocoding, reusing layer', response);
-            }
-        });
+    // as user is typing, we will read their value and call the predictive text
+    // api to predict their text
+    if (value.length > 1) {
+      predictiveText(value);
+    } else {
+      setPredictiveResults([]);
+      document.querySelector(".userLocationDiv").classList.remove("active");
+      document
+        .querySelector(".locationPredictiveResults ul")
+        .classList.remove("active");
     }
+  };
 
-    const getGeoLocation = (location) => {
-        // we need to set the country, lets strict to canada &  us only
-        // String to store for the user's current location
+  // API call for predictive text
+  const predictiveText = (location) => {
+    axios({
+      url: `http://www.mapquestapi.com/search/v3/prediction`,
+      params: {
+        key: apiKey,
+        q: location,
+        collection: "address",
+      },
+      dataType: "JSON",
+      method: "GET",
+    }).then((response) => {
+      setPredictiveResults("");
 
-        setLoadingState(true); // after clicking enter, loading animation starts
+      if (response.data.results) {
+        // store results in state, and take predictive results and map it
+        const locationResults = response.data.results;
+
+        //adds classlist of active for the predictive text results so it has appropriate display property
+        document.querySelector(".userLocationDiv").classList.add("active");
+        document
+          .querySelector(".locationPredictiveResults ul")
+          .classList.add("active");
+
+        setPredictiveResults(locationResults);
+
+        if (!location) {
+          document.addEventListener("click", function () {
+            document
+              .querySelector(".locationPredictiveResults ul")
+              .classList.remove("active");
+            setPredictiveResults([]);
+            document
+              .querySelector(".userLocationDiv")
+              .classList.remove("active");
+          });
+        }
+      } else {
+        /* not really working, need to rework logic */
+        console.log("asdasd");
+      }
+    });
+  };
+
+  // if user selects an address from the drop down, auto fills the input field for them
+  const autoFill = (e) => {
+    setLocation(e.target.textContent);
+    setPredictiveResults([]);
+    document.querySelector(".userLocationDiv").classList.remove("active");
+    document
+      .querySelector(".locationPredictiveResults ul")
+      .classList.remove("active");
+  };
+
+  //
+  function setLocationMarker(latitude, longtitude) {
+    console.log("setLocationMarker: ", `${latitude},${longtitude}`);
+    window.L.mapquest
+      .geocoding()
+      .geocode(`${latitude},${longtitude}`, (error, response) => {
+        if (!geocodingLayerDefined) {
+          setGeocodingLayerDefined(true);
+          setGeocodingLayer(
+            window.L.mapquest
+              .geocodingLayer({
+                geocodingResponse: response,
+              })
+              .addTo(mapState)
+          );
+          console.log("Geocoding, adding new layer", response);
+        } else {
+          geocodingLayer.setGeocodingResponse(response);
+          console.log("Geocoding, reusing layer", response);
+        }
+      });
+  }
+
+  const getGeoLocation = (location) => {
+    // we need to set the country, lets strict to canada &  us only
+    // String to store for the user's current location
+
+    setLoadingState(true); // after clicking enter, loading animation starts
 
         if (isValidCity(location)) {
             if (location !== '') {
@@ -147,26 +159,29 @@ function Location({ apiKey, mapState, geocodingLayer, setGeocodingLayer, geocodi
                                 setLoadingState(false);
                             }, 500); // loading page time = 0.5s+ api response time  (<0.2s)
 
-                            // An array of the possible locations best matching the query
-                            const locationsArray = response.data.results[0].locations;
+            // An array of the possible locations best matching the query
+            const locationsArray = response.data.results[0].locations;
 
-                            const selectedLocationIndex = 0; // THIS VARIABLE CAN STORE THE USER'S SELECTED LOCATION INDEX
+            const selectedLocationIndex = 0; // THIS VARIABLE CAN STORE THE USER'S SELECTED LOCATION INDEX
 
-                            if (response.data.results[0].length < 1) {
-                                console.log('invalid search');
-                                // implement the error handlikng for when user types random string of letters
-                            } else {
-                                const currentLongitude = locationsArray[selectedLocationIndex].latLng.lng; //
+            if (response.data.results[0].length < 1) {
+              console.log("invalid search");
+              // implement the error handlikng for when user types random string of letters
+            } else {
+              const currentLongitude =
+                locationsArray[selectedLocationIndex].latLng.lng; //
 
-                                const currentLatitutde = locationsArray[selectedLocationIndex].latLng.lat;
-                                setCurrentLocation({
-                                    longitude: currentLongitude,
-                                    latitude: currentLatitutde,
-                                });
+              const currentLatitutde =
+                locationsArray[selectedLocationIndex].latLng.lat;
+              setCurrentLocation({
+                longitude: currentLongitude,
+                latitude: currentLatitutde,
+              });
 
-                                setLocationMarker(currentLatitutde, currentLongitude);
+              setLocationMarker(currentLatitutde, currentLongitude);
 
-                                navigate(`/location/${currentLongitude}, ${currentLatitutde}`);
+                               // navigate(`/location/${currentLongitude}, ${currentLatitutde}`);
+              navigate(`/location/${currentLocation}`);
                             }
                         } else {
                             alert('no result found');
@@ -265,37 +280,53 @@ function Location({ apiKey, mapState, geocodingLayer, setGeocodingLayer, geocodi
                                     </button>
                                 </div>
 
-                                <form autoComplete="off" onSubmit={(e) => handleSubmit(e, location)}>
-                                    <label htmlFor="name" className="sr-only">
-                                        Enter your location
-                                    </label>
-                                    <div className="userLocationDiv">
-                                        <span>
-                                            <FontAwesomeIcon icon={!changeIcon ? faSearch : faAngleLeft}></FontAwesomeIcon>
-                                        </span>
-                                        <input type="text" id="name" className="userLocationInput" onChange={searchLocation} value={location} placeholder="Enter Your Location" required onBlur={swapBlur} onFocus={swapFocus} />
-                                    </div>
-                                </form>
-                                <div className="locationPredictiveResults">
-                                    <ul tabIndex="0">
-                                        {predictiveResults.map((result, index) => {
-                                            return (
-                                                <li key={index} onClick={autoFill} tabIndex="0">
-                                                    {result.displayString}
-                                                </li>
-                                            );
-                                        })}
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </>
-            ) : (
-                <Loading />
-            )}
+                <form
+                  autoComplete="off"
+                  onSubmit={(e) => handleSubmit(e, location)}
+                >
+                  <label htmlFor="name" className="sr-only">
+                    Enter your location
+                  </label>
+                  <div className="userLocationDiv">
+                    <span>
+                      <FontAwesomeIcon
+                        icon={!changeIcon ? faSearch : faAngleLeft}
+                      ></FontAwesomeIcon>
+                    </span>
+                    <input
+                      type="text"
+                      id="name"
+                      className="userLocationInput"
+                      onChange={searchLocation}
+                      value={location}
+                      placeholder="Enter Your Location"
+                      required
+                      onBlur={swapBlur}
+                      onFocus={swapFocus}
+                    />
+                  </div>
+                </form>
+                <div className="locationPredictiveResults">
+                  <ul tabIndex="0">
+                    {predictiveResults.map((result, index) => {
+                      return (
+                        <li key={index} onClick={autoFill} tabIndex="0">
+                          {result.displayString}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
         </>
-    );
+      ) : (
+        <div className="wrapper"><Loading/></div>
+        
+      )}
+    </>
+  );
 }
 
 export default Location;
