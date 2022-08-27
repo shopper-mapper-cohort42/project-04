@@ -7,7 +7,7 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 const SearchItems = ({ apiKey }) => {
   const navigate = useNavigate();
   const [searchItem, setSearchItem] = useState("");
-  const { coords} = useParams();
+  const {coords} = useParams();
   const handleSubmit = (e, searchItem) => {
     e.preventDefault();
     navigate(`/location/${coords}/${searchItem}`);

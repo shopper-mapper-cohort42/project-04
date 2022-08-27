@@ -297,7 +297,8 @@ function Location({
           </section>
         </>
       ) : (
-        <Loading />
+        <div className="wrapper"><Loading/></div>
+        
       )}
     </>
   );
