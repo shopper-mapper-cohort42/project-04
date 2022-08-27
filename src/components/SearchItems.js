@@ -2,13 +2,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import Results from "./Results";
+
 
 const SearchItems = ({ apiKey }) => {
   const navigate = useNavigate();
   const [searchItem, setSearchItem] = useState("");
-  const { coords } = useParams();
-
+  const {coords} = useParams();
   const handleSubmit = (e, searchItem) => {
     e.preventDefault();
     navigate(`/location/${coords}/${searchItem}`);
@@ -19,10 +18,10 @@ const SearchItems = ({ apiKey }) => {
   };
 
   return (
-    <>
-      <section className="searchItemSection">
-        <div className="wrapper">
-          <div className="searchItemDiv">
+    
+        <section className="searchItemSection">
+         <div className="wrapper">
+           <div className="searchItemDiv">
             <div className="backButtonDiv">
               <Link to={`/location`} className="returnToMain returnLinks">
                 <FontAwesomeIcon icon={faAngleLeft} />
@@ -49,7 +48,8 @@ const SearchItems = ({ apiKey }) => {
           </div>
         </div>
       </section>
-    </>
+      
+  
   );
 };
 export default SearchItems;

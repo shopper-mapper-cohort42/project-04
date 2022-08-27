@@ -18,7 +18,7 @@ function App() {
 
         <Main />
         {/* mapState={mapState}  */}
-        {/* <Footer /> */}
+        <Footer />
       </div>
     </>
   );
