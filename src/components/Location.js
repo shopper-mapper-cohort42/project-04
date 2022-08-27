@@ -5,6 +5,7 @@ import { faSearch, faAngleLeft } from '@fortawesome/free-solid-svg-icons';
 import mapImage from '../assets/home-location-map.png';
 import axios from 'axios';
 import Loading from './Loading';
+import { Country, State, City } from 'country-state-city'; //AL update
 
 function Location({ apiKey, mapState, geocodingLayer, setGeocodingLayer, geocodingLayerDefined, setGeocodingLayerDefined }) {
     const [location, setLocation] = useState('');
@@ -14,6 +15,32 @@ function Location({ apiKey, mapState, geocodingLayer, setGeocodingLayer, geocodi
     const [loadingState, setLoadingState] = useState(false);
     const [changeIcon, setChangeIcon] = useState(false);
     const navigate = useNavigate();
+
+    const isValidCity = function (input) {
+        //this is a boolean function that validates n.american cities only.
+        //npm i country-state-city
+        if (input) {
+            const splitStr = input.toLowerCase().split(' ');
+            for (let i = 0; i < splitStr.length; i++) {
+                splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+            }
+            const validString = splitStr.join(' ');
+
+            const canadianCities = City.getCitiesOfCountry('CA');
+            const americanCities = City.getCitiesOfCountry('US');
+            const cities = [...canadianCities, ...americanCities];
+
+            const filteredData = cities.filter((cityObj) => cityObj.name === validString);
+
+            if (!filteredData[0]) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return false;
+        }
+    };
 
     const searchLocation = (e) => {
         const { value } = e.target;
@@ -104,55 +131,62 @@ function Location({ apiKey, mapState, geocodingLayer, setGeocodingLayer, geocodi
 
         setLoadingState(true); // after clicking enter, loading animation starts
 
-        if (location !== '') {
-            axios({
-                url: `https://www.mapquestapi.com/geocoding/v1/address`,
-                params: {
-                    key: apiKey,
-                    location: location,
-                },
-            })
-                .then((response) => {
-                    // added catch thing ( setLoadingState= false, error message )
-                    if (response.data.results) {
-                        setTimeout(() => {
-                            setLoadingState(false);
-                        }, 500); // loading page time = 0.5s+ api response time  (<0.2s)
-
-                        // An array of the possible locations best matching the query
-                        const locationsArray = response.data.results[0].locations;
-
-                        const selectedLocationIndex = 0; // THIS VARIABLE CAN STORE THE USER'S SELECTED LOCATION INDEX
-
-                        if (response.data.results[0].length < 1) {
-                            console.log('invalid search');
-                            // implement the error handlikng for when user types random string of letters
-                        } else {
-                            const currentLongitude = locationsArray[selectedLocationIndex].latLng.lng; //
-
-                            const currentLatitutde = locationsArray[selectedLocationIndex].latLng.lat;
-                            setCurrentLocation({
-                                longitude: currentLongitude,
-                                latitude: currentLatitutde,
-                            });
-
-                            setLocationMarker(currentLatitutde, currentLongitude);
-
-                            navigate(`/location/${currentLongitude}, ${currentLatitutde}`);
-                        }
-                    } else {
-                        alert('no result found');
-                    }
+        if (isValidCity(location)) {
+            if (location !== '') {
+                axios({
+                    url: `https://www.mapquestapi.com/geocoding/v1/address`,
+                    params: {
+                        key: apiKey,
+                        location: location,
+                    },
                 })
-                .catch((err) => {
-                    console.log(err);
-                    setLoadingState(false);
-                    alert('Something is wrong...');
-                });
+                    .then((response) => {
+                        // added catch thing ( setLoadingState= false, error message )
+                        if (response.data.results) {
+                            setTimeout(() => {
+                                setLoadingState(false);
+                            }, 500); // loading page time = 0.5s+ api response time  (<0.2s)
+
+                            // An array of the possible locations best matching the query
+                            const locationsArray = response.data.results[0].locations;
+
+                            const selectedLocationIndex = 0; // THIS VARIABLE CAN STORE THE USER'S SELECTED LOCATION INDEX
+
+                            if (response.data.results[0].length < 1) {
+                                console.log('invalid search');
+                                // implement the error handlikng for when user types random string of letters
+                            } else {
+                                const currentLongitude = locationsArray[selectedLocationIndex].latLng.lng; //
+
+                                const currentLatitutde = locationsArray[selectedLocationIndex].latLng.lat;
+                                setCurrentLocation({
+                                    longitude: currentLongitude,
+                                    latitude: currentLatitutde,
+                                });
+
+                                setLocationMarker(currentLatitutde, currentLongitude);
+
+                                navigate(`/location/${currentLongitude}, ${currentLatitutde}`);
+                            }
+                        } else {
+                            alert('no result found');
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        setLoadingState(false);
+                        alert('Something is wrong...');
+                    });
+            } else {
+                setLoadingState(false);
+                setDisplayMessage('Please enter your address.');
+                togglePopup();
+            }
         } else {
+            alert(
+                'INVALID CITY NAME !! \n\nPlease enter ONLY North American Cities\n\nIf your desired city is in French, please input correct accent. \ne.g. Montréal, Québec etc \n\nIf your desired city has more than one word, then please give ONLY one space in between each words.\ne.g. New York City, '
+            );
             setLoadingState(false);
-            setDisplayMessage('Please enter your address.');
-            togglePopup();
         }
     };
 
