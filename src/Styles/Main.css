@@ -10,11 +10,6 @@ main {
   transition: all 0.5s;
 }
 
-#mainContent.active {
-  border: 2px red solid;
-  transform: translateY(-45vh);
-}
-
 /* Loading animation */
 .loadingP {
   text-align: center;
