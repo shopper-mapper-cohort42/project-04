@@ -7,8 +7,7 @@
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   transition: transform 0.3s;
-  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+
   width: 100%;
 }
 
@@ -137,6 +136,8 @@ input[type="range"]:focus::-moz-range-thumb {
   width: 100%;
   left: 0;
   z-index: 9999;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
 }
 .resultsDiv.active {
   /* transform: translateY(10vh); */
@@ -282,10 +283,11 @@ ol li {
   text-align: left;
 }
 .changeRadiusBtn {
-  width: 50%;
+  width: fit-content;
   border: 2px transparent solid;
   transition: 0.3s all;
   z-index: 9999;
+  font-size: 0.8rem;
 }
 
 .changeRadiusBtn:hover,
