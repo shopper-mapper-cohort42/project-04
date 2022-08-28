@@ -10,22 +10,31 @@ import Loading from "./Loading";
 // NOTE: We can pass that information into this component either through router or props
 // For now, I've left that information as these placeholder variables
 let currentLocation = {
-    longitude: -79.3832,
-    latitude: 43.6532,
+  longitude: -79.3832,
+  latitude: 43.6532,
 };
-let userQuery = 'construction';
+let userQuery = "construction";
 
 // NOTE: When we add in props, use the line below instead:
 // export default function Results ({apiKey, currentLocation, userQuery}) {
-export default function Results({ apiKey, mapState, searchResultsLayer, setSearchResultsLayer, searchResultsLayerDefined, setSearchResultsLayerDefined, destination, setDestination }) {
-    //imported from params
-    const { coords, searchItem } = useParams();
-    const navigate = useNavigate();
+export default function Results({
+  apiKey,
+  mapState,
+  searchResultsLayer,
+  setSearchResultsLayer,
+  searchResultsLayerDefined,
+  setSearchResultsLayerDefined,
+  destination,
+  setDestination,
+}) {
+  //imported from params
+  const { coords, searchItem } = useParams();
+  const navigate = useNavigate();
 
-    //updating the currentLocation
-    currentLocation.longitude = coords.split(',')[0];
-    currentLocation.latitude = coords.split(',')[1];
-    userQuery = searchItem;
+  //updating the currentLocation
+  currentLocation.longitude = coords.split(",")[0];
+  currentLocation.latitude = coords.split(",")[1];
+  userQuery = searchItem;
 
   // loading state for api call
 
@@ -61,10 +70,10 @@ export default function Results({ apiKey, mapState, searchResultsLayer, setSearc
   };
 
   function openResults() {
-    const mainContainerOpen = document.querySelector("#mainContent");
+    const resultsDiv = document.querySelector(".resultsSection");
     const olList = document.querySelector(".resultsOrderList");
 
-    mainContainerOpen.classList.toggle("active");
+    resultsDiv.classList.toggle("active");
     olList.classList.toggle("active");
   }
 
@@ -83,7 +92,14 @@ export default function Results({ apiKey, mapState, searchResultsLayer, setSearc
       const photos = response.data.results;
       setStorePhotos(photos);
     });
-  }, []);
+  }, [searchRadius]);
+
+  useEffect(() => {
+    const sliderProgress = document.querySelector("input[type='range']");
+    sliderProgress.style.background = `linear-gradient(90deg, var(--blue) ${
+      searchRadiusInput * 5
+    }%, rgb(192, 192, 192) ${searchRadiusInput * 5}%)`;
+  }, [searchRadiusInput]);
 
   // Make axios call when this component is mounted, or when radius changes
   useEffect(() => {
@@ -99,20 +115,20 @@ export default function Results({ apiKey, mapState, searchResultsLayer, setSearc
       q: userQuery,
     };
 
-        window.L.mapquest.key = apiKey;
-        window.L.mapquest.search().place(options, (error, response) => {
-            if (!searchResultsLayerDefined) {
-                setSearchResultsLayerDefined(true);
-                setSearchResultsLayer(
-                    window.L.mapquest
-                        .searchLayer({
-                            searchResponse: response,
-                        })
-                        .addTo(mapState)
-                        .on('search_marker_clicked', (e) => {
-                            handleSubmitDestination(e);
-                        })
-                );
+    window.L.mapquest.key = apiKey;
+    window.L.mapquest.search().place(options, (error, response) => {
+      if (!searchResultsLayerDefined) {
+        setSearchResultsLayerDefined(true);
+        setSearchResultsLayer(
+          window.L.mapquest
+            .searchLayer({
+              searchResponse: response,
+            })
+            .addTo(mapState)
+            .on("search_marker_clicked", (e) => {
+              handleSubmitDestination(e);
+            })
+        );
 
         console.log("Results, adding new layer", response);
       } else {
@@ -123,28 +139,22 @@ export default function Results({ apiKey, mapState, searchResultsLayer, setSearc
       const responseArray = response.results;
 
       if (!responseArray.length) {
-
-        //set loading state here 
-
         setLoadingState(false);
 
         // if there are no results, highlight nothing
         setIndicesToHighlight([]);
       } else if (responseArray.length % 2) {
+        // if odd number of results, highlight the middle result
 
-         // set loading state here 
-         setTimeout(() => {
+        // set loading state here
+        setTimeout(() => {
           setLoadingState(false);
         }, 500);
 
-        // if odd number of results, highlight the middle result
-
         setIndicesToHighlight([Math.floor(responseArray.length / 2)]);
-       
       } else {
-
-         // set loading state here 
-         setTimeout(() => {
+        // set loading state here
+        setTimeout(() => {
           setLoadingState(false);
         }, 500);
         // if even number of results, highlight the middle two results
@@ -152,8 +162,6 @@ export default function Results({ apiKey, mapState, searchResultsLayer, setSearc
           responseArray.length / 2,
           responseArray.length / 2 - 1,
         ]);
-
-
       }
 
       setResultsArray(responseArray);
@@ -162,107 +170,137 @@ export default function Results({ apiKey, mapState, searchResultsLayer, setSearc
 
   // Brings you to directions component on Result Click or Map Result Click
   const handleSubmitDestination = (destinationParam) => {
-    console.log(destinationParam);
     setDestination(destinationParam);
     navigate(
       `/location/${coords}/${searchItem}/${destinationParam.displayString}`
     );
   };
 
-return (
-  <>
-    {
-      loadingState===false?(
+  // opens search radius menu
+  const openRadiusMenu = () => {
+    const searchRadiusDiv = document.querySelector(".changeSearchRadiusDiv");
+    searchRadiusDiv.classList.toggle("active");
+  };
+
+  return (
+    <>
+      {loadingState === false ? (
         <section className="resultsSection">
           <div className="wrapper">
-          <span className="expandResults" onClick={openResults}></span>
-          <div className="resultsDiv">
-            <Link
-            to={`/location/${currentLocation.longitude},${currentLocation.latitude}`}
-            className="backButton returnLinks"
+            <span className="expandResults" onClick={openResults}></span>
+            <button
+              className="returnToMain changeRadiusBtn"
+              onClick={openRadiusMenu}
             >
-            BACK
-            </Link>
-          <form onSubmit={handleSubmitSearchRadiusChange}>
-            <p>Change Search Radius</p>
-            <input
-            type="range"
-            id="searchRadiusInput"
-            min="0"
-            max="20"
-            value={searchRadiusInput}
-            onChange={handleSearchRadiusInputChange}
-            />
-            <label htmlFor="searchRadiusInput">{`${searchRadiusInput}km`}</label>
-            <button>Update Search Results</button>
-          </form>
-          <h2>Results</h2>
-        {/* Ordered list to display the results by relevance */}
-        <ol className="resultsOrderList">
-          {resultsArray.map((result, resultIndex) => {
-            const resultLocation = {
-              longitude: result.place.geometry.coordinates[0],
-              latitude: result.place.geometry.coordinates[1],
-            };
-            return (
-              // HIGHLIGHTED RENDERING
-              <li key={result.id}>
-                <div className="shopImageDiv">
-                  <div className="shopImageContainer">
-                    <img
-                      src={storePhotos[0].urls.small}
-                      alt={storePhotos[0].alt_description}
+              Change Search Radius
+            </button>
+            <div className="resultsDiv">
+              <Link
+                to={`/location/${currentLocation.longitude},${currentLocation.latitude}`}
+                className="backButton returnLinks"
+              >
+                BACK
+              </Link>
+              <div className="changeSearchRadiusDiv">
+                <form onSubmit={handleSubmitSearchRadiusChange}>
+                  <div className="rangeSlider">
+                    <input
+                      type="range"
+                      id="searchRadiusInput"
+                      className="searchRadiusInput"
+                      min="0"
+                      max="20"
+                      value={searchRadiusInput}
+                      onChange={handleSearchRadiusInputChange}
                     />
+                    <label
+                      className="radiusLabel"
+                      htmlFor="searchRadiusInput"
+                    >{`${searchRadiusInput} km`}</label>
                   </div>
-                </div>
-                <div className="shopTextDiv">
-                  {
-                    // NOTE: {indicesToHighlight.indexOf(resultIndex) >= 0} being TRUE is used for the highlighted rendering, if you want to put it elsewhere
-                    indicesToHighlight.indexOf(resultIndex) >= 0 ? (
-                      <h3 className="mostAverageTitle">
-                        ⭐Top Most Average Shop⭐
-                      </h3>
-                    ) : null // null is the NON-HIGHLIGHTED RESULT
-                  }
-                  <h3>{result.name}</h3>
-                  <p>{result.displayString}</p>
-                  <p className="resultsDistance">
-                    {lonLatDistance(
-                      currentLocation.longitude,
-                      currentLocation.latitude,
-                      resultLocation.longitude,
-                      resultLocation.latitude
-                    ).toFixed(2)}{" "}
-                    km away
-                  </p>
-                </div>
-                <div className="shopDirectionDiv">
-                  <span className="sr-only">Directions to {result.name}</span>
-                  <FontAwesomeIcon
-                    className="directionIcon"
-                    tabIndex="0"
-                    icon={faDirections}
-                    onClick={() => {
-                      handleSubmitDestination(result);
-                    }}
-                  />
-                </div>
-              </li>
-            );
-          })}
-        </ol>
-      </div>
-    </div>
-  </section>
-      ):(
-        <div className="wrapper"><Loading/></div>
-      )
-    }
-  </>
-); // End of return
+                  <button className="updateResults">
+                    Update Search Results
+                  </button>
+                </form>
+              </div>
 
+              <h2>Results</h2>
+              {/* Ordered list to display the results by relevance */}
+              <ol className="resultsOrderList">
+                {resultsArray.map((result, resultIndex) => {
+                  const resultLocation = {
+                    longitude: result.place.geometry.coordinates[0],
+                    latitude: result.place.geometry.coordinates[1],
+                  };
 
+                  const randomImage = Math.floor(
+                    Math.random() * storePhotos.length
+                  );
+                  return (
+                    // HIGHLIGHTED RENDERING
 
-
-
-} // End of Results()
+                    <li
+                      key={result.id}
+                      className={
+                        indicesToHighlight.indexOf(resultIndex) >= 0
+                          ? "mostAverage"
+                          : null
+                      }
+                    >
+                      <div className="shopImageDiv">
+                        <div className="shopImageContainer">
+                          <img
+                            src={storePhotos[randomImage].urls.small}
+                            alt={storePhotos[randomImage].alt_description}
+                          />
+                        </div>
+                      </div>
+                      <div className="shopTextDiv">
+                        {
+                          // NOTE: {indicesToHighlight.indexOf(resultIndex) >= 0} being TRUE is used for the highlighted rendering, if you want to put it elsewhere
+                          indicesToHighlight.indexOf(resultIndex) >= 0 ? (
+                            <h3 className="mostAverageTitle">
+                              ⭐Most Average Shop⭐
+                            </h3>
+                          ) : null // null is the NON-HIGHLIGHTED RESULT
+                        }
+                        <h3>{result.name}</h3>
+                        <p>{result.displayString.split(`${result.name},`)}</p>
+                        <p className="resultsDistance">
+                          {lonLatDistance(
+                            currentLocation.longitude,
+                            currentLocation.latitude,
+                            resultLocation.longitude,
+                            resultLocation.latitude
+                          ).toFixed(2)}{" "}
+                          km away
+                        </p>
+                      </div>
+                      <div className="shopDirectionDiv">
+                        <span className="sr-only">
+                          Directions to {result.name}
+                        </span>
+                        <FontAwesomeIcon
+                          className="directionIcon"
+                          tabIndex="0"
+                          icon={faDirections}
+                          onClick={() => {
+                            handleSubmitDestination(result);
+                          }}
+                        />
+                      </div>
+                    </li>
+                  );
+                })}
+              </ol>
+            </div>
+          </div>
+        </section>
+      ) : (
+        <div className="wrapper">
+          <Loading />
+        </div>
+      )}
+    </>
+  );
+}
