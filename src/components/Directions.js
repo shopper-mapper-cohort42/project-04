@@ -30,7 +30,7 @@ const selectedResult = {
     }
 }
 // Placeholder for apiKey, should be a prop
-const apiKey = "SbABP9Vr89Ox8a38s29QPLUQm51xa784";
+const apiKey = "Ly2CHsAhxGvzncY98vcRBQDokGoO0EMZ";
 // Placeholder values for current location and destination, should comes from route params
 const currentLocation = {
     longitude: -78.9441,

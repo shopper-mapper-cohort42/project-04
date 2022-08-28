@@ -180,8 +180,7 @@ function Location({ apiKey, mapState, geocodingLayer, setGeocodingLayer, geocodi
 
               setLocationMarker(currentLatitutde, currentLongitude);
 
-                               // navigate(`/location/${currentLongitude}, ${currentLatitutde}`);
-              navigate(`/location/${currentLocation}`);
+              navigate(`/location/${currentLongitude}, ${currentLatitutde}`);
                             }
                         } else {
                             alert('no result found');
