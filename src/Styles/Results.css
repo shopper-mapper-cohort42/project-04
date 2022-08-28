@@ -42,7 +42,7 @@
 input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
-  background: transparent;
+  background: linear-gradient(90deg, var(--blue) 50%, rgb(192, 192, 192) 50%);
   cursor: pointer;
   width: 15rem;
   height: 10px;
@@ -199,7 +199,7 @@ input[type="range"]:focus::-moz-range-thumb {
 .resultsOrderList {
   background-color: white;
   overflow: scroll;
-  height: 200px;
+  height: 300px;
   text-align: left;
   margin: 0;
   border-top: 1px var(--black) solid;

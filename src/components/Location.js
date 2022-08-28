@@ -190,8 +190,11 @@ function Location({
 
                 setLocationMarker(currentLatitutde, currentLongitude);
 
-                // navigate(`/location/${currentLongitude}, ${currentLatitutde}`);
-                navigate(`/location/${currentLocation}`);
+                console.log(currentLatitutde);
+                console.log(currentLongitude);
+
+                navigate(`/location/${currentLongitude}, ${currentLatitutde}`);
+                // navigate(`/location/${currentLocation}`);
               }
             } else {
               alert("no result found");

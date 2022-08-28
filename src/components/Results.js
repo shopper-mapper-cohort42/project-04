@@ -99,7 +99,7 @@ export default function Results({
     sliderProgress.style.background = `linear-gradient(90deg, var(--blue) ${
       searchRadiusInput * 5
     }%, rgb(192, 192, 192) ${searchRadiusInput * 5}%)`;
-  });
+  }, [searchRadiusInput]);
 
   // Make axios call when this component is mounted, or when radius changes
   useEffect(() => {
@@ -201,7 +201,6 @@ export default function Results({
               >
                 BACK
               </Link>
-
               <div className="changeSearchRadiusDiv">
                 <form onSubmit={handleSubmitSearchRadiusChange}>
                   <div className="rangeSlider">
@@ -304,4 +303,4 @@ export default function Results({
       )}
     </>
   );
-} // End of return
+}
