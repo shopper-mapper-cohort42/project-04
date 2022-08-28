@@ -1,51 +1,61 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faAngleLeft } from '@fortawesome/free-solid-svg-icons';
-import mapImage from '../assets/home-location-map.png';
-import axios from 'axios';
-import Loading from './Loading';
-import { Country, State, City } from 'country-state-city'; //AL update
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch, faAngleLeft } from "@fortawesome/free-solid-svg-icons";
+import mapImage from "../assets/home-location-map.png";
+import axios from "axios";
+import Loading from "./Loading";
+import { Country, State, City } from "country-state-city"; //AL update
 
-function Location({ apiKey, mapState, geocodingLayer, setGeocodingLayer, geocodingLayerDefined, setGeocodingLayerDefined }) {
-    const [location, setLocation] = useState('');
-    const [predictiveResults, setPredictiveResults] = useState([]);
-    const [currentLocation, setCurrentLocation] = useState({});
-    const [displayMessage, setDisplayMessage] = useState('');
-    const [loadingState, setLoadingState] = useState(false);
-    const [changeIcon, setChangeIcon] = useState(false);
-    const navigate = useNavigate();
+function Location({
+  apiKey,
+  mapState,
+  geocodingLayer,
+  setGeocodingLayer,
+  geocodingLayerDefined,
+  setGeocodingLayerDefined,
+}) {
+  const [location, setLocation] = useState("");
+  const [predictiveResults, setPredictiveResults] = useState([]);
+  const [currentLocation, setCurrentLocation] = useState({});
+  const [displayMessage, setDisplayMessage] = useState("");
+  const [loadingState, setLoadingState] = useState(false);
+  const [changeIcon, setChangeIcon] = useState(false);
+  const navigate = useNavigate();
 
-    const isValidCity = function (input) {
-        //this is a boolean function that validates n.american cities only.
-        //npm i country-state-city
-        if (input) {
-            const splitStr = input.toLowerCase().split(' ');
-            for (let i = 0; i < splitStr.length; i++) {
-                splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
-            }
-            const validString = splitStr.join(' ');
+  const isValidCity = function (input) {
+    //this is a boolean function that validates n.american cities only.
+    //npm i country-state-city
+    if (input) {
+      const splitStr = input.toLowerCase().split(" ");
+      for (let i = 0; i < splitStr.length; i++) {
+        splitStr[i] =
+          splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+      }
+      const validString = splitStr.join(" ");
 
-            const canadianCities = City.getCitiesOfCountry('CA');
-            const americanCities = City.getCitiesOfCountry('US');
-            const cities = [...canadianCities, ...americanCities];
+      const canadianCities = City.getCitiesOfCountry("CA");
+      const americanCities = City.getCitiesOfCountry("US");
+      const cities = [...canadianCities, ...americanCities];
 
-            const filteredData = cities.filter((cityObj) => cityObj.name === validString);
+      const filteredData = cities.filter(
+        (cityObj) => cityObj.name === validString
+      );
 
-            if (!filteredData[0]) {
-                return false;
-            } else {
-                return true;
-            }
-        } else {
-            return false;
-        }
-    };
+      if (!filteredData[0]) {
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      return false;
+    }
+  };
 
-    const searchLocation = (e) => {
-        const { value } = e.target;
-        setLocation(value);
-        setDisplayMessage('');
+  const searchLocation = (e) => {
+    const { value } = e.target;
+    setLocation(value);
+    setDisplayMessage("");
 
     // as user is typing, we will read their value and call the predictive text
     // api to predict their text
@@ -143,142 +153,147 @@ function Location({ apiKey, mapState, geocodingLayer, setGeocodingLayer, geocodi
 
     setLoadingState(true); // after clicking enter, loading animation starts
 
-        if (isValidCity(location)) {
-            if (location !== '') {
-                axios({
-                    url: `https://www.mapquestapi.com/geocoding/v1/address`,
-                    params: {
-                        key: apiKey,
-                        location: location,
-                    },
-                })
-                    .then((response) => {
-                        // added catch thing ( setLoadingState= false, error message )
-                        if (response.data.results) {
-                            setTimeout(() => {
-                                setLoadingState(false);
-                            }, 500); // loading page time = 0.5s+ api response time  (<0.2s)
-
-            // An array of the possible locations best matching the query
-            const locationsArray = response.data.results[0].locations;
-
-            const selectedLocationIndex = 0; // THIS VARIABLE CAN STORE THE USER'S SELECTED LOCATION INDEX
-
-            if (response.data.results[0].length < 1) {
-              console.log("invalid search");
-              // implement the error handlikng for when user types random string of letters
-            } else {
-              const currentLongitude =
-                locationsArray[selectedLocationIndex].latLng.lng; //
-
-              const currentLatitutde =
-                locationsArray[selectedLocationIndex].latLng.lat;
-              setCurrentLocation({
-                longitude: currentLongitude,
-                latitude: currentLatitutde,
-              });
-
-              setLocationMarker(currentLatitutde, currentLongitude);
-
-                               // navigate(`/location/${currentLongitude}, ${currentLatitutde}`);
-              navigate(`/location/${currentLocation}`);
-                            }
-                        } else {
-                            alert('no result found');
-                        }
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                        setLoadingState(false);
-                        alert('Something is wrong...');
-                    });
-            } else {
+    if (isValidCity(location)) {
+      if (location !== "") {
+        axios({
+          url: `https://www.mapquestapi.com/geocoding/v1/address`,
+          params: {
+            key: apiKey,
+            location: location,
+          },
+        })
+          .then((response) => {
+            // added catch thing ( setLoadingState= false, error message )
+            if (response.data.results) {
+              setTimeout(() => {
                 setLoadingState(false);
-                setDisplayMessage('Please enter your address.');
-                togglePopup();
+              }, 500); // loading page time = 0.5s+ api response time  (<0.2s)
+
+              // An array of the possible locations best matching the query
+              const locationsArray = response.data.results[0].locations;
+
+              const selectedLocationIndex = 0; // THIS VARIABLE CAN STORE THE USER'S SELECTED LOCATION INDEX
+
+              if (response.data.results[0].length < 1) {
+                console.log("invalid search");
+                // implement the error handlikng for when user types random string of letters
+              } else {
+                const currentLongitude =
+                  locationsArray[selectedLocationIndex].latLng.lng; //
+
+                const currentLatitutde =
+                  locationsArray[selectedLocationIndex].latLng.lat;
+                setCurrentLocation({
+                  longitude: currentLongitude,
+                  latitude: currentLatitutde,
+                });
+
+                setLocationMarker(currentLatitutde, currentLongitude);
+
+                console.log(currentLatitutde);
+                console.log(currentLongitude);
+
+                navigate(`/location/${currentLongitude}, ${currentLatitutde}`);
+                // navigate(`/location/${currentLocation}`);
+              }
+            } else {
+              alert("no result found");
             }
-        } else {
-            alert(
-                'INVALID CITY NAME !! \n\nPlease enter ONLY North American Cities\n\nIf your desired city is in French, please input correct accent. \ne.g. Montréal, Québec etc \n\nIf your desired city has more than one word, then please give ONLY one space in between each words.\ne.g. New York City, '
-            );
+          })
+          .catch((err) => {
+            console.log(err);
             setLoadingState(false);
-        }
-    };
+            alert("Something is wrong...");
+          });
+      } else {
+        setLoadingState(false);
+        setDisplayMessage("Please enter your address.");
+        togglePopup();
+      }
+    } else {
+      alert(
+        "INVALID CITY NAME !! \n\nPlease enter ONLY North American Cities\n\nIf your desired city is in French, please input correct accent. \ne.g. Montréal, Québec etc \n\nIf your desired city has more than one word, then please give ONLY one space in between each words.\ne.g. New York City, "
+      );
+      setLoadingState(false);
+    }
+  };
 
-    const handleSubmit = (e, location) => {
-        e.preventDefault();
-        getGeoLocation(location);
-    };
+  const handleSubmit = (e, location) => {
+    e.preventDefault();
+    getGeoLocation(location);
+  };
 
-    const getLocation = () => {
-        console.log('getLocation2');
-        sessionStorage.removeItem('reloading');
-        setLoadingState(true);
-        console.log('getLocation2: 1', loadingState);
+  const getLocation = () => {
+    console.log("getLocation2");
+    sessionStorage.removeItem("reloading");
+    setLoadingState(true);
+    console.log("getLocation2: 1", loadingState);
 
-        navigator.geolocation.getCurrentPosition(
-            // if location is enabled by user, otherwise
-            // run second call back function
-            (pos) => {
-                console.log('pos inside navigator', pos);
-                console.log('hello');
-                setTimeout(() => {
-                    setLoadingState(false);
-                }, 500); // loading page time = 0.5s+ api response time  (<0.2s)
+    navigator.geolocation.getCurrentPosition(
+      // if location is enabled by user, otherwise
+      // run second call back function
+      (pos) => {
+        console.log("pos inside navigator", pos);
+        console.log("hello");
+        setTimeout(() => {
+          setLoadingState(false);
+        }, 500); // loading page time = 0.5s+ api response time  (<0.2s)
 
-                setCurrentLocation(pos.coords);
-                console.log('POOS COORDS: ', pos.coords.latitude);
-                navigate(`/location/${pos.coords.longitude}, ${pos.coords.latitude}`);
-                console.log(pos);
-                setLocationMarker(pos.coords.latitude, pos.coords.longitude);
-            },
-            () => {
-                console.log('error mesage');
-                setDisplayMessage('We need your location to give you a better experience. Please refresh your browser to enable location settings.');
-                togglePopup();
-                setLoadingState(false);
-            }
+        setCurrentLocation(pos.coords);
+        console.log("POOS COORDS: ", pos.coords.latitude);
+        navigate(`/location/${pos.coords.longitude}, ${pos.coords.latitude}`);
+        console.log(pos);
+        setLocationMarker(pos.coords.latitude, pos.coords.longitude);
+      },
+      () => {
+        console.log("error mesage");
+        setDisplayMessage(
+          "We need your location to give you a better experience. Please refresh your browser to enable location settings."
         );
-    };
+        togglePopup();
+        setLoadingState(false);
+      }
+    );
+  };
 
-    const togglePopup = () => {
-        const locationPopup = document.querySelector('.locationPopup');
-        locationPopup.classList.toggle('active');
-    };
+  const togglePopup = () => {
+    const locationPopup = document.querySelector(".locationPopup");
+    locationPopup.classList.toggle("active");
+  };
 
-    const swapFocus = () => setChangeIcon(true);
+  const swapFocus = () => setChangeIcon(true);
 
-    const swapBlur = () => setChangeIcon(false);
+  const swapBlur = () => setChangeIcon(false);
 
-    //if API is called (loadingState=true), displaying loading page
-    return (
+  //if API is called (loadingState=true), displaying loading page
+  return (
+    <>
+      {loadingState === false ? (
         <>
-            {loadingState === false ? (
-                <>
-                    <section className="locationSection">
-                        <div className="wrapper">
-                            <div className="locationPopup">
-                                <div className="locationPopupContent">
-                                    <h3>Error</h3>
-                                    <img src={mapImage} alt="" />
-                                    <p>{displayMessage}</p>
-                                    <div className="popupButtons">
-                                        <button className="findLocation" onClick={togglePopup}>
-                                            Ok
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="locationForm">
-                                <div className="locationFormHeader">
-                                    <Link to={'/'} className="returnToMain returnLinks">
-                                        <FontAwesomeIcon icon={faAngleLeft} />
-                                        &nbsp;Return to Main Page
-                                    </Link>
-                                    <button className="findLocation" onClick={getLocation}>
-                                        Find My Location
-                                    </button>
-                                </div>
+          <section className="locationSection">
+            <div className="wrapper">
+              <div className="locationPopup">
+                <div className="locationPopupContent">
+                  <h3>Error</h3>
+                  <img src={mapImage} alt="" />
+                  <p>{displayMessage}</p>
+                  <div className="popupButtons">
+                    <button className="findLocation" onClick={togglePopup}>
+                      Ok
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className="locationForm">
+                <div className="locationFormHeader">
+                  <Link to={"/"} className="returnToMain returnLinks">
+                    <FontAwesomeIcon icon={faAngleLeft} />
+                    &nbsp;Return to Main Page
+                  </Link>
+                  <button className="findLocation" onClick={getLocation}>
+                    Find My Location
+                  </button>
+                </div>
 
                 <form
                   autoComplete="off"
@@ -322,8 +337,9 @@ function Location({ apiKey, mapState, geocodingLayer, setGeocodingLayer, geocodi
           </section>
         </>
       ) : (
-        <div className="wrapper"><Loading/></div>
-        
+        <div className="wrapper">
+          <Loading />
+        </div>
       )}
     </>
   );
