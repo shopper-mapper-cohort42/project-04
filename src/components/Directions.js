@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Link, useParams, useNavigate } from "react-router-dom";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBicycle, faCar, faPersonWalking, faWalking } from "@fortawesome/free-solid-svg-icons";
+
 // PLACEHOLDER VARIABLES
 // Placeholder variable for the selectedResult prop that we will get from Results.js to pass into this component
 const selectedResult = {
@@ -138,29 +141,51 @@ export default function Directions({ apiKey, mapState, destination, directionsLa
 
     return (
         <div>
-
             {/* Form to handle changing travel method */}
-            <form>
+            <form className='directionsRouteTypeForm'>
                 <h3>How are you travelling?</h3>
-                <div>
-                    <input type="radio" name="routeTypeInput" id='routeTypeInputFastest' value={'fastest'} checked={routeTypeInput === 'fastest'} onChange={() => { handleRouteTypeInputChange('fastest') }} />
-                    <label htmlFor="routeTypeInputFastest">By Car (Fastest)</label>
-                </div>
-                
-                <div>
-                    <input type="radio" name="routeTypeInput" id='routeTypeInputShortest' value={'shortest'} onChange={() => { handleRouteTypeInputChange('shortest') }} />
-                    <label htmlFor="routeTypeInputShortest">By Car (Shortest)</label>
-                </div>
-
-                <div>
-                    <input type="radio" name="routeTypeInput" id='routeTypeInputPedestrian' value={'pedestrian'} onChange={() => { handleRouteTypeInputChange('pedestrian') }} />
-                    <label htmlFor="routeTypeInputPedestrian">Walking</label>
-                </div>
-
-                <div>
-                    <input type="radio" name="routeTypeInput" id='routeTypeInputBicycle' value={'bicycle'} onChange={() => { handleRouteTypeInputChange('bicycle') }} />
-                    <label htmlFor="routeTypeInputBicycle">Bike</label>
-                </div>
+                <ul>
+                    <li>
+                        <input type="radio" name="routeTypeInput" id='routeTypeInputFastest' value={'fastest'} checked={routeTypeInput === 'fastest'} onChange={() => { handleRouteTypeInputChange('fastest') }} />
+                        <label htmlFor="routeTypeInputFastest">
+                            <FontAwesomeIcon
+                                className="directionIcon"
+                                icon={faCar}
+                            />
+                            <> Car (Fastest)</>
+                        </label>
+                    </li>
+                    <li>
+                        <input type="radio" name="routeTypeInput" id='routeTypeInputShortest' value={'shortest'} onChange={() => { handleRouteTypeInputChange('shortest') }} />
+                        <label htmlFor="routeTypeInputShortest">
+                            <FontAwesomeIcon
+                                className="directionIcon"
+                                icon={faCar}
+                            />
+                            <> Car (Shortest)</>
+                        </label>
+                    </li>
+                    <li>
+                        <input type="radio" name="routeTypeInput" id='routeTypeInputPedestrian' value={'pedestrian'} onChange={() => { handleRouteTypeInputChange('pedestrian') }} />
+                        <label htmlFor="routeTypeInputPedestrian">
+                            <FontAwesomeIcon
+                                className="directionIcon"
+                                icon={faWalking}
+                            />
+                            <> Walking</>
+                        </label>
+                    </li>
+                    <li>
+                        <input type="radio" name="routeTypeInput" id='routeTypeInputBicycle' value={'bicycle'} onChange={() => { handleRouteTypeInputChange('bicycle') }} />
+                        <label htmlFor="routeTypeInputBicycle">
+                            <FontAwesomeIcon
+                                className="directionIcon"
+                                icon={faBicycle}
+                            />
+                            <> Bicycle</>
+                        </label>
+                    </li>
+                </ul>
             </form>
 
 
@@ -171,7 +196,7 @@ export default function Directions({ apiKey, mapState, destination, directionsLa
                 <p>Total Distance: {routeObject.distance ? routeObject.distance.toFixed(2) : ''} km</p>
             </div>
 
-            <ol>
+            <ol className='directionsOrderList'>
                 {
                     directionObjectsArray.map((directionObject, directionIndex) => {
                         return (

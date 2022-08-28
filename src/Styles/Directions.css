@@ -1,0 +1,50 @@
+.directionsRouteTypeForm ul {
+    width: 100%;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.directionsRouteTypeForm li {
+    list-style: none;
+    position: relative;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+}
+
+
+.directionsRouteTypeForm input {
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+}
+
+.directionsRouteTypeForm label {
+    border: 3px solid rgba(0, 0, 0, 0);
+    padding: calc(0.25 * var(--spacing));
+}
+
+
+.directionsRouteTypeForm input:checked + label {
+    background-color: var(--green);
+}
+
+.directionsRouteTypeForm input:hover +label, 
+.directionsRouteTypeForm input:focus + label {
+    border: 3px solid var(--blue)
+}
+
+ol.directionsOrderList {
+    list-style-position: inside;
+    list-style: none;
+
+    padding: 0;
+}

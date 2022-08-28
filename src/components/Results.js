@@ -69,7 +69,7 @@ export default function Results({ apiKey, mapState, searchResultsLayer, setSearc
   }
 
   useEffect(() => {
-    const unsplashApiKey = "dsddDM5If1dZktxt2jefA-bUa5Sc-rWDXcKcRjGPYrM";
+    const unsplashApiKey = "GU4oO6d4rwKoHrCWvup2acwZtYiGjtuA"; //dsddDM5If1dZktxt2jefA-bUa5Sc-rWDXcKcRjGPYrM
     axios({
       url: `https://api.unsplash.com/search/photos`,
       method: "GET",
