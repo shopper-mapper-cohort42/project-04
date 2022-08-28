@@ -1,19 +1,15 @@
 .resultsSection {
   display: flex;
   flex-direction: column;
-  height: 50%;
-  position: fixed;
-  bottom: 0;
-  z-index: 9999;
-  background-color: white;
+  height: 100%;
+  position: absolute;
+  top: 0;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   transition: transform 0.3s;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
-}
-.resultsSection.active {
-  transform: translateY(-45vh);
+  width: 100%;
 }
 
 .searchRadiusInput {
@@ -105,20 +101,17 @@ input[type="range"]:focus::-moz-range-thumb {
   margin: 0 auto;
 }
 
-.resultsSection .wrapper {
-  width: 100%;
-}
-
 .expandResults {
   content: "";
   width: 50px;
   height: 5px;
   background-color: var(--black);
-  position: absolute;
-  top: 10px;
   left: 45%;
   border-radius: 20px;
+  position: absolute;
+  top: 10px;
   cursor: pointer;
+  z-index: 9999;
   transition: 0.3s background-color;
 }
 
@@ -130,10 +123,26 @@ input[type="range"]:focus::-moz-range-thumb {
 .resultsDiv {
   display: flex;
   flex-direction: column;
-  margin: 20px 0;
+  justify-content: flex-end;
+  position: fixed;
+  bottom: 0;
+  margin: 20px 0 0;
+  height: 40%;
   font-family: var(--bodyFont);
   text-align: center;
   background-color: white;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  transition: 0.3s height;
+  width: 100%;
+  left: 0;
+  z-index: 9999;
+}
+.resultsDiv.active {
+  /* transform: translateY(10vh); */
+  transition: 0.3s height;
+
+  height: 90%;
 }
 
 .resultsDiv h2 {
@@ -148,7 +157,6 @@ input[type="range"]:focus::-moz-range-thumb {
 }
 .resultsDiv p {
   margin: 10px;
-  text-transform: uppercase;
   font-size: clamp(0.8rem, 4vw, 1rem);
 }
 
@@ -205,7 +213,7 @@ input[type="range"]:focus::-moz-range-thumb {
   border-top: 1px var(--black) solid;
 }
 .resultsOrderList.active {
-  height: 70vh;
+  height: 700px;
 }
 ol p {
   font-size: clamp(0.85rem, 4vw, 1rem);
@@ -247,9 +255,19 @@ ol li {
 }
 
 /* search radius div */
+.resultBack {
+  position: absolute;
+  width: fit-content;
+  z-index: 9999;
+}
+
+.resultBack:hover,
+.resultBack:focus {
+  color: var(--blue);
+}
 .changeSearchRadiusDiv {
   display: none;
-  margin: 20px 0;
+  margin: 40px 0 0;
   opacity: 0;
   animation: openMenu 0.3s forwards alternate-reverse;
 }
@@ -257,13 +275,17 @@ ol li {
   display: block;
   animation: openMenu 0.3s forwards;
 }
-
-.changeRadiusBtn {
-  width: 50%;
+.extraButtonsDiv {
+  width: 100%;
   position: absolute;
   top: -40px;
+  text-align: left;
+}
+.changeRadiusBtn {
+  width: 50%;
   border: 2px transparent solid;
   transition: 0.3s all;
+  z-index: 9999;
 }
 
 .changeRadiusBtn:hover,

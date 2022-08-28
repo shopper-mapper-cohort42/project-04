@@ -154,11 +154,11 @@
 .returnToMain,
 .findLocation {
   background-color: white;
-  border: none;
+  border: 2px transparent solid;
   width: calc((100% / 2)-20px);
   padding: 5px 10px;
   border-radius: 20px;
-  transition: 0.3s color;
+  transition: 0.3s color, 0.3s border;
   text-decoration: none;
   font-size: clamp(0.8rem, 4vw, 1.2rem);
   font-family: var(--bodyFont);
@@ -171,4 +171,5 @@
 .findLocation:hover,
 .findLocation:focus {
   color: var(--blue);
+  border: 2px var(--blue) solid;
 }

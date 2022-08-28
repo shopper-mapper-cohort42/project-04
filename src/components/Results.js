@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDirections } from "@fortawesome/free-solid-svg-icons";
+import { faDirections, faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import Loading from "./Loading";
 
 // Mount the Results.js component once we have the user's current location and their search query (e.g. coffee)
@@ -70,7 +70,7 @@ export default function Results({
   };
 
   function openResults() {
-    const resultsDiv = document.querySelector(".resultsSection");
+    const resultsDiv = document.querySelector(".resultsDiv");
     const olList = document.querySelector(".resultsOrderList");
 
     resultsDiv.classList.toggle("active");
@@ -187,20 +187,26 @@ export default function Results({
       {loadingState === false ? (
         <section className="resultsSection">
           <div className="wrapper">
-            <span className="expandResults" onClick={openResults}></span>
-            <button
-              className="returnToMain changeRadiusBtn"
-              onClick={openRadiusMenu}
-            >
-              Change Search Radius
-            </button>
-            <div className="resultsDiv">
+            <div className="searchItemDiv">
               <Link
                 to={`/location/${currentLocation.longitude},${currentLocation.latitude}`}
-                className="backButton returnLinks"
+                className="backButton returnLinks returnToMain resultBack"
               >
+                <FontAwesomeIcon icon={faAngleLeft} />
                 BACK
               </Link>
+            </div>
+
+            <div className="resultsDiv">
+              <div className="extraButtonsDiv">
+                <button
+                  className="returnToMain changeRadiusBtn"
+                  onClick={openRadiusMenu}
+                >
+                  Change Search Radius
+                </button>
+              </div>
+              <span className="expandResults" onClick={openResults}></span>
               <div className="changeSearchRadiusDiv">
                 <form onSubmit={handleSubmitSearchRadiusChange}>
                   <div className="rangeSlider">
