@@ -1,11 +1,11 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faAngleLeft } from '@fortawesome/free-solid-svg-icons';
-import mapImage from '../assets/home-location-map.png';
-import axios from 'axios';
-import Loading from './Loading';
-import { Country, State, City } from 'country-state-city'; //AL update
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch, faAngleLeft } from "@fortawesome/free-solid-svg-icons";
+import mapImage from "../assets/home-location-map.png";
+import axios from "axios";
+import Loading from "./Loading";
+import { Country, State, City } from "country-state-city"; //AL update
 
 function Location({ apiKey, mapState, geocodingLayer, setGeocodingLayer, geocodingLayerDefined, setGeocodingLayerDefined }) {
     const [location, setLocation] = useState('');
@@ -16,36 +16,39 @@ function Location({ apiKey, mapState, geocodingLayer, setGeocodingLayer, geocodi
     const [changeIcon, setChangeIcon] = useState(false);
     const navigate = useNavigate();
 
-    const isValidCity = function (input) {
-        //this is a boolean function that validates n.american cities only.
-        //npm i country-state-city
-        if (input) {
-            const splitStr = input.toLowerCase().split(' ');
-            for (let i = 0; i < splitStr.length; i++) {
-                splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
-            }
-            const validString = splitStr.join(' ');
+  const isValidCity = function (input) {
+    //this is a boolean function that validates n.american cities only.
+    //npm i country-state-city
+    if (input) {
+      const splitStr = input.toLowerCase().split(" ");
+      for (let i = 0; i < splitStr.length; i++) {
+        splitStr[i] =
+          splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+      }
+      const validString = splitStr.join(" ");
 
-            const canadianCities = City.getCitiesOfCountry('CA');
-            const americanCities = City.getCitiesOfCountry('US');
-            const cities = [...canadianCities, ...americanCities];
+      const canadianCities = City.getCitiesOfCountry("CA");
+      const americanCities = City.getCitiesOfCountry("US");
+      const cities = [...canadianCities, ...americanCities];
 
-            const filteredData = cities.filter((cityObj) => cityObj.name === validString);
+      const filteredData = cities.filter(
+        (cityObj) => cityObj.name === validString
+      );
 
-            if (!filteredData[0]) {
-                return false;
-            } else {
-                return true;
-            }
-        } else {
-            return false;
-        }
-    };
+      if (!filteredData[0]) {
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      return false;
+    }
+  };
 
-    const searchLocation = (e) => {
-        const { value } = e.target;
-        setLocation(value);
-        setDisplayMessage('');
+  const searchLocation = (e) => {
+    const { value } = e.target;
+    setLocation(value);
+    setDisplayMessage("");
 
     // as user is typing, we will read their value and call the predictive text
     // api to predict their text
@@ -178,53 +181,56 @@ function Location({ apiKey, mapState, geocodingLayer, setGeocodingLayer, geocodi
               //   latitude: currentLatitutde,
               // });
 
-              setLocationMarker(currentLatitutde, currentLongitude);
-              
-              navigate(`/location/${currentLongitude}, ${currentLatitutde}`);
-                            }
-                        } else {
-                            alert('no result found');
-                        }
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                        setLoadingState(false);
-                        alert('Something is wrong...');
-                    });
+                setLocationMarker(currentLatitutde, currentLongitude);
+
+                console.log(currentLatitutde);
+                console.log(currentLongitude);
+
+                navigate(`/location/${currentLongitude}, ${currentLatitutde}`);
+                // navigate(`/location/${currentLocation}`);
+              }
             } else {
-                setLoadingState(false);
-                setDisplayMessage('Please enter your address.');
-                togglePopup();
+              alert("no result found");
             }
-        } else {
-            alert(
-                'INVALID CITY NAME !! \n\nPlease enter ONLY North American Cities\n\nIf your desired city is in French, please input correct accent. \ne.g. Montréal, Québec etc \n\nIf your desired city has more than one word, then please give ONLY one space in between each words.\ne.g. New York City, '
-            );
+          })
+          .catch((err) => {
+            console.log(err);
             setLoadingState(false);
-        }
-        
-    };
+            alert("Something is wrong...");
+          });
+      } else {
+        setLoadingState(false);
+        setDisplayMessage("Please enter your address.");
+        togglePopup();
+      }
+    } else {
+      alert(
+        "INVALID CITY NAME !! \n\nPlease enter ONLY North American Cities\n\nIf your desired city is in French, please input correct accent. \ne.g. Montréal, Québec etc \n\nIf your desired city has more than one word, then please give ONLY one space in between each words.\ne.g. New York City, "
+      );
+      setLoadingState(false);
+    }
+  };
 
-    const handleSubmit = (e, location) => {
-        e.preventDefault();
-        getGeoLocation(location);
-    };
+  const handleSubmit = (e, location) => {
+    e.preventDefault();
+    getGeoLocation(location);
+  };
 
-    const getLocation = () => {
-        console.log('getLocation2');
-        sessionStorage.removeItem('reloading');
-        setLoadingState(true);
-        console.log('getLocation2: 1', loadingState);
+  const getLocation = () => {
+    console.log("getLocation2");
+    sessionStorage.removeItem("reloading");
+    setLoadingState(true);
+    console.log("getLocation2: 1", loadingState);
 
-        navigator.geolocation.getCurrentPosition(
-            // if location is enabled by user, otherwise
-            // run second call back function
-            (pos) => {
-                console.log('pos inside navigator', pos);
-                console.log('hello');
-                setTimeout(() => {
-                    setLoadingState(false);
-                }, 500); // loading page time = 0.5s+ api response time  (<0.2s)
+    navigator.geolocation.getCurrentPosition(
+      // if location is enabled by user, otherwise
+      // run second call back function
+      (pos) => {
+        console.log("pos inside navigator", pos);
+        console.log("hello");
+        setTimeout(() => {
+          setLoadingState(false);
+        }, 500); // loading page time = 0.5s+ api response time  (<0.2s)
 
                 //setCurrentLocation(pos.coords);
                 // setCurrentLocation({
@@ -246,44 +252,44 @@ function Location({ apiKey, mapState, geocodingLayer, setGeocodingLayer, geocodi
         );
     };
 
-    const togglePopup = () => {
-        const locationPopup = document.querySelector('.locationPopup');
-        locationPopup.classList.toggle('active');
-    };
+  const togglePopup = () => {
+    const locationPopup = document.querySelector(".locationPopup");
+    locationPopup.classList.toggle("active");
+  };
 
-    const swapFocus = () => setChangeIcon(true);
+  const swapFocus = () => setChangeIcon(true);
 
-    const swapBlur = () => setChangeIcon(false);
+  const swapBlur = () => setChangeIcon(false);
 
-    //if API is called (loadingState=true), displaying loading page
-    return (
+  //if API is called (loadingState=true), displaying loading page
+  return (
+    <>
+      {loadingState === false ? (
         <>
-            {loadingState === false ? (
-                <>
-                    <section className="locationSection">
-                        <div className="wrapper">
-                            <div className="locationPopup">
-                                <div className="locationPopupContent">
-                                    <h3>Error</h3>
-                                    <img src={mapImage} alt="" />
-                                    <p>{displayMessage}</p>
-                                    <div className="popupButtons">
-                                        <button className="findLocation" onClick={togglePopup}>
-                                            Ok
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="locationForm">
-                                <div className="locationFormHeader">
-                                    <Link to={'/'} className="returnToMain returnLinks">
-                                        <FontAwesomeIcon icon={faAngleLeft} />
-                                        &nbsp;Return to Main Page
-                                    </Link>
-                                    <button className="findLocation" onClick={getLocation}>
-                                        Find My Location
-                                    </button>
-                                </div>
+          <section className="locationSection">
+            <div className="wrapper">
+              <div className="locationPopup">
+                <div className="locationPopupContent">
+                  <h3>Error</h3>
+                  <img src={mapImage} alt="" />
+                  <p>{displayMessage}</p>
+                  <div className="popupButtons">
+                    <button className="findLocation" onClick={togglePopup}>
+                      Ok
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className="locationForm">
+                <div className="locationFormHeader">
+                  <Link to={"/"} className="returnToMain returnLinks">
+                    <FontAwesomeIcon icon={faAngleLeft} />
+                    &nbsp;Return to Main Page
+                  </Link>
+                  <button className="findLocation" onClick={getLocation}>
+                    Find My Location
+                  </button>
+                </div>
 
                 <form
                   autoComplete="off"
@@ -327,8 +333,9 @@ function Location({ apiKey, mapState, geocodingLayer, setGeocodingLayer, geocodi
           </section>
         </>
       ) : (
-        <div className="wrapper"><Loading/></div>
-        
+        <div className="wrapper">
+          <Loading />
+        </div>
       )}
     </>
   );
