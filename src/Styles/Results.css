@@ -215,12 +215,14 @@ input[type="range"]:focus::-moz-range-thumb {
   cursor: pointer;
   top: 10px;
   left: 10px;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, transform 0.3s;
 }
 .hamburgerMenu:hover .hbLine {
   background-color: var(--blue);
 }
-
+.hamburgerMenu.active {
+  transform: translateX(200px);
+}
 .hbLine {
   top: 10px;
   position: absolute;

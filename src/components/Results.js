@@ -213,7 +213,9 @@ export default function Results({
 
             <div className={hideResults ? "resultsDiv active" : "resultsDiv"}>
               <div
-                className="hamburgerMenu"
+                className={
+                  hideResults ? "hamburgerMenu active" : "hamburgerMenu"
+                }
                 tabIndex="0"
                 onClick={() =>
                   toggleHamburger
@@ -225,7 +227,7 @@ export default function Results({
                 <span className="lineTwo hbLine"></span>
                 <span className="lineThree hbLine"></span>
               </div>
-              <div
+              <button
                 className="minimizeResults"
                 onClick={() =>
                   hideResults ? setHideResults(false) : setHideResults(true)
@@ -239,7 +241,7 @@ export default function Results({
                 <span className="sr-only">
                   {hideResults ? "Open Results Menu" : "Close Results Menu"}
                 </span>
-              </div>
+              </button>
               <div
                 className={
                   toggleHamburger ? "extraButtonsDiv active" : "extraButtonsDiv"
