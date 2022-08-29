@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDirections, faAngleLeft } from "@fortawesome/free-solid-svg-icons";
+import {
+  faDirections,
+  faAngleLeft,
+  faAngleRight,
+} from "@fortawesome/free-solid-svg-icons";
 import Loading from "./Loading";
 
 // Mount the Results.js component once we have the user's current location and their search query (e.g. coffee)
@@ -45,6 +49,11 @@ export default function Results({
   const [resultsArray, setResultsArray] = useState([]); // For displaying search results
   const [indicesToHighlight, setIndicesToHighlight] = useState([]); // For highlighting specific search results
   const [storePhotos, setStorePhotos] = useState([]);
+
+  // checks state to hide results menu on desktop
+  const [openSearchRadiusMenu, setSearchRadiusMenu] = useState(false);
+  const [hideResults, setHideResults] = useState(false);
+  const [toggleHamburger, setToggleHamburger] = useState(false);
 
   // Controlled input for radius changing and form submit handler
   const [searchRadiusInput, setSearchRadiusInput] = useState(10);
@@ -182,6 +191,11 @@ export default function Results({
     searchRadiusDiv.classList.toggle("active");
   };
 
+  const openExtraButtons = () => {
+    const sideMenu = document.querySelector(".extraButtonsDiv");
+    sideMenu.classList.toggle("active");
+  };
+
   return (
     <>
       {loadingState === false ? (
@@ -197,8 +211,50 @@ export default function Results({
               </Link>
             </div>
 
-            <div className="resultsDiv">
-              <div className="extraButtonsDiv">
+            <div className={hideResults ? "resultsDiv active" : "resultsDiv"}>
+              <div
+                className="hamburgerMenu"
+                tabIndex="0"
+                onClick={() =>
+                  toggleHamburger
+                    ? setToggleHamburger(false)
+                    : setToggleHamburger(true)
+                }
+              >
+                <span className="lineOne hbLine"></span>
+                <span className="lineTwo hbLine"></span>
+                <span className="lineThree hbLine"></span>
+              </div>
+              <div
+                className="minimizeResults"
+                onClick={() =>
+                  hideResults ? setHideResults(false) : setHideResults(true)
+                }
+                tabIndex="0"
+              >
+                <FontAwesomeIcon
+                  className="minimizeResultsIcon"
+                  icon={hideResults ? faAngleLeft : faAngleRight}
+                />
+                <span className="sr-only">
+                  {hideResults ? "Open Results Menu" : "Close Results Menu"}
+                </span>
+              </div>
+              <div
+                className={
+                  toggleHamburger ? "extraButtonsDiv active" : "extraButtonsDiv"
+                }
+              >
+                <div
+                  className="closeMenu"
+                  onClick={() =>
+                    toggleHamburger
+                      ? setToggleHamburger(false)
+                      : setToggleHamburger(true)
+                  }
+                >
+                  <FontAwesomeIcon icon={faAngleLeft} />
+                </div>
                 <button
                   className="returnToMain changeRadiusBtn"
                   onClick={openRadiusMenu}
@@ -232,7 +288,11 @@ export default function Results({
 
               <h2>Results</h2>
               {/* Ordered list to display the results by relevance */}
-              <ol className="resultsOrderList">
+              <ol
+                className={
+                  hideResults ? "resultsOrderList active" : "resultsOrderList"
+                }
+              >
                 {resultsArray.map((result, resultIndex) => {
                   const resultLocation = {
                     longitude: result.place.geometry.coordinates[0],

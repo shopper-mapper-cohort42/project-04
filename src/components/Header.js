@@ -9,7 +9,7 @@ function Header() {
   return (
     <header>
       <div className="wrapper">
-        <h1>Easy Click</h1>
+        <h1>Shopper Mapper</h1>
         <div className="heroImageDiv">
           <div className="imageSlide">
             {images.map((image, index) => {

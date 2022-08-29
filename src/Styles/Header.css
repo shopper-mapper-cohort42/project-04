@@ -8,11 +8,6 @@ header {
   background-color: var(--orange);
 }
 
-h2 {
-  position: relative;
-  z-index: 20 !important;
-}
-
 header .wrapper {
   display: flex;
   flex-direction: column;

@@ -61,8 +61,8 @@
   background-color: white;
   box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
-.userLocationDiv span,
-.searchShopDiv span {
+.userLocationDiv div,
+.searchShopDiv div {
   margin: 0 auto;
   padding: 5px 10px;
 }
@@ -83,14 +83,14 @@
 .userLocationDiv input,
 .searchShopDiv input {
   width: 90%;
-  margin: 0 auto;
+  /* margin: 0 auto; */
   background-color: white;
   border: none;
   padding: var(--spacing);
-  border-top-right-radius: 15px;
-  border-top-left-radius: 0;
-  border-bottom-right-radius: 15px;
-  border-bottom-left-radius: 0;
+  border-top-right-radius: 0px;
+  border-top-left-radius: 15px;
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 15px;
 }
 .userLocationDiv.active {
   border-bottom-left-radius: 0;
@@ -160,10 +160,17 @@
   border-radius: 20px;
   transition: 0.3s color, 0.3s border;
   text-decoration: none;
-  font-size: clamp(0.8rem, 4vw, 1.2rem);
+  font-size: clamp(0.8rem, 4vw, 1rem);
   font-family: var(--bodyFont);
   color: black;
   box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+.searchIcon {
+  transition: 0.3s color;
+}
+.searchIcon:hover,
+.searchIcon:focus {
+  color: var(--blue);
 }
 
 .returnToMain:hover,

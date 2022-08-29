@@ -7,14 +7,21 @@ import axios from "axios";
 import Loading from "./Loading";
 import { Country, State, City } from "country-state-city"; //AL update
 
-function Location({ apiKey, mapState, geocodingLayer, setGeocodingLayer, geocodingLayerDefined, setGeocodingLayerDefined }) {
-    const [location, setLocation] = useState('');
-    const [predictiveResults, setPredictiveResults] = useState([]);
-    //const [currentLocation, setCurrentLocation] = useState({});
-    const [displayMessage, setDisplayMessage] = useState('');
-    const [loadingState, setLoadingState] = useState(false);
-    const [changeIcon, setChangeIcon] = useState(false);
-    const navigate = useNavigate();
+function Location({
+  apiKey,
+  mapState,
+  geocodingLayer,
+  setGeocodingLayer,
+  geocodingLayerDefined,
+  setGeocodingLayerDefined,
+}) {
+  const [location, setLocation] = useState("");
+  const [predictiveResults, setPredictiveResults] = useState([]);
+  //const [currentLocation, setCurrentLocation] = useState({});
+  const [displayMessage, setDisplayMessage] = useState("");
+  const [loadingState, setLoadingState] = useState(false);
+  const [changeIcon, setChangeIcon] = useState(false);
+  const navigate = useNavigate();
 
   const isValidCity = function (input) {
     //this is a boolean function that validates n.american cities only.
@@ -146,40 +153,40 @@ function Location({ apiKey, mapState, geocodingLayer, setGeocodingLayer, geocodi
 
     setLoadingState(true); // after clicking enter, loading animation starts
 
-        if (isValidCity(location)) {
-            if (location !== '') {
-                axios({
-                    url: `https://www.mapquestapi.com/geocoding/v1/address`,
-                    params: {
-                        key: apiKey,
-                        location: location,
-                    },
-                })
-                    .then((response) => {
-                        // added catch thing ( setLoadingState= false, error message )
-                        if (response.data.results) {
-                            setTimeout(() => {
-                                setLoadingState(false);
-                            }, 500); // loading page time = 0.5s+ api response time  (<0.2s)
+    if (isValidCity(location)) {
+      if (location !== "") {
+        axios({
+          url: `https://www.mapquestapi.com/geocoding/v1/address`,
+          params: {
+            key: apiKey,
+            location: location,
+          },
+        })
+          .then((response) => {
+            // added catch thing ( setLoadingState= false, error message )
+            if (response.data.results) {
+              setTimeout(() => {
+                setLoadingState(false);
+              }, 500); // loading page time = 0.5s+ api response time  (<0.2s)
 
-            // An array of the possible locations best matching the query
-            const locationsArray = response.data.results[0].locations;
+              // An array of the possible locations best matching the query
+              const locationsArray = response.data.results[0].locations;
 
-            const selectedLocationIndex = 0; // THIS VARIABLE CAN STORE THE USER'S SELECTED LOCATION INDEX
+              const selectedLocationIndex = 0; // THIS VARIABLE CAN STORE THE USER'S SELECTED LOCATION INDEX
 
-            if (response.data.results[0].length < 1) {
-              console.log("invalid search");
-              // implement the error handlikng for when user types random string of letters
-            } else {
-              const currentLongitude =
-                locationsArray[selectedLocationIndex].latLng.lng; //
+              if (response.data.results[0].length < 1) {
+                console.log("invalid search");
+                // implement the error handlikng for when user types random string of letters
+              } else {
+                const currentLongitude =
+                  locationsArray[selectedLocationIndex].latLng.lng; //
 
-              const currentLatitutde =
-                locationsArray[selectedLocationIndex].latLng.lat;
-              // setCurrentLocation({
-              //   longitude: currentLongitude,
-              //   latitude: currentLatitutde,
-              // });
+                const currentLatitutde =
+                  locationsArray[selectedLocationIndex].latLng.lat;
+                // setCurrentLocation({
+                //   longitude: currentLongitude,
+                //   latitude: currentLatitutde,
+                // });
 
                 setLocationMarker(currentLatitutde, currentLongitude);
 
@@ -232,34 +239,32 @@ function Location({ apiKey, mapState, geocodingLayer, setGeocodingLayer, geocodi
           setLoadingState(false);
         }, 500); // loading page time = 0.5s+ api response time  (<0.2s)
 
-                //setCurrentLocation(pos.coords);
-                // setCurrentLocation({
-                //   longitude: pos.coords.longitude,
-                //   latitude: pos.coords.latitude
-                // });
-                console.log('POOS COORDS: ', pos.coords);
-                //console.log('loc is ', currentLocation);
-                navigate(`/location/${pos.coords.longitude}, ${pos.coords.latitude}`);
-                console.log(pos);
-                setLocationMarker(pos.coords.latitude, pos.coords.longitude);
-            },
-            () => {
-                console.log('error mesage');
-                setDisplayMessage('We need your location to give you a better experience. Please refresh your browser to enable location settings.');
-                togglePopup();
-                setLoadingState(false);
-            }
+        //setCurrentLocation(pos.coords);
+        // setCurrentLocation({
+        //   longitude: pos.coords.longitude,
+        //   latitude: pos.coords.latitude
+        // });
+        console.log("POOS COORDS: ", pos.coords);
+        //console.log('loc is ', currentLocation);
+        navigate(`/location/${pos.coords.longitude}, ${pos.coords.latitude}`);
+        console.log(pos);
+        setLocationMarker(pos.coords.latitude, pos.coords.longitude);
+      },
+      () => {
+        console.log("error mesage");
+        setDisplayMessage(
+          "We need your location to give you a better experience. Please refresh your browser to enable location settings."
         );
-    };
+        togglePopup();
+        setLoadingState(false);
+      }
+    );
+  };
 
   const togglePopup = () => {
     const locationPopup = document.querySelector(".locationPopup");
     locationPopup.classList.toggle("active");
   };
-
-  const swapFocus = () => setChangeIcon(true);
-
-  const swapBlur = () => setChangeIcon(false);
 
   //if API is called (loadingState=true), displaying loading page
   return (
@@ -290,20 +295,11 @@ function Location({ apiKey, mapState, geocodingLayer, setGeocodingLayer, geocodi
                     Find My Location
                   </button>
                 </div>
-
-                <form
-                  autoComplete="off"
-                  onSubmit={(e) => handleSubmit(e, location)}
-                >
-                  <label htmlFor="name" className="sr-only">
-                    Enter your location
-                  </label>
+                <form onSubmit={(e) => handleSubmit(e, location)}>
                   <div className="userLocationDiv">
-                    <span>
-                      <FontAwesomeIcon
-                        icon={!changeIcon ? faSearch : faAngleLeft}
-                      ></FontAwesomeIcon>
-                    </span>
+                    <label htmlFor="name" className="sr-only">
+                      Enter your location
+                    </label>
                     <input
                       type="text"
                       id="name"
@@ -312,9 +308,11 @@ function Location({ apiKey, mapState, geocodingLayer, setGeocodingLayer, geocodi
                       value={location}
                       placeholder="Enter Your Location"
                       required
-                      onBlur={swapBlur}
-                      onFocus={swapFocus}
                     />
+                    <div onClick={(e) => handleSubmit(e, location)}>
+                      <FontAwesomeIcon className="searchIcon" icon={faSearch} />
+                      <span className="sr-only">Submit your location</span>
+                    </div>
                   </div>
                 </form>
                 <div className="locationPredictiveResults">
