@@ -7,9 +7,42 @@
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   transition: transform 0.3s;
-  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+
   width: 100%;
+}
+
+.searchSuggestions {
+  border: 2px red solid;
+  margin-top: 10px;
+  white-space: nowrap;
+  overflow-x: scroll;
+}
+
+.searchSuggestions button {
+  font-family: var(--bodyFont);
+  background-color: white;
+  border: 2px transparent solid;
+  margin-right: 10px;
+  padding: 5px 8px;
+  border-radius: 20px;
+  transition: 0.3s color, 0.3s background-color;
+  font-size: clamp(0.8rem, 4vw, 0.9rem);
+}
+
+.icon {
+  margin-right: 0.2rem;
+}
+
+.searchSuggestions button:hover {
+  border: 2px var(--blue) solid;
+  color: var(--blue);
+}
+
+/* suggestions scroll bar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 20px;
+  scrollbar-color: blue;
 }
 
 .searchRadiusInput {
@@ -137,11 +170,12 @@ input[type="range"]:focus::-moz-range-thumb {
   width: 100%;
   left: 0;
   z-index: 9999;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
 }
 .resultsDiv.active {
   /* transform: translateY(10vh); */
   transition: 0.3s height;
-
   height: 90%;
 }
 
@@ -151,13 +185,13 @@ input[type="range"]:focus::-moz-range-thumb {
 }
 
 .resultsDiv h3 {
-  font-size: clamp(1rem, 4vw, 1.2rem);
+  font-size: clamp(0.9rem, 4vw, 1rem);
   margin: 0;
   color: var(--black);
 }
 .resultsDiv p {
   margin: 10px;
-  font-size: clamp(0.8rem, 4vw, 1rem);
+  font-size: clamp(0.8rem, 4vw, 0.9rem);
 }
 
 .resultsDiv ol {
@@ -172,6 +206,78 @@ input[type="range"]:focus::-moz-range-thumb {
   align-items: center;
 }
 
+/* hamburger menu */
+.hamburgerMenu {
+  display: none;
+  height: 50px;
+  width: 50px;
+  position: absolute;
+  cursor: pointer;
+  top: 10px;
+  left: 10px;
+  transition: background-color 0.3s, transform 0.3s;
+}
+.hamburgerMenu:hover .hbLine {
+  background-color: var(--blue);
+}
+.hamburgerMenu.active {
+  transform: translateX(200px);
+}
+.hbLine {
+  top: 10px;
+  position: absolute;
+  left: 10%;
+  content: "";
+  width: 35px;
+  height: 3px;
+  background-color: var(--black);
+  transition: background-color 0.3s;
+  border-radius: 30px;
+}
+.hbLine:hover,
+.hbLine:focus {
+  background-color: var(--blue);
+}
+.lineTwo {
+  top: 20px;
+}
+.lineThree {
+  top: 30px;
+}
+
+/* close button */
+.closeMenu {
+  display: none;
+}
+
+/* minimize results (desktop */
+.minimizeResults {
+  display: none;
+  position: absolute;
+  left: -40px;
+  top: 50%;
+  background-color: white;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px transparent solid;
+  cursor: pointer;
+  color: var(--black);
+  transition: 0.3s color, 0.3s border;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+
+.minimizeResults:hover,
+.minimizeResults:focus {
+  border: 2px var(--blue) solid;
+  color: var(--blue);
+}
+
+.minimizeResultsIcon {
+  align-self: center;
+}
 .shopImageDiv {
   display: flex;
   justify-content: center;
@@ -191,7 +297,7 @@ input[type="range"]:focus::-moz-range-thumb {
 }
 
 .mostAverageTitle {
-  font-size: clamp(0.4rem, 4vw, 1.2rem) !important;
+  font-size: clamp(0.8rem, 4vw, 1rem) !important;
   font-style: italic;
   color: var(--black);
 }
@@ -232,7 +338,7 @@ ol li {
   background-color: var(--orange);
 }
 .resultsDistance {
-  font-size: clamp(0.7rem, 4vw, 1rem);
+  font-size: clamp(0.7rem, 4vw, 0.8rem) !important;
   color: var(--black);
   background-color: var(--green);
   width: fit-content;
@@ -282,10 +388,11 @@ ol li {
   text-align: left;
 }
 .changeRadiusBtn {
-  width: 50%;
+  width: fit-content;
   border: 2px transparent solid;
   transition: 0.3s all;
   z-index: 9999;
+  font-size: 0.8rem;
 }
 
 .changeRadiusBtn:hover,
