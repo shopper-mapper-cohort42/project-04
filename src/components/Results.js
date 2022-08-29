@@ -213,7 +213,9 @@ export default function Results({
 
             <div className={hideResults ? "resultsDiv active" : "resultsDiv"}>
               <div
-                className="hamburgerMenu"
+                className={
+                  hideResults ? "hamburgerMenu active" : "hamburgerMenu"
+                }
                 tabIndex="0"
                 onClick={() =>
                   toggleHamburger
