@@ -61,8 +61,13 @@ function Main() {
       center: [56.1304, -106.3468],
       layers: window.L.mapquest.tileLayer("map"),
       zoom: 4,
+      zoomControl: false
     });
     //map.addControl(window.L.mapquest.control({position: 'topleft'}));
+
+    window.L.control.zoom({
+      position: 'topright'
+    }).addTo(map)
 
     setMapState(map);
   }, []);
