@@ -12,11 +12,11 @@ function WelcomePage() {
               Pellentesque convallis mauris urna, dictum efficitur eros finibus
               dignissim.
             </p>
-          </div>
-          <div className="getStartedButtonDiv">
-            <Link to={"/location"} className="getStartedButton blueButton">
-              Get Started
-            </Link>
+            <div className="getStartedButtonDiv">
+              <Link to={"/location"} className="getStartedButton blueButton">
+                Get Started
+              </Link>
+            </div>
           </div>
         </div>
       </section>

@@ -1,5 +1,9 @@
 .subHeaderBox {
-  margin: 20px 0;
+  margin: 0 20px 20px;
+}
+
+.subHeaderBox h2 {
+  margin-top: 10px;
 }
 
 .getStartedButtonDiv {
@@ -7,7 +11,9 @@
 }
 
 .welcomePageDiv {
-  background-color: white;
+  position: absolute;
+  height: 50%;
+  background-color: var(--orange);
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
 }

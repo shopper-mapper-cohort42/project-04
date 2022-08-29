@@ -1,2 +1,70 @@
 @media (min-width: 1000px) {
+  /* results section */
+  .extraButtonsDiv {
+    transform: translateX(1000px);
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 80%;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    transition: transform 0.3s;
+  }
+  .extraButtonsDiv.active {
+    transform: translateX(0px);
+  }
+  .resultsDiv {
+    height: 100%;
+    max-width: 400px;
+    width: 30%;
+    border-radius: 0;
+    right: 0;
+    left: auto;
+    transition: transform 0.3s;
+  }
+  .resultsDiv.active {
+    height: 100%;
+    transform: translateY(0);
+    transform: translateX(300px);
+    transition: transform 0.3s;
+  }
+  .resultsOrderList {
+    height: 100%;
+  }
+  .expandResults {
+    display: none;
+  }
+  .resultsSection .wrapper {
+    display: flex;
+    height: 100%;
+  }
+  .hamburgerMenu {
+    display: block;
+  }
+  .closeMenu {
+    display: block;
+    border: 2px transparent solid;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    margin: 10px;
+    border-radius: 50%;
+    transition: border 0.3s, color 0.3s;
+  }
+  .closeMenu:hover,
+  .closeMenu:focus {
+    border: 2px var(--blue) solid;
+    color: var(--blue);
+  }
+  .minimizeResults {
+    display: flex;
+  }
+  .resultsDiv ol.active {
+    transition: transform 0.3s;
+  }
+  .resultsDiv ol.active {
+    height: auto;
+    transform: translateY(0);
+    transform: translateX(200px);
+  }
 }

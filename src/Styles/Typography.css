@@ -15,7 +15,7 @@ h1 {
 
 h2 {
   font-family: var(--headerFont);
-  font-size: clamp(1.2rem, 4vw, 1.5rem);
+  font-size: clamp(1.2rem, 4vw, 1.3rem);
   color: var(--black);
 }
 
@@ -32,6 +32,6 @@ p {
 /* predictive results drop down*/
 
 .locationPredictiveResults li {
-  font-size: clamp(0.8rem, 4vw, 1.2rem);
+  font-size: clamp(0.8rem, 4vw, 1rem);
   font-family: var(--bodyFont);
 }
