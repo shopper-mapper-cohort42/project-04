@@ -17,9 +17,10 @@ function Location({
 }) {
   const [location, setLocation] = useState("");
   const [predictiveResults, setPredictiveResults] = useState([]);
-  const [currentLocation, setCurrentLocation] = useState({});
+  //const [currentLocation, setCurrentLocation] = useState({});
   const [displayMessage, setDisplayMessage] = useState("");
   const [loadingState, setLoadingState] = useState(false);
+  const [changeIcon, setChangeIcon] = useState(false);
   const navigate = useNavigate();
 
   const isValidCity = function (input) {
@@ -182,10 +183,10 @@ function Location({
 
                 const currentLatitutde =
                   locationsArray[selectedLocationIndex].latLng.lat;
-                setCurrentLocation({
-                  longitude: currentLongitude,
-                  latitude: currentLatitutde,
-                });
+                // setCurrentLocation({
+                //   longitude: currentLongitude,
+                //   latitude: currentLatitutde,
+                // });
 
                 setLocationMarker(currentLatitutde, currentLongitude);
 
@@ -238,8 +239,13 @@ function Location({
           setLoadingState(false);
         }, 500); // loading page time = 0.5s+ api response time  (<0.2s)
 
-        setCurrentLocation(pos.coords);
-        console.log("POOS COORDS: ", pos.coords.latitude);
+        //setCurrentLocation(pos.coords);
+        // setCurrentLocation({
+        //   longitude: pos.coords.longitude,
+        //   latitude: pos.coords.latitude
+        // });
+        console.log("POOS COORDS: ", pos.coords);
+        //console.log('loc is ', currentLocation);
         navigate(`/location/${pos.coords.longitude}, ${pos.coords.latitude}`);
         console.log(pos);
         setLocationMarker(pos.coords.latitude, pos.coords.longitude);
