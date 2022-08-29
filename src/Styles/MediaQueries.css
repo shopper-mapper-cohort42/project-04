@@ -1,14 +1,14 @@
 @media (min-width: 1000px) {
   /* results section */
   .extraButtonsDiv {
-    transform: translateX(1000px);
+    transform: translateY(-1000px);
     top: 0;
     right: 0;
     height: 100%;
-    width: 80%;
+    width: 100%;
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-    transition: transform 0.3s;
+    transition: transform 0.4s;
   }
   .extraButtonsDiv.active {
     transform: translateX(0px);
@@ -47,7 +47,7 @@
     width: 30px;
     height: 30px;
     text-align: center;
-    margin: 10px;
+    margin: 10px auto;
     border-radius: 50%;
     transition: border 0.3s, color 0.3s;
   }

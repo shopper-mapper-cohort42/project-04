@@ -20,7 +20,6 @@ function Location({
   //const [currentLocation, setCurrentLocation] = useState({});
   const [displayMessage, setDisplayMessage] = useState("");
   const [loadingState, setLoadingState] = useState(false);
-  const [changeIcon, setChangeIcon] = useState(false);
   const navigate = useNavigate();
 
   const isValidCity = function (input) {
