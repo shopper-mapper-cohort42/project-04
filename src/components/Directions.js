@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link, useParams, useNavigate } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBicycle, faCar, faClock, faPersonWalking, faRoad, faWalking } from "@fortawesome/free-solid-svg-icons";
+import { faBicycle, faCar, faClock, faPersonWalking, faRoad, faWalking, faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 
 // PLACEHOLDER VARIABLES
 // Placeholder variable for the selectedResult prop that we will get from Results.js to pass into this component
@@ -151,10 +151,24 @@ export default function Directions({
     }
   }, [directionsLayerDefined]);
 
-    return (
-      <section className="directionsSection">
-        <div className="wrapper">
-          <div>
+  const [hideDirections, setHideDirections] = useState(false);
+
+  return (
+    <section className="directionsSection">
+      
+      <div className="wrapper">
+        <div className="directionBackButton">
+          <Link
+            to={`/location/${currentLocation.longitude},${currentLocation.latitude}/${searchItem}`}
+            className="backButton returnLinks returnToMain resultBack"
+          >
+            <FontAwesomeIcon icon={faAngleLeft} />
+            BACK
+          </Link>
+        </div>
+        <div className={hideDirections ? "directionsDiv active" : "directionsDiv"}>
+          <span className="expandDirections" onClick={() => { setHideDirections(!hideDirections) }} ></span>
+          <div className="directionsTopContainer">
             <div className="destinationInfoHeadingContainer">
               <h3>Directions to {destination.name}</h3>
               <h4>{destination.displayString}</h4>
@@ -218,35 +232,31 @@ export default function Directions({
               </p>
             </div>
           </div>
+          <ol className={hideDirections ? "directionsOrderList active" : "directionsOrderList"}>
+            {directionObjectsArray.map((directionObject, directionIndex) => {
+              return (
+                <li key={`directionKey-${directionIndex}`} className="directionContainer"> 
 
+                  <div className="directionTextContainer">
+                    <div className="directionNarrativeContainer">
+                      <img className="directionImage" src={directionObject.iconUrl} alt="" />
+                      <p>{directionObject.narrative}</p>
+                    </div>
 
-
-
-      <ol className='directionsOrderList'>
-        {directionObjectsArray.map((directionObject, directionIndex) => {
-          return (
-            <li key={`directionKey-${directionIndex}`} className="directionContainer"> 
-
-              <div className="directionTextContainer">
-                <div className="directionNarrativeContainer">
-                  <img className="directionImage" src={directionObject.iconUrl} alt="" />
-                  <p>{directionObject.narrative}</p>
-                </div>
-
-                {/* Conditional rendering for direction and time when it's not at the last direction */}
-                {directionIndex < directionObjectsArray.length - 1 ? (
-                  <div className="directionDetailsContainer">
-                    <p className="directionDistance">{directionObject.distance.toFixed(2)} km</p>
-                    <p className="directionTime">Time: {formatHHMMSS(directionObject.formattedTime)}</p>
+                    {/* Conditional rendering for direction and time when it's not at the last direction */}
+                    {directionIndex < directionObjectsArray.length - 1 ? (
+                      <div className="directionDetailsContainer">
+                        <p className="directionDistance">{directionObject.distance.toFixed(2)} km</p>
+                        <p className="directionTime">Time: {formatHHMMSS(directionObject.formattedTime)}</p>
+                      </div>
+                    ) : null}
                   </div>
-                ) : null}
-              </div>
-            </li>
-          );
-        })}
-      </ol>
-
+                </li>
+              );
+            })}
+          </ol>
         </div>
+      </div>
     </section>
   );
 }
