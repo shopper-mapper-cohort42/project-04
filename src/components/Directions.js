@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link, useParams, useNavigate } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBicycle, faCar, faPersonWalking, faWalking } from "@fortawesome/free-solid-svg-icons";
+import { faBicycle, faCar, faClock, faPersonWalking, faRoad, faWalking } from "@fortawesome/free-solid-svg-icons";
 
 // PLACEHOLDER VARIABLES
 // Placeholder variable for the selectedResult prop that we will get from Results.js to pass into this component
@@ -152,10 +152,16 @@ export default function Directions({
   }, [directionsLayerDefined]);
 
     return (
-        <div>
+      <section className="directionsSection">
+        <div className="wrapper">
+          <div>
+            <div className="destinationInfoHeadingContainer">
+              <h3>Directions to {destination.name}</h3>
+              <h4>{destination.displayString}</h4>
+            </div>
+
             {/* Form to handle changing travel method */}
             <form className='directionsRouteTypeForm'>
-                <h3>How are you travelling?</h3>
                 <ul>
                     <li>
                         <input type="radio" name="routeTypeInput" id='routeTypeInputFastest' value={'fastest'} checked={routeTypeInput === 'fastest'} onChange={() => { handleRouteTypeInputChange('fastest') }} />
@@ -200,35 +206,47 @@ export default function Directions({
                 </ul>
             </form>
 
-      <div>
-        <h3>Your Directions to {destination.name}</h3>
-        <h4>{destination.displayString}</h4>
-        <p>Estimated Travel Time: {formatSeconds(routeObject.realTime)}</p>
-        <p>
-          Total Distance:{" "}
-          {routeObject.distance ? routeObject.distance.toFixed(2) : ""} km
-        </p>
-      </div>
+            <div className="destinationInfoDetailContainer">
+              <p>
+                <FontAwesomeIcon className="directionIcon" icon={faClock} />
+                Travel Time: {formatSeconds(routeObject.realTime)}
+              </p>
+              <p>
+                <FontAwesomeIcon className="directionIcon" icon={faRoad} />
+                <> Distance: </>
+                {routeObject.distance ? routeObject.distance.toFixed(2) : ""} km
+              </p>
+            </div>
+          </div>
+
+
+
 
       <ol className='directionsOrderList'>
         {directionObjectsArray.map((directionObject, directionIndex) => {
           return (
-            <li key={`directionKey-${directionIndex}`}>
-              <p>{directionObject.narrative}</p>
+            <li key={`directionKey-${directionIndex}`} className="directionContainer"> 
 
-              {/* Conditional rendering for direction and time when it's not at the last direction */}
-              {directionIndex < directionObjectsArray.length - 1 ? (
-                <div>
-                  <p>(Facing {directionObject.directionName})</p>{" "}
-                  {/* SUGGESTION: replace with a directional compass symbol */}
-                  <p>Time: {formatHHMMSS(directionObject.formattedTime)}</p>
+              <div className="directionTextContainer">
+                <div className="directionNarrativeContainer">
+                  <img className="directionImage" src={directionObject.iconUrl} alt="" />
+                  <p>{directionObject.narrative}</p>
                 </div>
-              ) : null}
-              <img src={directionObject.iconUrl} alt="" />
+
+                {/* Conditional rendering for direction and time when it's not at the last direction */}
+                {directionIndex < directionObjectsArray.length - 1 ? (
+                  <div className="directionDetailsContainer">
+                    <p className="directionDistance">{directionObject.distance.toFixed(2)} km</p>
+                    <p className="directionTime">Time: {formatHHMMSS(directionObject.formattedTime)}</p>
+                  </div>
+                ) : null}
+              </div>
             </li>
           );
         })}
       </ol>
-    </div>
+
+        </div>
+    </section>
   );
 }

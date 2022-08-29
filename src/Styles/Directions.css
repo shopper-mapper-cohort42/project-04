@@ -1,3 +1,30 @@
+.directionsSection {
+    position: absolute;
+    top: 0;
+    transition: transform 0.3s;
+
+    height: 100%;
+    width: 100%;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    background-color: white;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+}
+
+.destinationInfoHeadingContainer h3, 
+.destinationInfoHeadingContainer h4 {
+    margin: var(--spacing);
+}
+
+.destinationInfoHeadingContainer h4 {
+    opacity: 0.5;
+}
+
 .directionsRouteTypeForm ul {
     width: 100%;
     padding: 0;
@@ -13,9 +40,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-
 }
-
 
 .directionsRouteTypeForm input {
     position: absolute;
@@ -28,18 +53,49 @@
 }
 
 .directionsRouteTypeForm label {
-    border: 3px solid rgba(0, 0, 0, 0);
-    padding: calc(0.25 * var(--spacing));
+    border: 3px solid var(--input-grey);
+    border-radius: 10px;
+    background-color: white;
+    padding: calc(0.25 * var(--spacing)) calc(0.5 * var(--spacing));
 }
-
 
 .directionsRouteTypeForm input:checked + label {
     background-color: var(--green);
+    border: 3px solid var(--green);
 }
 
-.directionsRouteTypeForm input:hover +label, 
+.directionsRouteTypeForm input:hover + label, 
 .directionsRouteTypeForm input:focus + label {
     border: 3px solid var(--blue)
+}
+
+.destinationInfoDetailContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.destinationInfoDetailContainer p {
+    margin: calc(0.25 * var(--spacing))
+}
+
+.destinationInfoDetailContainer p {
+    position: relative;
+    z-index: 10;
+}
+
+.destinationInfoDetailContainer .directionIcon {
+    position: absolute;
+    z-index: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.2;
+}
+
+.destinationInfoDetailContainer .directionIcon:hover {
+    color: inherit;
+    cursor: default;
 }
 
 ol.directionsOrderList {
@@ -47,4 +103,64 @@ ol.directionsOrderList {
     list-style: none;
 
     padding: 0;
+}
+
+.directionContainer {
+    padding: calc(0.5 * var(--spacing))  var(--spacing);
+    display: flex;
+    flex-direction: row;
+}
+
+.directionContainer:last-child {
+    padding: var(--spacing);
+}
+
+.directionImageContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: var;
+}
+
+.directionTextContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    width: 100%;
+}
+
+.directionNarrativeContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing);
+}
+
+.directionDetailsContainer {
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: calc(0.25 * var(--spacing))
+}
+
+.directionDistance, .directionTime {
+    margin-left: auto;
+    font-size: clamp(0.7rem, 4vw, 1rem);
+    width: fit-content;
+    border-radius: 20px;
+    padding: 4px 8px;
+    font-weight: bold;
+    text-transform: none !important;
+}
+
+.directionDistance {
+    color: var(--black);
+    background-color: var(--green);
+}
+
+.directionTime {
+    color: var(--black);
+    border: 1px solid var(--black);
 }

@@ -78,7 +78,7 @@ export default function Results({
   }
 
   useEffect(() => {
-    const unsplashApiKey = "GU4oO6d4rwKoHrCWvup2acwZtYiGjtuA"; //dsddDM5If1dZktxt2jefA-bUa5Sc-rWDXcKcRjGPYrM
+    const unsplashApiKey = "EdiposNhsc-ZFDGSbSFb-BXp2VjbYeohfAUoUGdo2MA"; //dsddDM5If1dZktxt2jefA-bUa5Sc-rWDXcKcRjGPYrM
     axios({
       url: `https://api.unsplash.com/search/photos`,
       method: "GET",
