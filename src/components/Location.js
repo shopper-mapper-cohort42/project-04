@@ -200,9 +200,9 @@ function Location({
   //   locationPopup.classList.toggle("active");
   // };
 
-  useEffect((clearAllLayers) => {
+  useEffect(() => {
     clearAllLayers()
-  }, [])
+  }, [clearAllLayers])
 
   return (
     <>
