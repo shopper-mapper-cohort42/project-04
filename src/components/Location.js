@@ -200,7 +200,7 @@ function Location({
   //   locationPopup.classList.toggle("active");
   // };
 
-  useEffect(() => {
+  useEffect((clearAllLayers) => {
     clearAllLayers()
   }, [])
 
