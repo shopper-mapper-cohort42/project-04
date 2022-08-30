@@ -31,8 +31,8 @@ html {
   font-family: var(--bodyFont);
   transition: 0.3s background-color;
   border: none;
-  padding: var(--spacing);
-  border-radius: 15px;
+  padding: 10px 15px;
+  border-radius: 10px;
   font-weight: bold;
   color: white;
   text-decoration: none;
@@ -54,4 +54,9 @@ html {
 .returnLinks:hover,
 .returnLinks:focus {
   color: #5bc5ff;
+}
+
+input::placeholder,
+input {
+  font-family: var(--bodyFont);
 }
