@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,28 +6,28 @@ import { faBicycle, faCar, faClock, faRoad, faWalking, faAngleLeft, faAngleRight
 
 // PLACEHOLDER VARIABLES
 // Placeholder variable for the selectedResult prop that we will get from Results.js to pass into this component
-const selectedResult = {
-    id: 'mqId:422478344',
-    displayString: 'Cancon Constructions, 90 Scollard St, Toronto, ON M5R 1G2',
-    name: 'Cancon Constructions (PLACEHOLDER)',
-    slug: '/canada/on/cancon-constructions-422478344',
-    language: 'en',
-    place: {
-        type: 'Feature',
-        geometry: {
-            coordinates: [-79.391768, 43.672036],
-            type: 'Point',
-        },
-        properties: {
-            city: 'Toronto',
-            stateCode: 'ON',
-            postalCode: 'M5R 1G2',
-            countryCode: 'CA',
-            street: '90 Scollard St',
-            type: 'address',
-        },
-    },
-};
+// const selectedResult = {
+//     id: 'mqId:422478344',
+//     displayString: 'Cancon Constructions, 90 Scollard St, Toronto, ON M5R 1G2',
+//     name: 'Cancon Constructions (PLACEHOLDER)',
+//     slug: '/canada/on/cancon-constructions-422478344',
+//     language: 'en',
+//     place: {
+//         type: 'Feature',
+//         geometry: {
+//             coordinates: [-79.391768, 43.672036],
+//             type: 'Point',
+//         },
+//         properties: {
+//             city: 'Toronto',
+//             stateCode: 'ON',
+//             postalCode: 'M5R 1G2',
+//             countryCode: 'CA',
+//             street: '90 Scollard St',
+//             type: 'address',
+//         },
+//     },
+// };
 
 // Placeholder values for current location and destination, should comes from route params
 const currentLocation = {
@@ -37,6 +37,7 @@ const currentLocation = {
 
 export default function Directions({ apiKey, mapState, destination, directionsLayer, setDirectionsLayer, directionsLayerDefined, setDirectionsLayerDefined }) {
     const { coords, searchItem, destinationCoords } = useParams();
+    const [hideDirections, setHideDirections] = useState(false);
     currentLocation.longitude = coords.split(',')[0];
     currentLocation.latitude = coords.split(',')[1];
 
@@ -80,17 +81,28 @@ export default function Directions({ apiKey, mapState, destination, directionsLa
         return hoursText + minutesText + secondsText;
     };
 
-    const routeOptions = {
-        start: `${currentLocation.latitude},${currentLocation.longitude}`,
-        end: destinationCoords,
-        options: {
-            key: apiKey,
-            unit: 'k',
-            routeType: routeTypeInput,
-        },
-    };
+    const routeOptions = useMemo(() => {
+        return {
+            start: `${currentLocation.latitude},${currentLocation.longitude}`,
+            end: destinationCoords,
+            options: {
+                key: apiKey,
+                unit: 'k',
+                routeType: routeTypeInput,
+            },
+        };
+    }, [apiKey, destinationCoords, routeTypeInput]);
+    // const routeOptions =  {
+    //     start: `${currentLocation.latitude},${currentLocation.longitude}`,
+    //     end: destinationCoords,
+    //     options: {
+    //         key: apiKey,
+    //         unit: 'k',
+    //         routeType: routeTypeInput,
+    //     },
+    // };
 
-    useEffect(() => {
+    const mapthing = useCallback(() => {
         window.L.mapquest.key = apiKey;
         window.L.mapquest.directions().route(routeOptions, (error, response) => {
             try {
@@ -111,18 +123,24 @@ export default function Directions({ apiKey, mapState, destination, directionsLa
             setRouteObject(response.route);
             setDirectionObjectsArray(response.route.legs[0].maneuvers);
         });
-    }, [routeTypeInput]); //Update the directions when mounted and whenever the destination changes
+    }, [apiKey, directionsLayer, directionsLayerDefined, mapState, routeOptions, setDirectionsLayer, setDirectionsLayerDefined]);
 
     useEffect(() => {
+        mapthing();
+    }, [mapthing]); //Update the directions when mounted and whenever the destination changes
+
+    const mapthing2 = useCallback(() => {
         if (directionsLayerDefined) {
             directionsLayer.on('directions_changed', function (response) {
                 setRouteObject(response.route);
                 setDirectionObjectsArray(response.route.legs[0].maneuvers);
             });
         }
-    }, [directionsLayerDefined]);
+    }, [directionsLayerDefined, directionsLayer]);
 
-    const [hideDirections, setHideDirections] = useState(false);
+    useEffect(() => {
+        mapthing2();
+    }, [mapthing2]);
 
     return (
         <section className="directionsSection">

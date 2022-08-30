@@ -106,59 +106,55 @@ export default function Results({ apiKey, mapState, searchResultsLayer, setSearc
             q: userQuery,
         };
 
-        try {
-            window.L.mapquest.key = apiKey;
-            window.L.mapquest.search().place(options, (error, response) => {
-                try {
-                    if (!searchResultsLayerDefined) {
-                        setSearchResultsLayerDefined(true);
-                        setSearchResultsLayer(
-                            window.L.mapquest
-                                .searchLayer({
-                                    searchResponse: response,
-                                })
-                                .addTo(mapState)
-                                .on('search_marker_clicked', (e) => {
-                                    handleSubmitDestination(e);
-                                })
-                        );
-                    } else {
-                        searchResultsLayer.setSearchResponse(response);
-                    }
-                } catch (error) {
-                    navigate('/location');
-                }
-
-                const responseArray = response.results;
-
-                if (!responseArray.length) {
-                    setLoadingState(false);
-
-                    // if there are no results, highlight nothing
-                    setIndicesToHighlight([]);
-                } else if (responseArray.length % 2) {
-                    // if odd number of results, highlight the middle result
-
-                    // set loading state here
-                    setTimeout(() => {
-                        setLoadingState(false);
-                    }, 500);
-
-                    setIndicesToHighlight([Math.floor(responseArray.length / 2)]);
+        window.L.mapquest.key = apiKey;
+        window.L.mapquest.search().place(options, (error, response) => {
+            try {
+                if (!searchResultsLayerDefined) {
+                    setSearchResultsLayerDefined(true);
+                    setSearchResultsLayer(
+                        window.L.mapquest
+                            .searchLayer({
+                                searchResponse: response,
+                            })
+                            .addTo(mapState)
+                            .on('search_marker_clicked', (e) => {
+                                handleSubmitDestination(e);
+                            })
+                    );
                 } else {
-                    // set loading state here
-                    setTimeout(() => {
-                        setLoadingState(false);
-                    }, 500);
-                    // if even number of results, highlight the middle two results
-                    setIndicesToHighlight([responseArray.length / 2, responseArray.length / 2 - 1]);
+                    searchResultsLayer.setSearchResponse(response);
                 }
+            } catch (error) {
+                navigate('/location');
+            }
 
-                setResultsArray(responseArray);
-            });
-        } catch (error) {
-            console.log('ERROR:');
-        }
+            const responseArray = response.results;
+
+            if (!responseArray.length) {
+                setLoadingState(false);
+
+                // if there are no results, highlight nothing
+                setIndicesToHighlight([]);
+            } else if (responseArray.length % 2) {
+                // if odd number of results, highlight the middle result
+
+                // set loading state here
+                setTimeout(() => {
+                    setLoadingState(false);
+                }, 500);
+
+                setIndicesToHighlight([Math.floor(responseArray.length / 2)]);
+            } else {
+                // set loading state here
+                setTimeout(() => {
+                    setLoadingState(false);
+                }, 500);
+                // if even number of results, highlight the middle two results
+                setIndicesToHighlight([responseArray.length / 2, responseArray.length / 2 - 1]);
+            }
+
+            setResultsArray(responseArray);
+        });
     }, [searchRadius]); // SUGGESTION: We can also make the list update live as the user changes the search radius, but it could be more laggy.
 
     // Brings you to directions component on Result Click or Map Result Click
