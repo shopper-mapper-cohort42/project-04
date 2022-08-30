@@ -29,9 +29,9 @@ export default function Results({
   setSearchResultsLayer,
   searchResultsLayerDefined,
   setSearchResultsLayerDefined,
-  destination,
   setDestination,
 }) {
+
   //imported from params
   const { coords, searchItem } = useParams();
   const navigate = useNavigate();
@@ -106,6 +106,8 @@ export default function Results({
     });
   }, [searchRadius]);
 
+
+
   useEffect(() => {
     const sliderProgress = document.querySelector("input[type='range']");
     sliderProgress.style.background = `linear-gradient(90deg, var(--blue) ${
@@ -113,8 +115,15 @@ export default function Results({
     }%, rgb(192, 192, 192) ${searchRadiusInput * 5}%)`;
   }, [searchRadiusInput]);
 
+  // Brings you to directions component on Result Click or Map Result Click
+  const handleSubmitDestination = (destinationParam) => {
+    setDestination(destinationParam);
+    navigate(
+      `/location/${coords}/${searchItem}/${destinationParam.displayString}`
+    );
+  };
   // Make axios call when this component is mounted, or when radius changes
-  useEffect(() => {
+  useEffect((handleSubmitDestination) => {
     setLoadingState(true);
     const options = {
       sort: "relevance",
@@ -175,21 +184,21 @@ export default function Results({
 
       setResultsArray(responseArray);
     });
-  }, [searchRadius]); // SUGGESTION: We can also make the list update live as the user changes the search radius, but it could be more laggy.
-
-  // Brings you to directions component on Result Click or Map Result Click
-  const handleSubmitDestination = (destinationParam) => {
-    setDestination(destinationParam);
-    navigate(
-      `/location/${coords}/${searchItem}/${destinationParam.displayString}`
-    );
-  };
+  }, [searchRadius, 
+    apiKey,  
+    mapState, 
+    searchResultsLayer, 
+    searchResultsLayerDefined, 
+    setSearchResultsLayer, 
+    setSearchResultsLayerDefined,
+  ]); // SUGGESTION: We can also make the list update live as the user changes the search radius, but it could be more laggy.
+  
 
   // opens search radius menu
-  const openRadiusMenu = () => {
-    const searchRadiusDiv = document.querySelector(".changeSearchRadiusDiv");
-    searchRadiusDiv.classList.toggle("active");
-  };
+  // const openRadiusMenu = () => {
+  //   const searchRadiusDiv = document.querySelector(".changeSearchRadiusDiv");
+  //   searchRadiusDiv.classList.toggle("active");
+  // };
 
   return (
     <>
