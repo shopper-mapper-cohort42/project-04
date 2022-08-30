@@ -18,7 +18,7 @@ function Location({
   const [predictiveResults, setPredictiveResults] = useState([]);
   const [displayMessage, setDisplayMessage] = useState("");
   const [loadingState, setLoadingState] = useState(false);
-  const [closeDropDown, setCloseDropDown] = useState(false);
+  const [closeDropDown, setCloseDropDown] = useState(true);
   const [togglePopup, setTogglePopup] = useState(false);
   const navigate = useNavigate();
 
@@ -31,8 +31,10 @@ function Location({
     // api to predict their text
     if (value.length > 1) {
       predictiveText(value);
+      setCloseDropDown(false);
     } else {
       setPredictiveResults([]);
+
       // document.querySelector(".userLocationDiv").classList.remove("active");
       // document
       //   .querySelector(".locationPredictiveResults ul")
@@ -75,6 +77,7 @@ function Location({
   // if user selects an address from the drop down, auto fills the input field for them
   const autoFill = (e) => {
     setLocation(e.target.textContent);
+    setCloseDropDown(true);
     setPredictiveResults([]);
   };
 
@@ -254,9 +257,8 @@ function Location({
                       className="userLocationInput"
                       onChange={searchLocation}
                       value={location}
-                      placeholder="Enter Your Location"
                       onFocus={() => setCloseDropDown(false)}
-                      onBlur={() => setCloseDropDown(true)}
+                      placeholder="Enter Your Location"
                       required
                     />
                     <div onClick={(e) => handleSubmit(e, location)}>
@@ -269,7 +271,11 @@ function Location({
                   <ul tabIndex="0" className={closeDropDown ? null : "active"}>
                     {predictiveResults.map((result, index) => {
                       return (
-                        <li key={index} onClick={autoFill} tabIndex="0">
+                        <li
+                          key={index}
+                          onClick={(e) => autoFill(e)}
+                          tabIndex="0"
+                        >
                           {result.displayString}
                         </li>
                       );
