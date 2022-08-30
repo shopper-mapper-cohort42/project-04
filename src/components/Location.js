@@ -5,7 +5,6 @@ import { faSearch, faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import mapImage from "../assets/home-location-map.png";
 import axios from "axios";
 import Loading from "./Loading";
-import { Country, State, City } from "country-state-city"; //AL update
 
 function Location({
   apiKey,
@@ -17,40 +16,10 @@ function Location({
 }) {
   const [location, setLocation] = useState("");
   const [predictiveResults, setPredictiveResults] = useState([]);
-  //const [currentLocation, setCurrentLocation] = useState({});
   const [displayMessage, setDisplayMessage] = useState("");
   const [loadingState, setLoadingState] = useState(false);
-  const [changeIcon, setChangeIcon] = useState(false);
   const navigate = useNavigate();
 
-  const isValidCity = function (input) {
-    //this is a boolean function that validates n.american cities only.
-    //npm i country-state-city
-    if (input) {
-      const splitStr = input.toLowerCase().split(" ");
-      for (let i = 0; i < splitStr.length; i++) {
-        splitStr[i] =
-          splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
-      }
-      const validString = splitStr.join(" ");
-
-      const canadianCities = City.getCitiesOfCountry("CA");
-      const americanCities = City.getCitiesOfCountry("US");
-      const cities = [...canadianCities, ...americanCities];
-
-      const filteredData = cities.filter(
-        (cityObj) => cityObj.name === validString
-      );
-
-      if (!filteredData[0]) {
-        return false;
-      } else {
-        return true;
-      }
-    } else {
-      return false;
-    }
-  };
 
   const searchLocation = (e) => {
     const { value } = e.target;
@@ -87,16 +56,14 @@ function Location({
       if (response.data.results) {
         // store results in state, and take predictive results and map it
         const locationResults = response.data.results;
+        setPredictiveResults(locationResults);
 
         //adds classlist of active for the predictive text results so it has appropriate display property
         document.querySelector(".userLocationDiv").classList.add("active");
         document
           .querySelector(".locationPredictiveResults ul")
           .classList.add("active");
-
-        setPredictiveResults(locationResults);
-
-        if (!location) {
+          
           document.addEventListener("click", function () {
             document
               .querySelector(".locationPredictiveResults ul")
@@ -106,12 +73,32 @@ function Location({
               .querySelector(".userLocationDiv")
               .classList.remove("active");
           });
-        }
+        
+        // if (!location) {
+        //   document.addEventListener("click", function () {
+        //     document
+        //       .querySelector(".locationPredictiveResults ul")
+        //       .classList.remove("active");
+        //     setPredictiveResults([]);
+        //     document
+        //       .querySelector(".userLocationDiv")
+        //       .classList.remove("active");
+        //   });
+        // }
       } else {
-        /* not really working, need to rework logic */
-        console.log("asdasd");
+
+        setDisplayMessage("No valid results...");
+        togglePopup();
       }
-    });
+    })
+   .catch(
+    (err)=>{
+     
+      setDisplayMessage(`There is somthing wrong, we get ${err.message}`);
+      togglePopup();
+
+    }
+   )
   };
 
   // if user selects an address from the drop down, auto fills the input field for them
@@ -124,9 +111,8 @@ function Location({
       .classList.remove("active");
   };
 
-  //
+  // a function which enables users to find their current location on the map 
   function setLocationMarker(latitude, longtitude) {
-    console.log("setLocationMarker: ", `${latitude},${longtitude}`);
     window.L.mapquest
       .geocoding()
       .geocode(`${latitude},${longtitude}`, (error, response) => {
@@ -139,10 +125,9 @@ function Location({
               })
               .addTo(mapState)
           );
-          console.log("Geocoding, adding new layer", response);
+          
         } else {
           geocodingLayer.setGeocodingResponse(response);
-          console.log("Geocoding, reusing layer", response);
         }
       });
   }
@@ -153,7 +138,7 @@ function Location({
 
     setLoadingState(true); // after clicking enter, loading animation starts
 
-    if (isValidCity(location)) {
+    // API call for getGeoLocation; convert user's input into coordinates
       if (location !== "") {
         axios({
           url: `https://www.mapquestapi.com/geocoding/v1/address`,
@@ -175,47 +160,33 @@ function Location({
               const selectedLocationIndex = 0; // THIS VARIABLE CAN STORE THE USER'S SELECTED LOCATION INDEX
 
               if (response.data.results[0].length < 1) {
-                console.log("invalid search");
                 // implement the error handlikng for when user types random string of letters
               } else {
                 const currentLongitude =
-                  locationsArray[selectedLocationIndex].latLng.lng; //
+                  locationsArray[selectedLocationIndex].latLng.lng; 
 
                 const currentLatitutde =
                   locationsArray[selectedLocationIndex].latLng.lat;
-                // setCurrentLocation({
-                //   longitude: currentLongitude,
-                //   latitude: currentLatitutde,
-                // });
 
                 setLocationMarker(currentLatitutde, currentLongitude);
 
-                console.log(currentLatitutde);
-                console.log(currentLongitude);
-
                 navigate(`/location/${currentLongitude}, ${currentLatitutde}`);
-                // navigate(`/location/${currentLocation}`);
               }
             } else {
               alert("no result found");
             }
           })
           .catch((err) => {
-            console.log(err);
             setLoadingState(false);
-            alert("Something is wrong...");
+            setDisplayMessage(`You may have ${err.message} err, please try again later..`);
+            togglePopup();
           });
       } else {
         setLoadingState(false);
         setDisplayMessage("Please enter your address.");
         togglePopup();
       }
-    } else {
-      alert(
-        "INVALID CITY NAME !! \n\nPlease enter ONLY North American Cities\n\nIf your desired city is in French, please input correct accent. \ne.g. Montréal, Québec etc \n\nIf your desired city has more than one word, then please give ONLY one space in between each words.\ne.g. New York City, "
-      );
-      setLoadingState(false);
-    }
+    
   };
 
   const handleSubmit = (e, location) => {
@@ -224,34 +195,19 @@ function Location({
   };
 
   const getLocation = () => {
-    console.log("getLocation2");
     sessionStorage.removeItem("reloading");
     setLoadingState(true);
-    console.log("getLocation2: 1", loadingState);
-
     navigator.geolocation.getCurrentPosition(
       // if location is enabled by user, otherwise
       // run second call back function
       (pos) => {
-        console.log("pos inside navigator", pos);
-        console.log("hello");
         setTimeout(() => {
           setLoadingState(false);
         }, 500); // loading page time = 0.5s+ api response time  (<0.2s)
-
-        //setCurrentLocation(pos.coords);
-        // setCurrentLocation({
-        //   longitude: pos.coords.longitude,
-        //   latitude: pos.coords.latitude
-        // });
-        console.log("POOS COORDS: ", pos.coords);
-        //console.log('loc is ', currentLocation);
         navigate(`/location/${pos.coords.longitude}, ${pos.coords.latitude}`);
-        console.log(pos);
         setLocationMarker(pos.coords.latitude, pos.coords.longitude);
       },
       () => {
-        console.log("error mesage");
         setDisplayMessage(
           "We need your location to give you a better experience. Please refresh your browser to enable location settings."
         );
