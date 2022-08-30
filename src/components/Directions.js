@@ -114,7 +114,16 @@ export default function Directions({
       setRouteObject(response.route);
       setDirectionObjectsArray(response.route.legs[0].maneuvers);
     });
-  }, [routeTypeInput]); //Update the directions when mounted and whenever the destination changes
+  }, [
+    routeTypeInput,
+    apiKey,
+    directionsLayer,
+    directionsLayerDefined,
+    mapState,
+    routeOptions,
+    setDirectionsLayer,
+    setDirectionsLayerDefined,
+  ]); //Update the directions when mounted and whenever the destination changes
 
   useEffect(() => {
     if (directionsLayerDefined) {
@@ -123,7 +132,7 @@ export default function Directions({
         setDirectionObjectsArray(response.route.legs[0].maneuvers);
       });
     }
-  }, [directionsLayerDefined]);
+  }, [directionsLayerDefined, directionsLayer]);
 
   const [hideDirections, setHideDirections] = useState(false);
 
