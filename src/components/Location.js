@@ -46,7 +46,7 @@ function Location({
       params: {
         key: apiKey,
         q: location,
-        collection: "address",
+        collection: "adminArea,poi,address,category,franchise,airport",
       },
       dataType: "JSON",
       method: "GET",
@@ -132,9 +132,9 @@ function Location({
       });
   }
 
-  const getGeoLocation = (location) => {
-    // we need to set the country, lets strict to canada &  us only
-    // String to store for the user's current location
+    const getGeoLocation = (location) => {
+        // we need to set the country, lets strict to canada &  us only
+        // String to store for the user's current location
 
     setLoadingState(true); // after clicking enter, loading animation starts
 
@@ -154,10 +154,10 @@ function Location({
                 setLoadingState(false);
               }, 500); // loading page time = 0.5s+ api response time  (<0.2s)
 
-              // An array of the possible locations best matching the query
-              const locationsArray = response.data.results[0].locations;
+                        // An array of the possible locations best matching the query
+                        const locationsArray = response.data.results[0].locations;
 
-              const selectedLocationIndex = 0; // THIS VARIABLE CAN STORE THE USER'S SELECTED LOCATION INDEX
+                        const selectedLocationIndex = 0; // THIS VARIABLE CAN STORE THE USER'S SELECTED LOCATION INDEX
 
               if (response.data.results[0].length < 1) {
                 // implement the error handlikng for when user types random string of letters
@@ -168,7 +168,7 @@ function Location({
                 const currentLatitutde =
                   locationsArray[selectedLocationIndex].latLng.lat;
 
-                setLocationMarker(currentLatitutde, currentLongitude);
+                            setLocationMarker(currentLatitutde, currentLongitude);
 
                 navigate(`/location/${currentLongitude}, ${currentLatitutde}`);
               }
@@ -190,10 +190,10 @@ function Location({
     
   };
 
-  const handleSubmit = (e, location) => {
-    e.preventDefault();
-    getGeoLocation(location);
-  };
+    const handleSubmit = (e, location) => {
+        e.preventDefault();
+        getGeoLocation(location);
+    };
 
   const getLocation = () => {
     sessionStorage.removeItem("reloading");
@@ -218,82 +218,74 @@ function Location({
     );
   };
 
-  const togglePopup = () => {
-    const locationPopup = document.querySelector(".locationPopup");
-    locationPopup.classList.toggle("active");
-  };
+    const togglePopup = () => {
+        const locationPopup = document.querySelector('.locationPopup');
+        locationPopup.classList.toggle('active');
+    };
 
-  //if API is called (loadingState=true), displaying loading page
-  return (
-    <>
-      {loadingState === false ? (
+    //if API is called (loadingState=true), displaying loading page
+    return (
         <>
-          <section className="locationSection">
-            <div className="wrapper">
-              <div className="locationPopup">
-                <div className="locationPopupContent">
-                  <h3>Error</h3>
-                  <img src={mapImage} alt="" />
-                  <p>{displayMessage}</p>
-                  <div className="popupButtons">
-                    <button className="findLocation" onClick={togglePopup}>
-                      Ok
-                    </button>
-                  </div>
+            {loadingState === false ? (
+                <>
+                    <section className="locationSection">
+                        <div className="wrapper">
+                            <div className="locationPopup">
+                                <div className="locationPopupContent">
+                                    <h3>Error</h3>
+                                    <img src={mapImage} alt="" />
+                                    <p>{displayMessage}</p>
+                                    <div className="popupButtons">
+                                        <button className="findLocation" onClick={togglePopup}>
+                                            Ok
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="locationForm">
+                                <div className="locationFormHeader">
+                                    <Link to={'/'} className="returnToMain returnLinks">
+                                        <FontAwesomeIcon icon={faAngleLeft} />
+                                        &nbsp;Return to Main Page
+                                    </Link>
+                                    <button className="findLocation" onClick={getLocation}>
+                                        Find My Location
+                                    </button>
+                                </div>
+                                <form onSubmit={(e) => handleSubmit(e, location)}>
+                                    <div className="userLocationDiv">
+                                        <label htmlFor="name" className="sr-only">
+                                            Enter your location
+                                        </label>
+                                        <input type="text" id="name" className="userLocationInput" onChange={searchLocation} value={location} placeholder="Enter Your Location" required />
+                                        <div onClick={(e) => handleSubmit(e, location)}>
+                                            <FontAwesomeIcon className="searchIcon" icon={faSearch} />
+                                            <span className="sr-only">Submit your location</span>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div className="locationPredictiveResults">
+                                    <ul tabIndex="0">
+                                        {predictiveResults.map((result, index) => {
+                                            return (
+                                                <li key={index} onClick={autoFill} tabIndex="0">
+                                                    {result.displayString}
+                                                </li>
+                                            );
+                                        })}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </>
+            ) : (
+                <div className="wrapper">
+                    <Loading />
                 </div>
-              </div>
-              <div className="locationForm">
-                <div className="locationFormHeader">
-                  <Link to={"/"} className="returnToMain returnLinks">
-                    <FontAwesomeIcon icon={faAngleLeft} />
-                    &nbsp;Return to Main Page
-                  </Link>
-                  <button className="findLocation" onClick={getLocation}>
-                    Find My Location
-                  </button>
-                </div>
-                <form onSubmit={(e) => handleSubmit(e, location)}>
-                  <div className="userLocationDiv">
-                    <label htmlFor="name" className="sr-only">
-                      Enter your location
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      className="userLocationInput"
-                      onChange={searchLocation}
-                      value={location}
-                      placeholder="Enter Your Location"
-                      required
-                    />
-                    <div onClick={(e) => handleSubmit(e, location)}>
-                      <FontAwesomeIcon className="searchIcon" icon={faSearch} />
-                      <span className="sr-only">Submit your location</span>
-                    </div>
-                  </div>
-                </form>
-                <div className="locationPredictiveResults">
-                  <ul tabIndex="0">
-                    {predictiveResults.map((result, index) => {
-                      return (
-                        <li key={index} onClick={autoFill} tabIndex="0">
-                          {result.displayString}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </section>
+            )}
         </>
-      ) : (
-        <div className="wrapper">
-          <Loading />
-        </div>
-      )}
-    </>
-  );
+    );
 }
 
 export default Location;
