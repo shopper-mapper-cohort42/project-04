@@ -12,31 +12,6 @@ import {
   faAngleRight,
 } from "@fortawesome/free-solid-svg-icons";
 
-// PLACEHOLDER VARIABLES
-// Placeholder variable for the selectedResult prop that we will get from Results.js to pass into this component
-const selectedResult = {
-  id: "mqId:422478344",
-  displayString: "Cancon Constructions, 90 Scollard St, Toronto, ON M5R 1G2",
-  name: "Cancon Constructions (PLACEHOLDER)",
-  slug: "/canada/on/cancon-constructions-422478344",
-  language: "en",
-  place: {
-    type: "Feature",
-    geometry: {
-      coordinates: [-79.391768, 43.672036],
-      type: "Point",
-    },
-    properties: {
-      city: "Toronto",
-      stateCode: "ON",
-      postalCode: "M5R 1G2",
-      countryCode: "CA",
-      street: "90 Scollard St",
-      type: "address",
-    },
-  },
-};
-
 // Placeholder values for current location and destination, should comes from route params
 const currentLocation = {
   longitude: -78.9441,

@@ -39,6 +39,20 @@ function Main() {
     mapStateParam.removeLayer(directionsLayerParam);
     setDirectionsLayerDefined(false);
   };
+  const clearAllLayers = (
+    mapStateParam,
+    geocodingLayerParam,
+    searchResultsLayerParam,
+    directionsLayerParam
+  ) => {
+    try {
+      clearGeocodingLayer(mapStateParam, geocodingLayerParam);
+      clearSearchResultsLayer(mapStateParam, searchResultsLayerParam);
+      clearDirectionsLayer(mapStateParam, directionsLayerParam);
+    } catch (error) {
+      // console.log('ERROR IN MAIN.JS');
+    }
+  };
 
   // Create and mount the map state
   const [mapState, setMapState] = useState({});
@@ -77,7 +91,14 @@ function Main() {
                 setGeocodingLayer={setGeocodingLayer}
                 geocodingLayerDefined={geocodingLayerDefined}
                 setGeocodingLayerDefined={setGeocodingLayerDefined}
-                clearAllLayers={() => {clearAllLayers(mapState, geocodingLayer, searchResultsLayer, directionsLayer)}}
+                clearAllLayers={() => {
+                  clearAllLayers(
+                    mapState,
+                    geocodingLayer,
+                    searchResultsLayer,
+                    directionsLayer
+                  );
+                }}
               />
             }
           />

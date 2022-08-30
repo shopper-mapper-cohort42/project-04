@@ -39,7 +39,17 @@ export default function Results({
   //updating the currentLocation
   currentLocation.longitude = coords.split(",")[0];
   currentLocation.latitude = coords.split(",")[1];
-  userQuery = searchItem;
+  let reGex =
+    /^[a@][s\$][s\$]$|[a@][s\$][s\$][Hh][o0][l1][e3][s\$]?|^(c|k|ck|q)[o0](c|k|ck|q)[s\$]?$|d[i1]ck|[s\$][e3]x /;
+  console.log(reGex.test(userQuery));
+
+  if (reGex.test(userQuery) == true) {
+    userQuery = "store";
+    console.log(userQuery);
+  } else {
+    userQuery = searchItem;
+    console.log(userQuery);
+  }
 
   // loading state for api call
 
@@ -81,6 +91,14 @@ export default function Results({
     return 12742 * Math.asin(Math.sqrt(a));
   };
 
+  function openResults() {
+    const resultsDiv = document.querySelector(".resultsDiv");
+    const olList = document.querySelector(".resultsOrderList");
+
+    resultsDiv.classList.toggle("active");
+    olList.classList.toggle("active");
+  }
+
   useEffect(() => {
     const unsplashApiKey = "EdiposNhsc-ZFDGSbSFb-BXp2VjbYeohfAUoUGdo2MA"; //dsddDM5If1dZktxt2jefA-bUa5Sc-rWDXcKcRjGPYrM
     axios({
@@ -119,54 +137,62 @@ export default function Results({
       q: userQuery,
     };
 
-    window.L.mapquest.key = apiKey;
-    window.L.mapquest.search().place(options, (error, response) => {
-      if (!searchResultsLayerDefined) {
-        setSearchResultsLayerDefined(true);
-        setSearchResultsLayer(
-          window.L.mapquest
-            .searchLayer({
-              searchResponse: response,
-            })
-            .addTo(mapState)
-            .on("search_marker_clicked", (e) => {
-              handleSubmitDestination(e);
-            })
-        );
-      } else {
-        searchResultsLayer.setSearchResponse(response);
-      }
+    try {
+      window.L.mapquest.key = apiKey;
+      window.L.mapquest.search().place(options, (error, response) => {
+        try {
+          if (!searchResultsLayerDefined) {
+            setSearchResultsLayerDefined(true);
+            setSearchResultsLayer(
+              window.L.mapquest
+                .searchLayer({
+                  searchResponse: response,
+                })
+                .addTo(mapState)
+                .on("search_marker_clicked", (e) => {
+                  handleSubmitDestination(e);
+                })
+            );
+          } else {
+            searchResultsLayer.setSearchResponse(response);
+          }
+        } catch (error) {
+          navigate("/location");
+        }
 
-      const responseArray = response.results;
+        const responseArray = response.results;
 
-      if (!responseArray.length) {
-        setLoadingState(false);
-
-        // if there are no results, highlight nothing
-        setIndicesToHighlight([]);
-      } else if (responseArray.length % 2) {
-        // if odd number of results, highlight the middle result
-
-        // set loading state here
-        setTimeout(() => {
+        if (!responseArray.length) {
           setLoadingState(false);
-        }, 500);
 
-        setIndicesToHighlight([Math.floor(responseArray.length / 2)]);
-      } else {
-        // set loading state here
-        setTimeout(() => {
-          setLoadingState(false);
-        }, 500);
-        // if even number of results, highlight the middle two results
-        setIndicesToHighlight([
-          responseArray.length / 2,
-          responseArray.length / 2 - 1,
-        ]);
-      }
+          // if there are no results, highlight nothing
+          setIndicesToHighlight([]);
+        } else if (responseArray.length % 2) {
+          // if odd number of results, highlight the middle result
 
-      setResultsArray(responseArray);
-    });
+          // set loading state here
+          setTimeout(() => {
+            setLoadingState(false);
+          }, 500);
+
+          setIndicesToHighlight([Math.floor(responseArray.length / 2)]);
+        } else {
+          // set loading state here
+          setTimeout(() => {
+            setLoadingState(false);
+          }, 500);
+          // if even number of results, highlight the middle two results
+          setIndicesToHighlight([
+            responseArray.length / 2,
+            responseArray.length / 2 - 1,
+          ]);
+        }
+
+        setResultsArray(responseArray);
+      });
+    } catch (error) {
+      console.log("ERROR:");
+    }
   }, [searchRadius]); // SUGGESTION: We can also make the list update live as the user changes the search radius, but it could be more laggy.
 
   // Brings you to directions component on Result Click or Map Result Click
@@ -175,6 +201,12 @@ export default function Results({
     navigate(
       `/location/${coords}/${searchItem}/${destinationParam.displayString}`
     );
+  };
+
+  // opens search radius menu
+  const openRadiusMenu = () => {
+    const searchRadiusDiv = document.querySelector(".changeSearchRadiusDiv");
+    searchRadiusDiv.classList.toggle("active");
   };
 
   return (
@@ -247,12 +279,7 @@ export default function Results({
                   Change Search Radius
                 </button>
               </div>
-              <span
-                className="expandResults"
-                onClick={() =>
-                  hideResults ? setHideResults(false) : setHideResults(true)
-                }
-              ></span>
+              <span className="expandResults" onClick={openResults}></span>
               <div
                 className={
                   openRadius
@@ -266,7 +293,7 @@ export default function Results({
                       type="range"
                       id="searchRadiusInput"
                       className="searchRadiusInput"
-                      min="0"
+                      min="1"
                       max="20"
                       value={searchRadiusInput}
                       onChange={handleSearchRadiusInputChange}
@@ -329,7 +356,8 @@ export default function Results({
                         <h3>{result.name}</h3>
                         <p>{result.displayString.split(`${result.name},`)}</p>
                         <p className="resultsDistance">
-                          ~{lonLatDistance(
+                          ~
+                          {lonLatDistance(
                             currentLocation.longitude,
                             currentLocation.latitude,
                             resultLocation.longitude,
