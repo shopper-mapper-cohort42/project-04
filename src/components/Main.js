@@ -75,41 +75,6 @@ function Main() {
 
   return (
     <>
-      {/* <div>
-        <p>Clear Map (Debugging Buttons)</p>
-        <button
-          onClick={() => {
-            clearGeocodingLayer(mapState, geocodingLayer);
-          }}
-        >
-          Clear Current Location Marker
-        </button>
-        <button
-          onClick={() => {
-            clearSearchResultsLayer(mapState, searchResultsLayer);
-          }}
-        >
-          Clear Results Layer
-        </button>
-        <button
-          onClick={() => {
-            clearDirectionsLayer(mapState, directionsLayer);
-          }}
-        >
-          Clear Directions Layer
-        </button>
-        <button
-          onClick={() => {
-            clearAllLayers(
-              mapState,
-              geocodingLayer,
-              searchResultsLayer,
-              directionsLayer
-            );
-          }}
-        ></button>
-      </div> */}
-
       <main id="mainContent">
         <Routes>
           <Route path="/" element={<WelcomePage />} />
