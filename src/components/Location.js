@@ -34,11 +34,6 @@ function Location({
       setCloseDropDown(false);
     } else {
       setPredictiveResults([]);
-
-      // document.querySelector(".userLocationDiv").classList.remove("active");
-      // document
-      //   .querySelector(".locationPredictiveResults ul")
-      //   .classList.remove("active");
     }
   };
 
@@ -193,11 +188,6 @@ function Location({
       }
     );
   };
-
-  // const togglePopup = () => {
-  //   const locationPopup = document.querySelector(".locationPopup");
-  //   locationPopup.classList.toggle("active");
-  // };
 
   //if API is called (loadingState=true), displaying loading page
   return (

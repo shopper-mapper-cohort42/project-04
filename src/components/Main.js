@@ -40,17 +40,6 @@ function Main() {
     setDirectionsLayerDefined(false);
   };
 
-  const clearAllLayers = (
-    mapStateParam,
-    geocodingLayerParam,
-    searchResultsLayerParam,
-    directionsLayerParam
-  ) => {
-    clearGeocodingLayer(mapStateParam, geocodingLayerParam);
-    clearSearchResultsLayer(mapStateParam, searchResultsLayerParam);
-    clearDirectionsLayer(mapStateParam, directionsLayerParam);
-  };
-
   // Create and mount the map state
   const [mapState, setMapState] = useState({});
   useEffect(() => {

@@ -81,14 +81,6 @@ export default function Results({
     return 12742 * Math.asin(Math.sqrt(a));
   };
 
-  function openResults() {
-    const resultsDiv = document.querySelector(".resultsDiv");
-    const olList = document.querySelector(".resultsOrderList");
-
-    resultsDiv.classList.toggle("active");
-    olList.classList.toggle("active");
-  }
-
   useEffect(() => {
     const unsplashApiKey = "EdiposNhsc-ZFDGSbSFb-BXp2VjbYeohfAUoUGdo2MA"; //dsddDM5If1dZktxt2jefA-bUa5Sc-rWDXcKcRjGPYrM
     axios({
@@ -185,12 +177,6 @@ export default function Results({
     );
   };
 
-  // opens search radius menu
-  const openRadiusMenu = () => {
-    const searchRadiusDiv = document.querySelector(".changeSearchRadiusDiv");
-    searchRadiusDiv.classList.toggle("active");
-  };
-
   return (
     <>
       {loadingState === false ? (
@@ -261,7 +247,12 @@ export default function Results({
                   Change Search Radius
                 </button>
               </div>
-              <span className="expandResults" onClick={openResults}></span>
+              <span
+                className="expandResults"
+                onClick={() =>
+                  hideResults ? setHideResults(false) : setHideResults(true)
+                }
+              ></span>
               <div
                 className={
                   openRadius
