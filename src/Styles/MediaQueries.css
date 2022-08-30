@@ -1,4 +1,35 @@
 @media (min-width: 1000px) {
+  .App {
+    display: flex;
+  }
+  header {
+    width: 50%;
+    height: 100%;
+  }
+  header .wrapper {
+    height: 100%;
+  }
+  .imageSlide {
+    height: 500px;
+    width: 500px;
+  }
+  .image {
+    animation: slideShowDesktop 20s infinite;
+  }
+  footer {
+    position: absolute;
+    bottom: 0;
+    background-color: white;
+  }
+  .welcomePageDiv {
+    width: 50%;
+    height: 100%;
+    border-radius: 0;
+  }
+  .welcomePageDiv .wrapper {
+    height: 100%;
+    margin-top: 40%;
+  }
   /* results section */
   .extraButtonsDiv {
     transform: translateY(-1000px);
@@ -112,5 +143,8 @@
   .directionsOrderList.active,
   .directionsTopContainer.active {
     transform: translateX(300px);
+  }
+  .changeSearchRadiusDiv {
+    margin-top: 100px;
   }
 }

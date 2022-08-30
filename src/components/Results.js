@@ -257,7 +257,13 @@ export default function Results({
                 </button>
               </div>
               <span className="expandResults" onClick={openResults}></span>
-              <div className="changeSearchRadiusDiv">
+              <div
+                className={
+                  toggleHamburger
+                    ? "changeSearchRadiusDiv active"
+                    : "changeSearchRadiusDiv"
+                }
+              >
                 <form onSubmit={handleSubmitSearchRadiusChange}>
                   <div className="rangeSlider">
                     <input

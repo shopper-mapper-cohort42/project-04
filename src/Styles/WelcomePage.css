@@ -1,5 +1,7 @@
 .subHeaderBox {
   margin: 0 20px 20px;
+  display: flex;
+  flex-direction: column;
 }
 
 .subHeaderBox h2 {
@@ -13,9 +15,10 @@
 .welcomePageDiv {
   position: absolute;
   height: 50%;
-  background-color: var(--orange);
+  background-color: white;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
+  width: 100%;
 }
 
 .welcomePageDiv .wrapper {

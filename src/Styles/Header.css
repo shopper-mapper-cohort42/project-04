@@ -67,3 +67,33 @@ header .wrapper {
     transform: translateX(0);
   }
 }
+
+@keyframes slideShowDesktop {
+  0% {
+    transform: translateX(0);
+  }
+  5% {
+    transform: translateX(-500px);
+  }
+  25% {
+    transform: translateX(-500px);
+  }
+  30% {
+    transform: translateX(-1000px);
+  }
+  50% {
+    transform: translateX(-1000px);
+  }
+  55% {
+    transform: translateX(-1500px);
+  }
+  75% {
+    transform: translateX(-1500px);
+  }
+  80% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}

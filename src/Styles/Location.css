@@ -104,7 +104,7 @@
 }
 
 .locationPredictiveResults ul {
-  background-color: var(--input-grey);
+  background-color: white;
   position: absolute;
   margin: 0;
   padding: 0;
@@ -115,6 +115,7 @@
   z-index: 100;
   width: 100%;
   display: none;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
 
 .locationPredictiveResults ul.active {
