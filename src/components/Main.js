@@ -15,7 +15,6 @@ function Main() {
   const [geocodingLayerDefined, setGeocodingLayerDefined] = useState(false);
 
   const clearGeocodingLayer = (mapStateParam, geocodingLayerParam) => {
-    console.log(mapStateParam, geocodingLayerParam);
     mapStateParam.removeLayer(geocodingLayerParam);
     setGeocodingLayerDefined(false);
   };
@@ -61,54 +60,21 @@ function Main() {
       center: [56.1304, -106.3468],
       layers: window.L.mapquest.tileLayer("map"),
       zoom: 4,
-      zoomControl: false
+      zoomControl: false,
     });
     //map.addControl(window.L.mapquest.control({position: 'topleft'}));
 
-    window.L.control.zoom({
-      position: 'topright'
-    }).addTo(map)
+    window.L.control
+      .zoom({
+        position: "topleft",
+      })
+      .addTo(map);
 
     setMapState(map);
   }, []);
 
   return (
     <>
-      {/* <div>
-        <p>Clear Map (Debugging Buttons)</p>
-        <button
-          onClick={() => {
-            clearGeocodingLayer(mapState, geocodingLayer);
-          }}
-        >
-          Clear Current Location Marker
-        </button>
-        <button
-          onClick={() => {
-            clearSearchResultsLayer(mapState, searchResultsLayer);
-          }}
-        >
-          Clear Results Layer
-        </button>
-        <button
-          onClick={() => {
-            clearDirectionsLayer(mapState, directionsLayer);
-          }}
-        >
-          Clear Directions Layer
-        </button>
-        <button
-          onClick={() => {
-            clearAllLayers(
-              mapState,
-              geocodingLayer,
-              searchResultsLayer,
-              directionsLayer
-            );
-          }}
-        ></button>
-      </div> */}
-
       <main id="mainContent">
         <Routes>
           <Route path="/" element={<WelcomePage />} />

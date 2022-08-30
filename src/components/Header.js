@@ -13,7 +13,14 @@ function Header() {
         <div className="heroImageDiv">
           <div className="imageSlide">
             {images.map((image, index) => {
-              return <img src={image} key={index} className="image" />;
+              return (
+                <img
+                  src={image}
+                  key={index}
+                  alt="Isometric illustration of a store"
+                  className="image"
+                />
+              );
             })}
           </div>
         </div>

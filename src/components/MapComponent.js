@@ -9,13 +9,10 @@ export default function MapComponent({ mapState }) {
     try {
       const mapElement = document.getElementById("map");
 
-      console.log(reactRouterLocation.pathname);
       if (reactRouterLocation.pathname.includes("/location")) {
-        console.log(true);
         mapElement.style.display = "block";
         mapState.invalidateSize();
       } else {
-        console.log(false);
         mapElement.style.display = "none";
       }
     } catch (err) {

@@ -6,13 +6,10 @@
   top: 0;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
-  transition: transform 0.3s;
-
   width: 100%;
 }
 
 .searchSuggestions {
-  border: 2px red solid;
   margin-top: 10px;
   white-space: nowrap;
   overflow-x: scroll;
@@ -139,7 +136,8 @@ input[type="range"]:focus::-moz-range-thumb {
   width: 50px;
   height: 5px;
   background-color: var(--black);
-  left: 45%;
+  left: 50%;
+  transform: translateX(-50%);
   border-radius: 20px;
   position: absolute;
   top: 10px;
@@ -313,22 +311,20 @@ input[type="range"]:focus::-moz-range-thumb {
 .resultsOrderList {
   background-color: white;
   overflow: scroll;
-  height: 300px;
+  height: 90%;
   text-align: left;
   margin: 0;
   border-top: 1px var(--black) solid;
+  overflow-x: hidden;
 }
 .resultsOrderList.active {
-  height: 700px;
+  height: 90%;
 }
 ol p {
   font-size: clamp(0.85rem, 4vw, 1rem);
   margin: 0;
 }
 
-/* ol li:nth-child(odd) {
-  background-color: var(--input-grey);
-} */
 ol li {
   border-top: 1px solid grey;
   background-color: white;
