@@ -96,18 +96,20 @@ export default function Directions({
   useEffect(() => {
     window.L.mapquest.key = apiKey;
     window.L.mapquest.directions().route(routeOptions, (error, response) => {
-      if (!directionsLayerDefined) {
-        setDirectionsLayerDefined(true);
-        setDirectionsLayer(
-          window.L.mapquest
-            .directionsLayer({
-              directionsResponse: response,
-            })
-            .addTo(mapState)
-        );
-      } else {
-        directionsLayer.setDirectionsResponse(response);
-      }
+      try {
+        if (!directionsLayerDefined) {
+          setDirectionsLayerDefined(true);
+          setDirectionsLayer(
+            window.L.mapquest
+              .directionsLayer({
+                directionsResponse: response,
+              })
+              .addTo(mapState)
+          );
+        } else {
+          directionsLayer.setDirectionsResponse(response);
+        }
+      } catch (error) {}
 
       setRouteObject(response.route);
       setDirectionObjectsArray(response.route.legs[0].maneuvers);
@@ -167,7 +169,12 @@ export default function Directions({
           >
             <div className="destinationInfoHeadingContainer">
               <h3>Directions to {destination.name}</h3>
-              <h4>{destination.displayString.split(`${destination.name},`)}</h4>
+
+              <h4>
+                {destination.displayString
+                  ? destination.displayString.split(`${destination.name},`)
+                  : ""}
+              </h4>
             </div>
 
             {/* Form to handle changing travel method */}
