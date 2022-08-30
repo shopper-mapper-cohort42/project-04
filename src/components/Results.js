@@ -39,17 +39,8 @@ export default function Results({
   //updating the currentLocation
   currentLocation.longitude = coords.split(",")[0];
   currentLocation.latitude = coords.split(",")[1];
-  let reGex =
-    /^[a@][s\$][s\$]$|[a@][s\$][s\$][Hh][o0][l1][e3][s\$]?|^(c|k|ck|q)[o0](c|k|ck|q)[s\$]?$|d[i1]ck|[s\$][e3]x /;
-  console.log(reGex.test(userQuery));
 
-  if (reGex.test(userQuery) == true) {
-    userQuery = "store";
-    console.log(userQuery);
-  } else {
-    userQuery = searchItem;
-    console.log(userQuery);
-  }
+  userQuery = searchItem;
 
   // loading state for api call
 
@@ -214,6 +205,13 @@ export default function Results({
       {loadingState === false ? (
         <section className="resultsSection">
           <div className="wrapper">
+            <div className="errorPopup">
+              <div className="errorPopupContainer">
+                <h3>Error</h3>
+                <p>Hmm... looks like something went wrong</p>
+                <p>Here are some nearby stores</p>
+              </div>
+            </div>
             <div className="searchItemDiv">
               <Link
                 to={`/location/${currentLocation.longitude},${currentLocation.latitude}`}
