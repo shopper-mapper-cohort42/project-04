@@ -88,6 +88,7 @@ function Main() {
                 setGeocodingLayer={setGeocodingLayer}
                 geocodingLayerDefined={geocodingLayerDefined}
                 setGeocodingLayerDefined={setGeocodingLayerDefined}
+                clearAllLayers={() => {clearAllLayers(mapState, geocodingLayer, searchResultsLayer, directionsLayer)}}
               />
             }
           />
