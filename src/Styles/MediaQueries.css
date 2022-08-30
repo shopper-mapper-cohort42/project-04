@@ -147,4 +147,7 @@
   .changeSearchRadiusDiv {
     margin-top: 100px;
   }
+  .changeRadiusBtn {
+    transform: translateX(50%);
+  }
 }

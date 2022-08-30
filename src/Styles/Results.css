@@ -387,7 +387,6 @@ ol li {
   transition: 0.3s all;
   z-index: 9999;
   font-size: 0.8rem;
-  transform: translateX(50%);
 }
 
 .changeRadiusBtn:hover,
