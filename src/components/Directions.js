@@ -94,8 +94,17 @@ export default function Directions({
   };
 
   useEffect(() => {
+        const routeOptions2 = {
+            start: `${currentLocation.latitude},${currentLocation.longitude}`,
+            end: destinationCoords,
+            options: {
+                key: apiKey,
+                unit: 'k',
+                routeType: routeTypeInput,
+            },
+        };
     window.L.mapquest.key = apiKey;
-    window.L.mapquest.directions().route(routeOptions, (error, response) => {
+    window.L.mapquest.directions().route(routeOptions2, (error, response) => {
       try {
         if (!directionsLayerDefined) {
           setDirectionsLayerDefined(true);
@@ -114,7 +123,13 @@ export default function Directions({
       setRouteObject(response.route);
       setDirectionObjectsArray(response.route.legs[0].maneuvers);
     });
-  }, [routeTypeInput]); //Update the directions when mounted and whenever the destination changes
+  }, [routeTypeInput,
+    apiKey,directionsLayer,
+    directionsLayerDefined,
+    destinationCoords,
+    mapState,
+    setDirectionsLayer,
+    setDirectionsLayerDefined]); //Update the directions when mounted and whenever the destination changes
 
   useEffect(() => {
     if (directionsLayerDefined) {
@@ -123,7 +138,7 @@ export default function Directions({
         setDirectionObjectsArray(response.route.legs[0].maneuvers);
       });
     }
-  }, [directionsLayerDefined]);
+  }, [directionsLayerDefined, directionsLayer]);
 
   const [hideDirections, setHideDirections] = useState(false);
 

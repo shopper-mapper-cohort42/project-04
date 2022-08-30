@@ -197,7 +197,7 @@ function Location({
 
   useEffect(() => {
     clearAllLayers();
-  }, []);
+  }, [clearAllLayers]);
 
   return (
     <>

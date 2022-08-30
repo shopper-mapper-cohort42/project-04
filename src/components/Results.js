@@ -187,6 +187,7 @@ export default function Results({
       searchRadius,
       apiKey,
       mapState,
+      navigate,
       searchResultsLayer,
       searchResultsLayerDefined,
       setSearchResultsLayer,
