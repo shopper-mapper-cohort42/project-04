@@ -38,6 +38,8 @@
     height: 100%;
     width: 100%;
     background-color: white;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     transition: transform 0.4s;
   }

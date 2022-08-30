@@ -411,6 +411,15 @@ ol li {
   color: white;
 }
 
+/* error pop up */
+.errorPopup {
+  position: absolute;
+  z-index: 99999;
+}
+
+.errorPopupContainer {
+  background-color: white;
+}
 @keyframes openMenu {
   from {
     opacity: 0;
