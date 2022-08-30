@@ -13,7 +13,7 @@ function Location({
   setGeocodingLayer,
   geocodingLayerDefined,
   setGeocodingLayerDefined,
-  clearAllLayers
+  clearAllLayers,
 }) {
   const [location, setLocation] = useState("");
   const [predictiveResults, setPredictiveResults] = useState([]);
@@ -35,11 +35,6 @@ function Location({
       setCloseDropDown(false);
     } else {
       setPredictiveResults([]);
-
-      // document.querySelector(".userLocationDiv").classList.remove("active");
-      // document
-      //   .querySelector(".locationPredictiveResults ul")
-      //   .classList.remove("active");
     }
   };
 
@@ -201,8 +196,8 @@ function Location({
   // };
 
   useEffect(() => {
-    clearAllLayers()
-  }, [clearAllLayers])
+    clearAllLayers();
+  }, [clearAllLayers]);
 
   return (
     <>
