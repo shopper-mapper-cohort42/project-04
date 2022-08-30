@@ -51,6 +51,9 @@ export default function Results({
   const [indicesToHighlight, setIndicesToHighlight] = useState([]); // For highlighting specific search results
   const [storePhotos, setStorePhotos] = useState([]);
 
+  // checks state to open radius menu mobile
+  const [openRadius, setOpenRadius] = useState(false);
+
   // checks state to hide results menu on desktop
   const [hideResults, setHideResults] = useState(false);
   const [toggleHamburger, setToggleHamburger] = useState(false);
@@ -251,7 +254,9 @@ export default function Results({
                 </div>
                 <button
                   className="returnToMain changeRadiusBtn"
-                  onClick={openRadiusMenu}
+                  onClick={() => {
+                    openRadius ? setOpenRadius(false) : setOpenRadius(true);
+                  }}
                 >
                   Change Search Radius
                 </button>
@@ -259,7 +264,7 @@ export default function Results({
               <span className="expandResults" onClick={openResults}></span>
               <div
                 className={
-                  toggleHamburger
+                  openRadius
                     ? "changeSearchRadiusDiv active"
                     : "changeSearchRadiusDiv"
                 }

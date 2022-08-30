@@ -19,6 +19,8 @@ function Location({
   const [predictiveResults, setPredictiveResults] = useState([]);
   const [displayMessage, setDisplayMessage] = useState("");
   const [loadingState, setLoadingState] = useState(false);
+  const [closeDropDown, setCloseDropDown] = useState(true);
+  const [togglePopup, setTogglePopup] = useState(false);
   const navigate = useNavigate();
 
   const searchLocation = (e) => {
@@ -30,12 +32,14 @@ function Location({
     // api to predict their text
     if (value.length > 1) {
       predictiveText(value);
+      setCloseDropDown(false);
     } else {
       setPredictiveResults([]);
-      document.querySelector(".userLocationDiv").classList.remove("active");
-      document
-        .querySelector(".locationPredictiveResults ul")
-        .classList.remove("active");
+
+      // document.querySelector(".userLocationDiv").classList.remove("active");
+      // document
+      //   .querySelector(".locationPredictiveResults ul")
+      //   .classList.remove("active");
     }
   };
 
@@ -58,53 +62,24 @@ function Location({
           // store results in state, and take predictive results and map it
           const locationResults = response.data.results;
           setPredictiveResults(locationResults);
-
-          //adds classlist of active for the predictive text results so it has appropriate display property
-          document.querySelector(".userLocationDiv").classList.add("active");
-          document
-            .querySelector(".locationPredictiveResults ul")
-            .classList.add("active");
-
-          document.addEventListener("click", function () {
-            document
-              .querySelector(".locationPredictiveResults ul")
-              .classList.remove("active");
-            setPredictiveResults([]);
-            document
-              .querySelector(".userLocationDiv")
-              .classList.remove("active");
-          });
-
-          // if (!location) {
-          //   document.addEventListener("click", function () {
-          //     document
-          //       .querySelector(".locationPredictiveResults ul")
-          //       .classList.remove("active");
-          //     setPredictiveResults([]);
-          //     document
-          //       .querySelector(".userLocationDiv")
-          //       .classList.remove("active");
-          //   });
-          // }
         } else {
           setDisplayMessage("No valid results...");
-          togglePopup();
+          setTogglePopup(true);
+          // togglePopup();
         }
       })
       .catch((err) => {
         setDisplayMessage(`There is something wrong. ${err.message}`);
-        togglePopup();
+        setTogglePopup(true);
+        // togglePopup();
       });
   };
 
   // if user selects an address from the drop down, auto fills the input field for them
   const autoFill = (e) => {
     setLocation(e.target.textContent);
+    setCloseDropDown(true);
     setPredictiveResults([]);
-    document.querySelector(".userLocationDiv").classList.remove("active");
-    document
-      .querySelector(".locationPredictiveResults ul")
-      .classList.remove("active");
   };
 
   // a function which enables users to find their current location on the map
@@ -169,18 +144,24 @@ function Location({
             }
           } else {
             setDisplayMessage("No results found.");
-            togglePopup();
+            setTogglePopup(true);
+
+            // togglePopup();
           }
         })
         .catch((err) => {
           setLoadingState(false);
           setDisplayMessage(`${err.message}, please try again later...`);
-          togglePopup();
+          setTogglePopup(true);
+
+          // togglePopup();
         });
     } else {
       setLoadingState(false);
       setDisplayMessage("Please enter your address.");
-      togglePopup();
+      setTogglePopup(true);
+
+      // togglePopup();
     }
   };
 
@@ -206,16 +187,18 @@ function Location({
         setDisplayMessage(
           "We need your location to give you a better experience. Please refresh your browser to enable location settings."
         );
-        togglePopup();
+        setTogglePopup(true);
+
+        // togglePopup();
         setLoadingState(false);
       }
     );
   };
 
-  const togglePopup = () => {
-    const locationPopup = document.querySelector(".locationPopup");
-    locationPopup.classList.toggle("active");
-  };
+  // const togglePopup = () => {
+  //   const locationPopup = document.querySelector(".locationPopup");
+  //   locationPopup.classList.toggle("active");
+  // };
 
   useEffect(() => {
     clearAllLayers()
@@ -227,13 +210,24 @@ function Location({
         <>
           <section className="locationSection">
             <div className="wrapper">
-              <div className="locationPopup">
+              <div
+                className={
+                  togglePopup ? "locationPopup active" : "locationPopup"
+                }
+              >
                 <div className="locationPopupContent">
                   <h3>Error</h3>
                   <img src={mapImage} alt="" />
                   <p>{displayMessage}</p>
                   <div className="popupButtons">
-                    <button className="findLocation" onClick={togglePopup}>
+                    <button
+                      className="findLocation"
+                      onClick={() => {
+                        togglePopup
+                          ? setTogglePopup(false)
+                          : setTogglePopup(true);
+                      }}
+                    >
                       Ok
                     </button>
                   </div>
@@ -250,16 +244,24 @@ function Location({
                   </button>
                 </div>
                 <form onSubmit={(e) => handleSubmit(e, location)}>
-                  <div className="userLocationDiv">
+                  <div
+                    className={
+                      closeDropDown
+                        ? "userLocationDiv"
+                        : "userLocationDiv active"
+                    }
+                  >
                     <label htmlFor="name" className="sr-only">
                       Enter your location
                     </label>
                     <input
+                      autoComplete="off"
                       type="text"
                       id="name"
                       className="userLocationInput"
                       onChange={searchLocation}
                       value={location}
+                      onFocus={() => setCloseDropDown(false)}
                       placeholder="Enter Your Location"
                       required
                     />
@@ -270,10 +272,14 @@ function Location({
                   </div>
                 </form>
                 <div className="locationPredictiveResults">
-                  <ul tabIndex="0">
+                  <ul tabIndex="0" className={closeDropDown ? null : "active"}>
                     {predictiveResults.map((result, index) => {
                       return (
-                        <li key={index} onClick={autoFill} tabIndex="0">
+                        <li
+                          key={index}
+                          onClick={(e) => autoFill(e)}
+                          tabIndex="0"
+                        >
                           {result.displayString}
                         </li>
                       );
