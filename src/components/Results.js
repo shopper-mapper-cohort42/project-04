@@ -333,7 +333,7 @@ export default function Results({
                         <h3>{result.name}</h3>
                         <p>{result.displayString.split(`${result.name},`)}</p>
                         <p className="resultsDistance">
-                          {lonLatDistance(
+                          ~{lonLatDistance(
                             currentLocation.longitude,
                             currentLocation.latitude,
                             resultLocation.longitude,

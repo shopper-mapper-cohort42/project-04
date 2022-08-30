@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import mapImage from "../assets/home-location-map.png";
@@ -13,6 +13,7 @@ function Location({
   setGeocodingLayer,
   geocodingLayerDefined,
   setGeocodingLayerDefined,
+  clearAllLayers
 }) {
   const [location, setLocation] = useState("");
   const [predictiveResults, setPredictiveResults] = useState([]);
@@ -216,7 +217,10 @@ function Location({
     locationPopup.classList.toggle("active");
   };
 
-  //if API is called (loadingState=true), displaying loading page
+  useEffect(() => {
+    clearAllLayers()
+  }, [])
+
   return (
     <>
       {loadingState === false ? (
