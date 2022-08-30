@@ -125,7 +125,6 @@ function Main() {
                 setDirectionsLayer={setDirectionsLayer}
                 directionsLayerDefined={directionsLayerDefined}
                 setDirectionsLayerDefined={setDirectionsLayerDefined}
-                clearAllLayers={() => { clearAllLayers(mapState, geocodingLayer, searchResultsLayer, directionsLayer) }}
               />
             }
           />
