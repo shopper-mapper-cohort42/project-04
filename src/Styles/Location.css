@@ -1,9 +1,16 @@
 .locationSection {
   position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 9999;
-  width: 100%;
+  width: 90%;
   display: flex;
   flex-direction: column;
+}
+
+.locationSection .wrapper {
+  width: 100%;
 }
 
 /* LOCATION POPUP */

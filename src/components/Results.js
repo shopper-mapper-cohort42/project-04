@@ -17,7 +17,7 @@ let userQuery = 'construction';
 
 // NOTE: When we add in props, use the line below instead:
 // export default function Results ({apiKey, currentLocation, userQuery}) {
-export default function Results({ apiKey, mapState, searchResultsLayer, setSearchResultsLayer, searchResultsLayerDefined, setSearchResultsLayerDefined, destination, setDestination }) {
+export default function Results({ apiKey, mapState, searchResultsLayer, setSearchResultsLayer, searchResultsLayerDefined, setSearchResultsLayerDefined, destination, setDestination, clearSearchResultsLayer }) {
     //imported from params
     const { coords, searchItem } = useParams();
     const navigate = useNavigate();
