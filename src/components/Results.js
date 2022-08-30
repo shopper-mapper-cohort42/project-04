@@ -17,10 +17,19 @@ let userQuery = 'construction';
 
 // NOTE: When we add in props, use the line below instead:
 // export default function Results ({apiKey, currentLocation, userQuery}) {
-export default function Results({ apiKey, mapState, searchResultsLayer, setSearchResultsLayer, searchResultsLayerDefined, setSearchResultsLayerDefined, destination, setDestination }) {
-    //imported from params
-    const { coords, searchItem } = useParams();
-    const navigate = useNavigate();
+export default function Results({
+  apiKey,
+  mapState,
+  searchResultsLayer,
+  setSearchResultsLayer,
+  searchResultsLayerDefined,
+  setSearchResultsLayerDefined,
+  setDestination,
+}) {
+
+  //imported from params
+  const { coords, searchItem } = useParams();
+  const navigate = useNavigate();
 
     //updating the currentLocation
     currentLocation.longitude = coords.split(',')[0];
@@ -44,90 +53,101 @@ export default function Results({ apiKey, mapState, searchResultsLayer, setSearc
     const [hideResults, setHideResults] = useState(false);
     const [toggleHamburger, setToggleHamburger] = useState(false);
 
-    // Controlled input for radius changing and form submit handler
-    const [searchRadiusInput, setSearchRadiusInput] = useState(10);
-    const handleSearchRadiusInputChange = function (e) {
-        const { value } = e.target;
-        setSearchRadiusInput(value);
+  // Controlled input for radius changing and form submit handler
+  const [searchRadiusInput, setSearchRadiusInput] = useState(10);
+  const handleSearchRadiusInputChange = function (e) {
+    const { value } = e.target;
+    setSearchRadiusInput(value);
+  };
+  const handleSubmitSearchRadiusChange = function (e) {
+    e.preventDefault();
+    setSearchRadius(searchRadiusInput);
+  };
+
+  // Helper Function for calculating straight path distance, from https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
+  // NOTE: Not sure if we need this, but it gives the direct distance (ignoring roads, i.e. if you were to fly directly from one point to the other) between two long/lat points in kilometers. Alternatively, we can probably show the actual road distance with the distance API later on.
+  const lonLatDistance = function (lon1, lat1, lon2, lat2) {
+    const p = 0.017453292519943295;
+    const c = Math.cos;
+    const a =
+      0.5 -
+      c((lat2 - lat1) * p) / 2 +
+      (c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p))) / 2;
+    return 12742 * Math.asin(Math.sqrt(a));
+  };
+
+  function openResults() {
+    const resultsDiv = document.querySelector(".resultsDiv");
+    const olList = document.querySelector(".resultsOrderList");
+
+    resultsDiv.classList.toggle("active");
+    olList.classList.toggle("active");
+  }
+
+  useEffect(() => {
+    const unsplashApiKey = "EdiposNhsc-ZFDGSbSFb-BXp2VjbYeohfAUoUGdo2MA"; //dsddDM5If1dZktxt2jefA-bUa5Sc-rWDXcKcRjGPYrM
+    axios({
+      url: `https://api.unsplash.com/search/photos`,
+      method: "GET",
+      dataResponse: "json",
+      params: {
+        client_id: unsplashApiKey,
+        query: userQuery,
+        per_page: 30,
+      },
+    }).then((response) => {
+      const photos = response.data.results;
+      setStorePhotos(photos);
+    });
+  }, [searchRadius]);
+
+
+
+  useEffect(() => {
+    const sliderProgress = document.querySelector("input[type='range']");
+    sliderProgress.style.background = `linear-gradient(90deg, var(--blue) ${
+      searchRadiusInput * 5
+    }%, rgb(192, 192, 192) ${searchRadiusInput * 5}%)`;
+  }, [searchRadiusInput]);
+
+  // Brings you to directions component on Result Click or Map Result Click
+  const handleSubmitDestination = (destinationParam) => {
+    setDestination(destinationParam);
+    navigate(
+      `/location/${coords}/${searchItem}/${destinationParam.displayString}`
+    );
+  };
+  // Make axios call when this component is mounted, or when radius changes
+  useEffect((handleSubmitDestination) => {
+    setLoadingState(true);
+    const options = {
+      sort: "relevance",
+      feedback: false,
+      key: apiKey,
+      circle: `${currentLocation.longitude},${currentLocation.latitude},${
+        searchRadius * 1000
+      }`,
+      pageSize: 50,
+      q: userQuery,
     };
-    const handleSubmitSearchRadiusChange = function (e) {
-        e.preventDefault();
-        setSearchRadius(searchRadiusInput);
-    };
 
-    // Helper Function for calculating straight path distance, from https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
-    // NOTE: Not sure if we need this, but it gives the direct distance (ignoring roads, i.e. if you were to fly directly from one point to the other) between two long/lat points in kilometers. Alternatively, we can probably show the actual road distance with the distance API later on.
-    const lonLatDistance = function (lon1, lat1, lon2, lat2) {
-        const p = 0.017453292519943295;
-        const c = Math.cos;
-        const a = 0.5 - c((lat2 - lat1) * p) / 2 + (c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p))) / 2;
-        return 12742 * Math.asin(Math.sqrt(a));
-    };
-
-    function openResults() {
-        const resultsDiv = document.querySelector('.resultsDiv');
-        const olList = document.querySelector('.resultsOrderList');
-
-        resultsDiv.classList.toggle('active');
-        olList.classList.toggle('active');
-    }
-
-    useEffect(() => {
-        const unsplashApiKey = 'EdiposNhsc-ZFDGSbSFb-BXp2VjbYeohfAUoUGdo2MA'; //dsddDM5If1dZktxt2jefA-bUa5Sc-rWDXcKcRjGPYrM
-        axios({
-            url: `https://api.unsplash.com/search/photos`,
-            method: 'GET',
-            dataResponse: 'json',
-            params: {
-                client_id: unsplashApiKey,
-                query: userQuery,
-                per_page: 30,
-            },
-        }).then((response) => {
-            const photos = response.data.results;
-            setStorePhotos(photos);
-        });
-    }, [searchRadius]);
-
-    useEffect(() => {
-        const sliderProgress = document.querySelector("input[type='range']");
-        sliderProgress.style.background = `linear-gradient(90deg, var(--blue) ${searchRadiusInput * 5}%, rgb(192, 192, 192) ${searchRadiusInput * 5}%)`;
-    }, [searchRadiusInput]);
-
-    // Make axios call when this component is mounted, or when radius changes
-    useEffect(() => {
-        setLoadingState(true);
-        const options = {
-            sort: 'relevance',
-            feedback: false,
-            key: apiKey,
-            circle: `${currentLocation.longitude},${currentLocation.latitude},${searchRadius * 1000}`,
-            pageSize: 50,
-            q: userQuery,
-        };
-
-        try {
-            window.L.mapquest.key = apiKey;
-            window.L.mapquest.search().place(options, (error, response) => {
-                try {
-                    if (!searchResultsLayerDefined) {
-                        setSearchResultsLayerDefined(true);
-                        setSearchResultsLayer(
-                            window.L.mapquest
-                                .searchLayer({
-                                    searchResponse: response,
-                                })
-                                .addTo(mapState)
-                                .on('search_marker_clicked', (e) => {
-                                    handleSubmitDestination(e);
-                                })
-                        );
-                    } else {
-                        searchResultsLayer.setSearchResponse(response);
-                    }
-                } catch (error) {
-                    navigate('/location');
-                }
+    window.L.mapquest.key = apiKey;
+    window.L.mapquest.search().place(options, (error, response) => {
+      if (!searchResultsLayerDefined) {
+        setSearchResultsLayerDefined(true);
+        setSearchResultsLayer(
+          window.L.mapquest
+            .searchLayer({
+              searchResponse: response,
+            })
+            .addTo(mapState)
+            .on("search_marker_clicked", (e) => {
+              handleSubmitDestination(e);
+            })
+        );
+      } else {
+        searchResultsLayer.setSearchResponse(response);
+      }
 
                 const responseArray = response.results;
 
@@ -154,24 +174,23 @@ export default function Results({ apiKey, mapState, searchResultsLayer, setSearc
                     setIndicesToHighlight([responseArray.length / 2, responseArray.length / 2 - 1]);
                 }
 
-                setResultsArray(responseArray);
-            });
-        } catch (error) {
-            console.log('ERROR:');
-        }
-    }, [searchRadius]); // SUGGESTION: We can also make the list update live as the user changes the search radius, but it could be more laggy.
-
-    // Brings you to directions component on Result Click or Map Result Click
-    const handleSubmitDestination = (destinationParam) => {
-        setDestination(destinationParam);
-        navigate(`/location/${coords}/${searchItem}/${destinationParam.displayString}`);
-    };
+      setResultsArray(responseArray);
+    });
+  }, [searchRadius, 
+    apiKey,  
+    mapState, 
+    searchResultsLayer, 
+    searchResultsLayerDefined, 
+    setSearchResultsLayer, 
+    setSearchResultsLayerDefined,
+  ]); // SUGGESTION: We can also make the list update live as the user changes the search radius, but it could be more laggy.
+  
 
     // opens search radius menu
-    const openRadiusMenu = () => {
-        const searchRadiusDiv = document.querySelector('.changeSearchRadiusDiv');
-        searchRadiusDiv.classList.toggle('active');
-    };
+    // const openRadiusMenu = () => {
+      //   const searchRadiusDiv = document.querySelector('.changeSearchRadiusDiv');
+  //       searchRadiusDiv.classList.toggle('active');
+    // };
 
     return (
         <>
