@@ -10,7 +10,6 @@
 }
 
 .searchSuggestions {
-  border: 2px red solid;
   margin-top: 10px;
   white-space: nowrap;
   overflow-x: scroll;

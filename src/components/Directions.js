@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBicycle,
   faCar,
   faClock,
-  faPersonWalking,
   faRoad,
   faWalking,
   faAngleLeft,
@@ -38,16 +36,11 @@ const selectedResult = {
     },
   },
 };
-// Placeholder for apiKey, should be a prop
-const apiKey = "Ly2CHsAhxGvzncY98vcRBQDokGoO0EMZ";
+
 // Placeholder values for current location and destination, should comes from route params
 const currentLocation = {
   longitude: -78.9441,
   latitude: 44.105,
-};
-const destinationLocation = {
-  longitude: selectedResult.place.geometry.coordinates[0],
-  latitude: selectedResult.place.geometry.coordinates[1],
 };
 
 export default function Directions({
@@ -59,7 +52,6 @@ export default function Directions({
   directionsLayerDefined,
   setDirectionsLayerDefined,
 }) {
-  const navigate = useNavigate();
   const { coords, searchItem, destinationCoords } = useParams();
   currentLocation.longitude = coords.split(",")[0];
   currentLocation.latitude = coords.split(",")[1];
@@ -138,13 +130,10 @@ export default function Directions({
             })
             .addTo(mapState)
         );
-        console.log("Directions, adding new layer", response);
       } else {
         directionsLayer.setDirectionsResponse(response);
-        console.log("Directions, reusing layer", response);
       }
-      console.log(response);
-      console.log(response.route);
+
       setRouteObject(response.route);
       setDirectionObjectsArray(response.route.legs[0].maneuvers);
     });
@@ -153,7 +142,6 @@ export default function Directions({
   useEffect(() => {
     if (directionsLayerDefined) {
       directionsLayer.on("directions_changed", function (response) {
-        console.log(response);
         setRouteObject(response.route);
         setDirectionObjectsArray(response.route.legs[0].maneuvers);
       });

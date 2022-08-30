@@ -70,7 +70,9 @@
     transform: translateY(0);
     transform: translateX(200px);
   }
-
+  .searchSuggestions {
+    overflow-x: hidden;
+  }
   /* directions section*/
   .directionsDiv {
     position: fixed;
