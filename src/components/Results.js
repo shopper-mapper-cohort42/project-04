@@ -138,11 +138,8 @@ export default function Results({
               handleSubmitDestination(e);
             })
         );
-
-        console.log("Results, adding new layer", response);
       } else {
         searchResultsLayer.setSearchResponse(response);
-        console.log("Results, reusing layer", response);
       }
 
       const responseArray = response.results;
