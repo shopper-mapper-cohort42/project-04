@@ -6,6 +6,7 @@ import {
   faDirections,
   faAngleLeft,
   faAngleRight,
+  faAngleUp,
 } from "@fortawesome/free-solid-svg-icons";
 import Loading from "./Loading";
 
@@ -51,7 +52,6 @@ export default function Results({
   const [storePhotos, setStorePhotos] = useState([]);
 
   // checks state to hide results menu on desktop
-  const [openSearchRadiusMenu, setSearchRadiusMenu] = useState(false);
   const [hideResults, setHideResults] = useState(false);
   const [toggleHamburger, setToggleHamburger] = useState(false);
 
@@ -191,11 +191,6 @@ export default function Results({
     searchRadiusDiv.classList.toggle("active");
   };
 
-  const openExtraButtons = () => {
-    const sideMenu = document.querySelector(".extraButtonsDiv");
-    sideMenu.classList.toggle("active");
-  };
-
   return (
     <>
       {loadingState === false ? (
@@ -255,7 +250,7 @@ export default function Results({
                       : setToggleHamburger(true)
                   }
                 >
-                  <FontAwesomeIcon icon={faAngleLeft} />
+                  <FontAwesomeIcon icon={faAngleUp} />
                 </div>
                 <button
                   className="returnToMain changeRadiusBtn"

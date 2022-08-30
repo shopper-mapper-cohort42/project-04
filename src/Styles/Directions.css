@@ -1,228 +1,258 @@
 .directionsSection {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-    transition: transform 0.3s;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  transition: transform 0.3s;
 
-    width: 100%;
+  width: 100%;
 }
 
 .directionBackButton {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 .directionsDiv {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-
-    position: fixed;    
-    bottom: 0;
-    left: 0;
-
-    margin: 20px 0 0;
-    width: 100%;
-    height: 50%;
-
-    font-family: var(--bodyFont);
-    text-align: center;
-    background-color: white;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-    transition-property: transform, height;
-    transition-duration: 0.3s;
-    z-index: 9999;
-    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  margin: 20px 0 0;
+  width: 100%;
+  height: 50%;
+  font-family: var(--bodyFont);
+  text-align: center;
+  background-color: white;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  transition-property: transform, height;
+  transition-duration: 0.3s;
+  z-index: 9999;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
 }
 
 .directionsDiv.active {
-    height: 90%;
+  height: 90%;
 }
 
 .expandDirections {
-    content: "";
-    width: 50px;
-    height: 5px;
-    background-color: var(--black);
-    left: 50%;
-    transform: translateX(-50%);
-    border-radius: 20px;
-    position: absolute;
-    top: 10px;
-    cursor: pointer;
-    z-index: 9999;
-    transition: 0.3s background-color;
+  content: "";
+  width: 50px;
+  height: 5px;
+  background-color: var(--black);
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 20px;
+  position: absolute;
+  top: 10px;
+  cursor: pointer;
+  z-index: 9999;
+  transition: 0.3s background-color;
 }
 
 .expandDirections:hover,
 .expandDirections:focus {
-    background-color: var(--blue);
+  background-color: var(--blue);
 }
 
 .directionsTopContainer {
-    transition: 0.3s height;
+  transition: 0.3s height;
 }
 
-.destinationInfoHeadingContainer h3, 
+.destinationInfoHeadingContainer h3,
 .destinationInfoHeadingContainer h4 {
-    margin: var(--spacing);
+  margin: var(--spacing);
 }
 
 .destinationInfoHeadingContainer h4 {
-    opacity: 0.5;
+  opacity: 0.5;
+  font-size: clamp(0.8rem, 4vw, 0.9rem);
 }
 
 .directionsRouteTypeForm ul {
-    width: 100%;
-    padding: 0;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
+  width: 100%;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
 }
 
 .directionsRouteTypeForm li {
-    list-style: none;
-    position: relative;
+  list-style: none;
+  position: relative;
 
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .directionsRouteTypeForm input {
-    position: absolute;
-    display: block;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
 }
 
 .directionsRouteTypeForm label {
-    border: 3px solid var(--input-grey);
-    border-radius: 10px;
-    background-color: white;
-    padding: calc(0.25 * var(--spacing)) calc(0.5 * var(--spacing));
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  border: 3px solid var(--input-grey);
+  border-radius: 10px;
+  height: 100%;
+  width: 100%;
+  background-color: white;
+  padding: calc(0.25 * var(--spacing)) calc(0.5 * var(--spacing));
+  font-size: clamp(0.7rem, 4vh, 0.8rem);
+  font-weight: bold;
 }
 
 .directionsRouteTypeForm input:checked + label {
-    background-color: var(--green);
-    border: 3px solid var(--green);
+  background-color: var(--blue);
+  border: 3px solid var(--blue);
 }
 
-.directionsRouteTypeForm input:hover + label, 
+.directionsRouteTypeForm input:hover + label,
 .directionsRouteTypeForm input:focus + label {
-    border: 3px solid var(--blue)
+  border: 3px solid var(--blue);
 }
 
 .destinationInfoDetailContainer {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
 }
 
 .destinationInfoDetailContainer p {
-    margin: calc(0.25 * var(--spacing))
+  margin: calc(0.25 * var(--spacing));
+  font-size: clamp(0.7rem, 4vw, 0.8rem);
 }
 
 .destinationInfoDetailContainer p {
-    position: relative;
-    z-index: 10;
+  position: relative;
+  z-index: 10;
 }
 
 .destinationInfoDetailContainer .directionIcon {
-    position: absolute;
-    z-index: 0;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0.2;
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.2;
 }
 
 .destinationInfoDetailContainer .directionIcon:hover {
-    color: inherit;
-    cursor: default;
+  color: inherit;
+  cursor: default;
 }
 
 .directionsOrderList {
-    list-style-position: inside;
-    list-style: none;
-    overflow-y: scroll;
-    
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
-    padding: 0;
-    height: 90%;
-    width: 100%;
+  list-style-position: inside;
+  list-style: none;
+  overflow-y: scroll;
+
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  padding: 0;
+  height: 90%;
+  width: 100%;
 }
 
 .directionsOrderList.active {
-    height: 90%;
+  height: 90%;
 }
 
+/* slide out div for desktop */
+.slideOutDirectionsDiv {
+  position: absolute;
+  top: 45%;
+  left: -40px;
+  width: 30px;
+  height: 30px;
+  background-color: white;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  justify-content: center;
+  cursor: pointer;
+  border: 2px transparent solid;
+  border-radius: 50%;
+  transition: 0.3s color, 0.3s border;
+}
+.slideOutDirectionsDiv:hover,
+.slideOutDirectionsDiv:focus {
+  color: var(--blue);
+  border: 2px var(--blue) solid;
+}
 .directionContainer {
-    padding: calc(0.5 * var(--spacing))  var(--spacing);
-    display: flex;
-    flex-direction: row;
+  padding: calc(0.5 * var(--spacing)) var(--spacing);
+  display: flex;
+  flex-direction: row;
 }
 
 .directionContainer:last-child {
-    padding: var(--spacing);
+  padding: var(--spacing);
 }
 
 .directionImageContainer {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: var;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: var;
 }
 
 .directionTextContainer {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-
-    width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .directionNarrativeContainer {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: var(--spacing);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing);
 }
 
 .directionDetailsContainer {
-    flex-direction: row;
-    justify-content: flex-end;
-    gap: calc(0.25 * var(--spacing))
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: calc(0.25 * var(--spacing));
 }
 
-.directionDistance, .directionTime {
-    margin-left: auto;
-    font-size: clamp(0.7rem, 4vw, 1rem);
-    width: fit-content;
-    border-radius: 20px;
-    padding: 4px 8px;
-    font-weight: bold;
-    text-align: right;
-    text-transform: none !important;
+.directionDetailsContainer p {
+  font-size: clamp(0.7rem, 4vw, 0.8rem);
+}
+
+.directionDistance,
+.directionTime {
+  margin-left: auto;
+  font-size: clamp(0.7rem, 4vw, 1rem);
+  width: fit-content;
+  border-radius: 20px;
+  padding: 4px 8px;
+  font-weight: bold;
+  text-transform: none !important;
 }
 
 .directionDistance {
-    color: var(--black);
-    background-color: var(--green);
+  color: var(--black);
+  background-color: var(--green);
+  margin-bottom: 10px;
 }
 
 .directionTime {
-    color: var(--black);
-    border: 1px solid var(--black);
+  color: var(--black);
+  background-color: var(--orange);
 }

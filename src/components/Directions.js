@@ -3,7 +3,16 @@ import axios from "axios";
 import { Link, useParams, useNavigate } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBicycle, faCar, faClock, faPersonWalking, faRoad, faWalking, faAngleLeft } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBicycle,
+  faCar,
+  faClock,
+  faPersonWalking,
+  faRoad,
+  faWalking,
+  faAngleLeft,
+  faAngleRight,
+} from "@fortawesome/free-solid-svg-icons";
 
 // PLACEHOLDER VARIABLES
 // Placeholder variable for the selectedResult prop that we will get from Results.js to pass into this component
@@ -155,7 +164,6 @@ export default function Directions({
 
   return (
     <section className="directionsSection">
-      
       <div className="wrapper">
         <div className="directionBackButton">
           <Link
@@ -166,58 +174,110 @@ export default function Directions({
             BACK
           </Link>
         </div>
-        <div className={hideDirections ? "directionsDiv active" : "directionsDiv"}>
-          <span className="expandDirections" onClick={() => { setHideDirections(!hideDirections) }} ></span>
-          <div className="directionsTopContainer">
+        <div
+          className={hideDirections ? "directionsDiv active" : "directionsDiv"}
+        >
+          <span
+            className="expandDirections"
+            onClick={() => {
+              setHideDirections(!hideDirections);
+            }}
+          ></span>
+          <button
+            className="slideOutDirectionsDiv"
+            onClick={() => {
+              hideDirections
+                ? setHideDirections(false)
+                : setHideDirections(true);
+            }}
+          >
+            <FontAwesomeIcon
+              icon={hideDirections ? faAngleLeft : faAngleRight}
+            />
+          </button>
+          <div
+            className={
+              hideDirections
+                ? "directionsTopContainer active"
+                : "directionsTopContainer"
+            }
+          >
             <div className="destinationInfoHeadingContainer">
               <h3>Directions to {destination.name}</h3>
-              <h4>{destination.displayString}</h4>
+              <h4>{destination.displayString.split(`${destination.name},`)}</h4>
             </div>
 
             {/* Form to handle changing travel method */}
-            <form className='directionsRouteTypeForm'>
-                <ul>
-                    <li>
-                        <input type="radio" name="routeTypeInput" id='routeTypeInputFastest' value={'fastest'} checked={routeTypeInput === 'fastest'} onChange={() => { handleRouteTypeInputChange('fastest') }} />
-                        <label htmlFor="routeTypeInputFastest">
-                            <FontAwesomeIcon
-                                className="directionIcon"
-                                icon={faCar}
-                            />
-                            <> Car (Fastest)</>
-                        </label>
-                    </li>
-                    <li>
-                        <input type="radio" name="routeTypeInput" id='routeTypeInputShortest' value={'shortest'} onChange={() => { handleRouteTypeInputChange('shortest') }} />
-                        <label htmlFor="routeTypeInputShortest">
-                            <FontAwesomeIcon
-                                className="directionIcon"
-                                icon={faCar}
-                            />
-                            <> Car (Shortest)</>
-                        </label>
-                    </li>
-                    <li>
-                        <input type="radio" name="routeTypeInput" id='routeTypeInputPedestrian' value={'pedestrian'} onChange={() => { handleRouteTypeInputChange('pedestrian') }} />
-                        <label htmlFor="routeTypeInputPedestrian">
-                            <FontAwesomeIcon
-                                className="directionIcon"
-                                icon={faWalking}
-                            />
-                            <> Walking</>
-                        </label>
-                    </li>
-                    <li>
-                        <input type="radio" name="routeTypeInput" id='routeTypeInputBicycle' value={'bicycle'} onChange={() => { handleRouteTypeInputChange('bicycle') }} />
-                        <label htmlFor="routeTypeInputBicycle">
-                            <FontAwesomeIcon
-                                className="directionIcon"
-                                icon={faBicycle}
-                            />
-                            <> Bicycle</>
-                        </label>
-                    </li>
-                </ul>
+            <form className="directionsRouteTypeForm">
+              <ul>
+                <li>
+                  <input
+                    type="radio"
+                    name="routeTypeInput"
+                    id="routeTypeInputFastest"
+                    value={"fastest"}
+                    checked={routeTypeInput === "fastest"}
+                    onChange={() => {
+                      handleRouteTypeInputChange("fastest");
+                    }}
+                  />
+                  <label htmlFor="routeTypeInputFastest">
+                    <FontAwesomeIcon className="directionIcon" icon={faCar} />
+                    <> Car (Fastest)</>
+                  </label>
+                </li>
+                <li>
+                  <input
+                    type="radio"
+                    name="routeTypeInput"
+                    id="routeTypeInputShortest"
+                    value={"shortest"}
+                    onChange={() => {
+                      handleRouteTypeInputChange("shortest");
+                    }}
+                  />
+                  <label htmlFor="routeTypeInputShortest">
+                    <FontAwesomeIcon className="directionIcon" icon={faCar} />
+                    <> Car (Shortest)</>
+                  </label>
+                </li>
+                <li>
+                  <input
+                    type="radio"
+                    name="routeTypeInput"
+                    id="routeTypeInputPedestrian"
+                    value={"pedestrian"}
+                    onChange={() => {
+                      handleRouteTypeInputChange("pedestrian");
+                    }}
+                  />
+                  <label htmlFor="routeTypeInputPedestrian">
+                    <FontAwesomeIcon
+                      className="directionIcon"
+                      icon={faWalking}
+                    />
+                    <> Walking</>
+                  </label>
+                </li>
+                <li>
+                  <input
+                    type="radio"
+                    name="routeTypeInput"
+                    id="routeTypeInputBicycle"
+                    value={"bicycle"}
+                    onChange={() => {
+                      handleRouteTypeInputChange("bicycle");
+                    }}
+                  />
+                  <label htmlFor="routeTypeInputBicycle">
+                    <FontAwesomeIcon
+                      className="directionIcon"
+                      icon={faBicycle}
+                    />
+                    <> Bicycle</>
+                  </label>
+                </li>
+              </ul>
             </form>
 
             <div className="destinationInfoDetailContainer">
@@ -232,22 +292,38 @@ export default function Directions({
               </p>
             </div>
           </div>
-          <ol className={hideDirections ? "directionsOrderList active" : "directionsOrderList"}>
+          <ol
+            className={
+              hideDirections
+                ? "directionsOrderList active"
+                : "directionsOrderList"
+            }
+          >
             {directionObjectsArray.map((directionObject, directionIndex) => {
               return (
-                <li key={`directionKey-${directionIndex}`} className="directionContainer"> 
-
+                <li
+                  key={`directionKey-${directionIndex}`}
+                  className="directionContainer"
+                >
                   <div className="directionTextContainer">
                     <div className="directionNarrativeContainer">
-                      <img className="directionImage" src={directionObject.iconUrl} alt="" />
+                      <img
+                        className="directionImage"
+                        src={directionObject.iconUrl}
+                        alt=""
+                      />
                       <p>{directionObject.narrative}</p>
                     </div>
 
                     {/* Conditional rendering for direction and time when it's not at the last direction */}
                     {directionIndex < directionObjectsArray.length - 1 ? (
                       <div className="directionDetailsContainer">
-                        <p className="directionDistance">{directionObject.distance.toFixed(2)} km</p>
-                        <p className="directionTime">Time: {formatHHMMSS(directionObject.formattedTime)}</p>
+                        <p className="directionDistance">
+                          {directionObject.distance.toFixed(2)} km
+                        </p>
+                        <p className="directionTime">
+                          Time: {formatHHMMSS(directionObject.formattedTime)}
+                        </p>
                       </div>
                     ) : null}
                   </div>
