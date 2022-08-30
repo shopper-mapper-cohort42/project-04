@@ -173,12 +173,13 @@ function Location({
                 navigate(`/location/${currentLongitude}, ${currentLatitutde}`);
               }
             } else {
-              alert("no result found");
+              setDisplayMessage('No results found.');
+              togglePopup();
             }
           })
           .catch((err) => {
             setLoadingState(false);
-            setDisplayMessage(`You may have ${err.message} err, please try again later..`);
+            setDisplayMessage(`${err.message}, please try again later..`);
             togglePopup();
           });
       } else {
