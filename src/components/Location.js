@@ -96,10 +96,9 @@ function Location({
 
   // Convert search location into longitude/latitude coordinates
   const getGeoLocation = (location) => {
-
     // Enable loading animation and close predictive dropdown
     setLoadingState(true);
-    setCloseDropDown(true); 
+    setCloseDropDown(true);
 
     if (location !== "") {
       axios({
@@ -125,7 +124,6 @@ function Location({
 
             setLocationMarker(currentLatitutde, currentLongitude);
             navigate(`/location/${currentLongitude}, ${currentLatitutde}`);
-            
           } else {
             setDisplayMessage("No results found.");
             setTogglePopup(true);
@@ -237,11 +235,18 @@ function Location({
                       className="userLocationInput"
                       onChange={searchLocation}
                       value={location}
-                      onFocus={() => setCloseDropDown(false)}
+                      onFocus={() =>
+                        closeDropDown
+                          ? setCloseDropDown(false)
+                          : setCloseDropDown(true)
+                      }
                       placeholder="Enter Your Location"
                       required
                     />
-                    <div onClick={(e) => handleSubmit(e, location)} tabIndex="0">
+                    <div
+                      onClick={(e) => handleSubmit(e, location)}
+                      tabIndex="0"
+                    >
                       <FontAwesomeIcon className="searchIcon" icon={faSearch} />
                       <span className="sr-only">Submit your location</span>
                     </div>

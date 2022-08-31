@@ -1,7 +1,32 @@
 footer {
-  margin: 0 auto;
   text-align: center;
   width: 100%;
-  position: absolute;
   bottom: 0;
+  height: 10vh;
+  background-color: #011627;
+  color: white;
+}
+
+footer h2 {
+  margin: 0;
+}
+
+footer h3 {
+  margin: 0;
+  font-size: clamp(0.8rem, 4vw, 0.9rem);
+}
+
+footer h3:first-child {
+  padding-top: 10px;
+}
+
+footer a {
+  text-decoration: none;
+  color: white;
+  transition: 0.3s color;
+}
+
+footer a:hover,
+footer a:focus {
+  color: var(--blue);
 }
