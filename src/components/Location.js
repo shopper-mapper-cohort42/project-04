@@ -195,7 +195,7 @@ function Location({
                   <p>{displayMessage}</p>
                   <div className="popupButtons">
                     <button
-                      className="findLocation"
+                      className="blueButton"
                       onClick={() => {
                         togglePopup
                           ? setTogglePopup(false)
