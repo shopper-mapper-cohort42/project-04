@@ -208,11 +208,12 @@ export default function Results({
               >
                 <FontAwesomeIcon icon={faAngleLeft} />
                 BACK
+                <span className="sr-only">Return to Previous Page</span>
               </Link>
             </div>
 
             <div className={hideResults ? "resultsDiv active" : "resultsDiv"}>
-              <div
+              <button
                 className={
                   hideResults ? "hamburgerMenu active" : "hamburgerMenu"
                 }
@@ -226,7 +227,7 @@ export default function Results({
                 <span className="lineOne hbLine"></span>
                 <span className="lineTwo hbLine"></span>
                 <span className="lineThree hbLine"></span>
-              </div>
+              </button>
               <button
                 className="minimizeResults"
                 onClick={() =>
@@ -247,7 +248,7 @@ export default function Results({
                   toggleHamburger ? "extraButtonsDiv active" : "extraButtonsDiv"
                 }
               >
-                <div
+                <button
                   className="closeMenu"
                   onClick={() =>
                     toggleHamburger
@@ -256,7 +257,8 @@ export default function Results({
                   }
                 >
                   <FontAwesomeIcon icon={faAngleUp} />
-                </div>
+                  <span className="sr-only">Close Search Radius Menu</span>
+                </button>
                 <button
                   className="returnToMain changeRadiusBtn"
                   onClick={() => {
