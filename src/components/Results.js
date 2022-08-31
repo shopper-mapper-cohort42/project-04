@@ -53,6 +53,9 @@ export default function Results({
   // checks state to open radius menu mobile
   const [openRadius, setOpenRadius] = useState(false);
 
+  // checks if there is search reslts
+  const [shopResults, setShopResults] = useState(true);
+
   // checks state to hide results menu on desktop
   const [hideResults, setHideResults] = useState(false);
   const [toggleHamburger, setToggleHamburger] = useState(false);
@@ -90,6 +93,7 @@ export default function Results({
         client_id: unsplashApiKey,
         query: userQuery,
         per_page: 30,
+        content_filter: "high",
       },
     }).then((response) => {
       const photos = response.data.results;
@@ -97,6 +101,7 @@ export default function Results({
     });
   }, [searchRadius]);
 
+  // this will adjust the slider colour as the user slides the different value for the search radius
   useEffect(() => {
     const sliderProgress = document.querySelector("input[type='range']");
     sliderProgress.style.background = `linear-gradient(90deg, var(--blue) ${
@@ -153,7 +158,7 @@ export default function Results({
 
           if (!responseArray.length) {
             setLoadingState(false);
-
+            setShopResults(false);
             // if there are no results, highlight nothing
             setIndicesToHighlight([]);
           } else if (responseArray.length % 2) {
@@ -180,7 +185,7 @@ export default function Results({
           setResultsArray(responseArray);
         });
       } catch (error) {
-        console.log("ERROR:");
+        navigate(`/location/`);
       }
     },
     [
@@ -207,11 +212,12 @@ export default function Results({
               >
                 <FontAwesomeIcon icon={faAngleLeft} />
                 BACK
+                <span className="sr-only">Return to Previous Page</span>
               </Link>
             </div>
 
             <div className={hideResults ? "resultsDiv active" : "resultsDiv"}>
-              <div
+              <button
                 className={
                   hideResults ? "hamburgerMenu active" : "hamburgerMenu"
                 }
@@ -225,7 +231,7 @@ export default function Results({
                 <span className="lineOne hbLine"></span>
                 <span className="lineTwo hbLine"></span>
                 <span className="lineThree hbLine"></span>
-              </div>
+              </button>
               <button
                 className="minimizeResults"
                 onClick={() =>
@@ -246,7 +252,7 @@ export default function Results({
                   toggleHamburger ? "extraButtonsDiv active" : "extraButtonsDiv"
                 }
               >
-                <div
+                <button
                   className="closeMenu"
                   onClick={() =>
                     toggleHamburger
@@ -255,7 +261,8 @@ export default function Results({
                   }
                 >
                   <FontAwesomeIcon icon={faAngleUp} />
-                </div>
+                  <span className="sr-only">Close Search Radius Menu</span>
+                </button>
                 <button
                   className="returnToMain changeRadiusBtn"
                   onClick={() => {
@@ -307,72 +314,78 @@ export default function Results({
                   hideResults ? "resultsOrderList active" : "resultsOrderList"
                 }
               >
-                {resultsArray.map((result, resultIndex) => {
-                  const resultLocation = {
-                    longitude: result.place.geometry.coordinates[0],
-                    latitude: result.place.geometry.coordinates[1],
-                  };
+                {shopResults ? (
+                  resultsArray.map((result, resultIndex) => {
+                    const resultLocation = {
+                      longitude: result.place.geometry.coordinates[0],
+                      latitude: result.place.geometry.coordinates[1],
+                    };
 
-                  const randomImage = Math.floor(
-                    Math.random() * storePhotos.length
-                  );
-                  return (
-                    // HIGHLIGHTED RENDERING
+                    const randomImage = Math.floor(
+                      Math.random() * storePhotos.length
+                    );
+                    return (
+                      // HIGHLIGHTED RENDERING
 
-                    <li
-                      key={result.id}
-                      className={
-                        indicesToHighlight.indexOf(resultIndex) >= 0
-                          ? "mostAverage"
-                          : null
-                      }
-                    >
-                      <div className="shopImageDiv">
-                        <div className="shopImageContainer">
-                          <img
-                            src={storePhotos[randomImage].urls.small}
-                            alt={storePhotos[randomImage].alt_description}
+                      <li
+                        key={result.id}
+                        className={
+                          indicesToHighlight.indexOf(resultIndex) >= 0
+                            ? "mostAverage"
+                            : null
+                        }
+                      >
+                        <div className="shopImageDiv">
+                          <div className="shopImageContainer">
+                            <img
+                              src={storePhotos[randomImage].urls.small}
+                              alt={storePhotos[randomImage].alt_description}
+                            />
+                          </div>
+                        </div>
+                        <div className="shopTextDiv">
+                          {
+                            // NOTE: {indicesToHighlight.indexOf(resultIndex) >= 0} being TRUE is used for the highlighted rendering, if you want to put it elsewhere
+                            indicesToHighlight.indexOf(resultIndex) >= 0 ? (
+                              <h3 className="mostAverageTitle">
+                                ⭐Most Average Shop⭐
+                              </h3>
+                            ) : null // null is the NON-HIGHLIGHTED RESULT
+                          }
+                          <h3>{result.name}</h3>
+                          <p>{result.displayString.split(`${result.name},`)}</p>
+                          <p className="resultsDistance">
+                            ~
+                            {lonLatDistance(
+                              currentLocation.longitude,
+                              currentLocation.latitude,
+                              resultLocation.longitude,
+                              resultLocation.latitude
+                            ).toFixed(2)}{" "}
+                            km away
+                          </p>
+                        </div>
+                        <div className="shopDirectionDiv">
+                          <span className="sr-only">
+                            Directions to {result.name}
+                          </span>
+                          <FontAwesomeIcon
+                            className="directionIcon"
+                            tabIndex="0"
+                            icon={faDirections}
+                            onClick={() => {
+                              handleSubmitDestination(result);
+                            }}
                           />
                         </div>
-                      </div>
-                      <div className="shopTextDiv">
-                        {
-                          // NOTE: {indicesToHighlight.indexOf(resultIndex) >= 0} being TRUE is used for the highlighted rendering, if you want to put it elsewhere
-                          indicesToHighlight.indexOf(resultIndex) >= 0 ? (
-                            <h3 className="mostAverageTitle">
-                              ⭐Most Average Shop⭐
-                            </h3>
-                          ) : null // null is the NON-HIGHLIGHTED RESULT
-                        }
-                        <h3>{result.name}</h3>
-                        <p>{result.displayString.split(`${result.name},`)}</p>
-                        <p className="resultsDistance">
-                          ~
-                          {lonLatDistance(
-                            currentLocation.longitude,
-                            currentLocation.latitude,
-                            resultLocation.longitude,
-                            resultLocation.latitude
-                          ).toFixed(2)}{" "}
-                          km away
-                        </p>
-                      </div>
-                      <div className="shopDirectionDiv">
-                        <span className="sr-only">
-                          Directions to {result.name}
-                        </span>
-                        <FontAwesomeIcon
-                          className="directionIcon"
-                          tabIndex="0"
-                          icon={faDirections}
-                          onClick={() => {
-                            handleSubmitDestination(result);
-                          }}
-                        />
-                      </div>
-                    </li>
-                  );
-                })}
+                      </li>
+                    );
+                  })
+                ) : (
+                  <li>
+                    <p>No Results 😢 Try again?</p>
+                  </li>
+                )}
               </ol>
             </div>
           </div>
