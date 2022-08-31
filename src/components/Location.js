@@ -13,7 +13,7 @@ function Location({
   setGeocodingLayer,
   geocodingLayerDefined,
   setGeocodingLayerDefined,
-  clearAllLayers
+  clearAllLayers,
 }) {
   const [location, setLocation] = useState("");
   const [predictiveResults, setPredictiveResults] = useState([]);
@@ -35,18 +35,13 @@ function Location({
       setCloseDropDown(false);
     } else {
       setPredictiveResults([]);
-
-      // document.querySelector(".userLocationDiv").classList.remove("active");
-      // document
-      //   .querySelector(".locationPredictiveResults ul")
-      //   .classList.remove("active");
     }
   };
 
   // API call for predictive text
   const predictiveText = (location) => {
     axios({
-      url: `http://www.mapquestapi.com/search/v3/prediction`,
+      url: `https://www.mapquestapi.com/search/v3/prediction`,
       params: {
         key: apiKey,
         q: location,
@@ -201,8 +196,8 @@ function Location({
   // };
 
   useEffect(() => {
-    clearAllLayers()
-  }, [])
+    clearAllLayers();
+  }, [clearAllLayers]);
 
   return (
     <>

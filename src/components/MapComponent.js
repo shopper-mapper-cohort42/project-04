@@ -20,7 +20,7 @@ export default function MapComponent({ mapState }) {
             navigate('/location');
             // console.log("Error in MapComponent.js", err);
         }
-    }, [reactRouterLocation.pathname]);
+    }, [reactRouterLocation.pathname,mapState,navigate]);
 
     return <div id="map" style={{ width: '100%', height: '100%' }}></div>;
 }
