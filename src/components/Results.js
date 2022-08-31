@@ -10,7 +10,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Loading from "./Loading";
 
-
 export default function Results({
   apiKey,
   mapState,
@@ -20,7 +19,6 @@ export default function Results({
   setSearchResultsLayerDefined,
   setDestination,
 }) {
-
   //imported from params
   const { coords, searchItem } = useParams();
   const navigate = useNavigate();
@@ -28,7 +26,7 @@ export default function Results({
   //updating the currentLocation
   const currentLocation = {
     longitude: coords.split(",")[0],
-    latitude: coords.split(",")[1]
+    latitude: coords.split(",")[1],
   };
 
   let userQuery = searchItem;
@@ -92,7 +90,7 @@ export default function Results({
       const photos = response.data.results;
       setStorePhotos(photos);
     });
-  }, [searchRadius]);
+  }, [searchRadius, userQuery]);
 
   // this will adjust the slider colour as the user slides the different value for the search radius
   useEffect(() => {
@@ -103,95 +101,98 @@ export default function Results({
   }, [searchRadiusInput, openRadius]);
 
   // Brings you to directions component on Result Click or Map Result Click
-  const handleSubmitDestination = useCallback((destinationParam) => {
-    setDestination(destinationParam);
-    navigate(
-      `/location/${coords}/${searchItem}/${destinationParam.displayString}`
-    );
-  }, [coords, searchItem])
+  const handleSubmitDestination = useCallback(
+    (destinationParam) => {
+      setDestination(destinationParam);
+      navigate(
+        `/location/${coords}/${searchItem}/${destinationParam.displayString}`
+      );
+    },
+    [coords, searchItem, navigate, setDestination]
+  );
 
   // Update results list when component is mounted, or when radius changes
-  useEffect(
-    () => {
-      setLoadingState(true);
-      const options = {
-        sort: "relevance",
-        feedback: false,
-        key: apiKey,
-        circle: `${currentLocation.longitude},${currentLocation.latitude},${
-          searchRadius * 1000
-        }`,
-        pageSize: 50,
-        q: userQuery,
-      };
+  useEffect(() => {
+    setLoadingState(true);
+    const options = {
+      sort: "relevance",
+      feedback: false,
+      key: apiKey,
+      circle: `${currentLocation.longitude},${currentLocation.latitude},${
+        searchRadius * 1000
+      }`,
+      pageSize: 50,
+      q: userQuery,
+    };
 
-      window.L.mapquest.key = apiKey;
-      window.L.mapquest.search().place(options, (error, response) => {
-        try {
-          if (!searchResultsLayerDefined) {
-            setSearchResultsLayerDefined(true);
-            setSearchResultsLayer(
-              window.L.mapquest
-                .searchLayer({
-                  searchResponse: response,
-                })
-                .addTo(mapState)
-                .on("search_marker_clicked", (e) => {
-                  setDestination(e);
-                  handleSubmitDestination(e);
-                })
-            );
-          } else {
-            searchResultsLayer.setSearchResponse(response);
-          }
-        } catch (error) {
-          navigate("/location");
-        }
-
-        const responseArray = response.results;
-
-        if (!responseArray.length) {
-          setLoadingState(false);
-          setShopResults(false);
-          // if there are no results, highlight nothing
-          setIndicesToHighlight([]);
-        } else if (responseArray.length % 2) {
-          // if odd number of results, highlight the middle result
-
-          // set loading state here
-          setTimeout(() => {
-            setLoadingState(false);
-          }, 500);
-
-          setIndicesToHighlight([Math.floor(responseArray.length / 2)]);
+    window.L.mapquest.key = apiKey;
+    window.L.mapquest.search().place(options, (error, response) => {
+      try {
+        if (!searchResultsLayerDefined) {
+          setSearchResultsLayerDefined(true);
+          setSearchResultsLayer(
+            window.L.mapquest
+              .searchLayer({
+                searchResponse: response,
+              })
+              .addTo(mapState)
+              .on("search_marker_clicked", (e) => {
+                setDestination(e);
+                handleSubmitDestination(e);
+              })
+          );
         } else {
-          // set loading state here
-          setTimeout(() => {
-            setLoadingState(false);
-          }, 500);
-          // if even number of results, highlight the middle two results
-          setIndicesToHighlight([
-            responseArray.length / 2,
-            responseArray.length / 2 - 1,
-          ]);
+          searchResultsLayer.setSearchResponse(response);
         }
+      } catch (error) {
+        navigate("/location");
+      }
 
-        setResultsArray(responseArray);
-      });
-      
-    },
-    [
-      searchRadius,
-      apiKey,
-      mapState,
-      navigate,
-      searchResultsLayer,
-      searchResultsLayerDefined,
-      setSearchResultsLayer,
-      setSearchResultsLayerDefined,
-      handleSubmitDestination
-    ]
-  );
+      const responseArray = response.results;
+
+      if (!responseArray.length) {
+        setLoadingState(false);
+        setShopResults(false);
+        // if there are no results, highlight nothing
+        setIndicesToHighlight([]);
+      } else if (responseArray.length % 2) {
+        // if odd number of results, highlight the middle result
+
+        // set loading state here
+        setTimeout(() => {
+          setLoadingState(false);
+        }, 500);
+
+        setIndicesToHighlight([Math.floor(responseArray.length / 2)]);
+      } else {
+        // set loading state here
+        setTimeout(() => {
+          setLoadingState(false);
+        }, 500);
+        // if even number of results, highlight the middle two results
+        setIndicesToHighlight([
+          responseArray.length / 2,
+          responseArray.length / 2 - 1,
+        ]);
+      }
+
+      setResultsArray(responseArray);
+    });
+  }, [
+    searchRadius,
+    apiKey,
+    mapState,
+    navigate,
+    searchResultsLayer,
+    searchResultsLayerDefined,
+    setSearchResultsLayer,
+    setSearchResultsLayerDefined,
+    handleSubmitDestination,
+    currentLocation.longitude,
+    currentLocation.latitude,
+    setDestination,
+    userQuery,
+  ]);
 
   return (
     <>
@@ -315,7 +316,6 @@ export default function Results({
                     };
 
                     return (
-
                       <li
                         key={result.id}
                         className={
@@ -327,8 +327,14 @@ export default function Results({
                         <div className="shopImageDiv">
                           <div className="shopImageContainer">
                             <img
-                              src={storePhotos[resultIndex % storePhotos.length].urls.small}
-                              alt={storePhotos[resultIndex % storePhotos.length].alt_description}
+                              src={
+                                storePhotos[resultIndex % storePhotos.length]
+                                  .urls.small
+                              }
+                              alt={
+                                storePhotos[resultIndex % storePhotos.length]
+                                  .alt_description
+                              }
                             />
                           </div>
                         </div>

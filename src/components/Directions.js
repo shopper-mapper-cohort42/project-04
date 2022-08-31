@@ -12,7 +12,6 @@ import {
   faAngleRight,
 } from "@fortawesome/free-solid-svg-icons";
 
-
 export default function Directions({
   apiKey,
   mapState,
@@ -22,12 +21,11 @@ export default function Directions({
   directionsLayerDefined,
   setDirectionsLayerDefined,
 }) {
-
   // Take current location value from url
   const { coords, searchItem, destinationCoords } = useParams();
   const currentLocation = {
     longitude: coords.split(",")[0],
-    latitude: coords.split(",")[1]
+    latitude: coords.split(",")[1],
   };
 
   // State variable for displaying directions
@@ -82,10 +80,8 @@ export default function Directions({
     return hoursText + minutesText + secondsText;
   };
 
-
-  // Draw the route from user location to their selected destination, and update state for list of travel instructions 
+  // Draw the route from user location to their selected destination, and update state for list of travel instructions
   useEffect(() => {
-
     const routeOptions = {
       start: `${currentLocation.latitude},${currentLocation.longitude}`,
       end: destinationCoords.split(`${destination.name}, `)[1],
@@ -124,6 +120,9 @@ export default function Directions({
     mapState,
     setDirectionsLayer,
     setDirectionsLayerDefined,
+    currentLocation.latitude,
+    currentLocation.longitude,
+    destination.name,
   ]);
 
   // Update the travel directions when dragging the route
