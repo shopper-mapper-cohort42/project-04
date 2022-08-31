@@ -7,10 +7,10 @@ function WelcomePage() {
         <div className="wrapper">
           <div className="subHeaderBox">
             <h2>Average Results for Average People</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
             <p>
-              Pellentesque convallis mauris urna, dictum efficitur eros finibus
-              dignissim.
+              If you need to find somewhere to grab a bite or get your coffee
+              fix, this application can help! Just input your current location
+              and it will find nearby places.
             </p>
             <div className="getStartedButtonDiv">
               <Link to={"/location"} className="getStartedButton blueButton">

@@ -22,6 +22,7 @@
   border-radius: 20px;
   transition: 0.3s color, 0.3s background-color;
   font-size: clamp(0.8rem, 4vw, 0.9rem);
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
 
 .icon {
