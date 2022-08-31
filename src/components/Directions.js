@@ -12,10 +12,6 @@ import {
   faAngleRight,
 } from "@fortawesome/free-solid-svg-icons";
 
-const currentLocation = {
-  longitude: -78.9441,
-  latitude: 44.105,
-};
 
 export default function Directions({
   apiKey,
@@ -26,9 +22,13 @@ export default function Directions({
   directionsLayerDefined,
   setDirectionsLayerDefined,
 }) {
+
+  // Take current location value from url
   const { coords, searchItem, destinationCoords } = useParams();
-  currentLocation.longitude = coords.split(",")[0];
-  currentLocation.latitude = coords.split(",")[1];
+  const currentLocation = {
+    longitude: coords.split(",")[0],
+    latitude: coords.split(",")[1]
+  };
 
   // State variable for displaying directions
   const [routeObject, setRouteObject] = useState({}); // Holds all route info
@@ -37,7 +37,7 @@ export default function Directions({
   // State variable for user to select travel type
   const [routeTypeInput, setRouteTypeInput] = useState("fastest");
   const handleRouteTypeInputChange = (routeTypeInputParam) => {
-    routeOptions.options.routeType = routeTypeInputParam;
+    // routeOptions.options.routeType = routeTypeInputParam;
     setRouteTypeInput(routeTypeInputParam);
   };
 
@@ -82,20 +82,13 @@ export default function Directions({
     return hoursText + minutesText + secondsText;
   };
 
-  const routeOptions = {
-    start: `${currentLocation.latitude},${currentLocation.longitude}`,
-    end: destinationCoords,
-    options: {
-      key: apiKey,
-      unit: "k",
-      routeType: routeTypeInput,
-    },
-  };
 
+  // Draw the route from user location to their selected destination, and update state for list of travel instructions 
   useEffect(() => {
-    const routeOptions2 = {
+
+    const routeOptions = {
       start: `${currentLocation.latitude},${currentLocation.longitude}`,
-      end: destinationCoords,
+      end: destinationCoords.split(`${destination.name}, `)[1],
       options: {
         key: apiKey,
         unit: "k",
@@ -103,7 +96,7 @@ export default function Directions({
       },
     };
     window.L.mapquest.key = apiKey;
-    window.L.mapquest.directions().route(routeOptions2, (error, response) => {
+    window.L.mapquest.directions().route(routeOptions, (error, response) => {
       try {
         if (!directionsLayerDefined) {
           setDirectionsLayerDefined(true);
@@ -131,8 +124,9 @@ export default function Directions({
     mapState,
     setDirectionsLayer,
     setDirectionsLayerDefined,
-  ]); //Update the directions when mounted and whenever the destination changes
+  ]);
 
+  // Update the travel directions when dragging the route
   useEffect(() => {
     if (directionsLayerDefined) {
       directionsLayer.on("directions_changed", function (response) {

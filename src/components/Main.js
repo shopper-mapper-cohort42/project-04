@@ -7,7 +7,7 @@ import Results from "./Results";
 import SearchItems from "./SearchItems";
 import Directions from "./Directions";
 import MapComponent from "./MapComponent";
-const apiKey = "jrZujlqyshVE4BGwlkCkGGCNfjkLmiHk";
+const apiKey = "Ec7TSyWXk6cW6FQ77hjgDQLnjMMxGfHf";
 
 function Main() {
   // Geocoding Layer States and Clear Function
@@ -61,7 +61,7 @@ function Main() {
   const [mapState, setMapState] = useState({});
   useEffect(() => {
     // Mapquest/API Key
-    window.L.mapquest.key = "Ly2CHsAhxGvzncY98vcRBQDokGoO0EMZ";
+    window.L.mapquest.key = apiKey;
     let map = window.L.mapquest.map("map", {
       center: [56.1304, -106.3468],
       layers: window.L.mapquest.tileLayer("map"),

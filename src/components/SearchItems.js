@@ -50,7 +50,7 @@ const SearchItems = ({ apiKey }) => {
                 value={searchItem}
                 placeholder="Where do you want to go?"
               />
-              <div>
+              <div tabIndex="0">
                 <FontAwesomeIcon
                   icon={faSearch}
                   className="searchIcon"
