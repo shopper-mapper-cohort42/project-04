@@ -204,6 +204,8 @@ input[type="range"]:focus::-moz-range-thumb {
 
 /* hamburger menu */
 .hamburgerMenu {
+  background-color: transparent;
+  border: none;
   display: none;
   height: 50px;
   width: 50px;

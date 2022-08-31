@@ -7,7 +7,7 @@ import Results from "./Results";
 import SearchItems from "./SearchItems";
 import Directions from "./Directions";
 import MapComponent from "./MapComponent";
-const apiKey = "Ly2CHsAhxGvzncY98vcRBQDokGoO0EMZ";
+const apiKey = "jrZujlqyshVE4BGwlkCkGGCNfjkLmiHk";
 
 function Main() {
   // Geocoding Layer States and Clear Function
@@ -51,7 +51,9 @@ function Main() {
       clearSearchResultsLayer(mapStateParam, searchResultsLayerParam);
       clearDirectionsLayer(mapStateParam, directionsLayerParam);
     } catch (error) {
-      // console.log('ERROR IN MAIN.JS');
+      // navigate(
+      //   `/location/${coords}/${searchItem}/${destinationParam.displayString}`
+      // );
     }
   };
 

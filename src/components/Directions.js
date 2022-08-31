@@ -12,7 +12,6 @@ import {
   faAngleRight,
 } from "@fortawesome/free-solid-svg-icons";
 
-// Placeholder values for current location and destination, should comes from route params
 const currentLocation = {
   longitude: -78.9441,
   latitude: 44.105,
@@ -94,15 +93,15 @@ export default function Directions({
   };
 
   useEffect(() => {
-        const routeOptions2 = {
-            start: `${currentLocation.latitude},${currentLocation.longitude}`,
-            end: destinationCoords,
-            options: {
-                key: apiKey,
-                unit: 'k',
-                routeType: routeTypeInput,
-            },
-        };
+    const routeOptions2 = {
+      start: `${currentLocation.latitude},${currentLocation.longitude}`,
+      end: destinationCoords,
+      options: {
+        key: apiKey,
+        unit: "k",
+        routeType: routeTypeInput,
+      },
+    };
     window.L.mapquest.key = apiKey;
     window.L.mapquest.directions().route(routeOptions2, (error, response) => {
       try {
@@ -123,13 +122,16 @@ export default function Directions({
       setRouteObject(response.route);
       setDirectionObjectsArray(response.route.legs[0].maneuvers);
     });
-  }, [routeTypeInput,
-    apiKey,directionsLayer,
+  }, [
+    routeTypeInput,
+    apiKey,
+    directionsLayer,
     directionsLayerDefined,
     destinationCoords,
     mapState,
     setDirectionsLayer,
-    setDirectionsLayerDefined]); //Update the directions when mounted and whenever the destination changes
+    setDirectionsLayerDefined,
+  ]); //Update the directions when mounted and whenever the destination changes
 
   useEffect(() => {
     if (directionsLayerDefined) {
