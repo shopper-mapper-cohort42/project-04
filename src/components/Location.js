@@ -23,13 +23,12 @@ function Location({
   const [togglePopup, setTogglePopup] = useState(false);
   const navigate = useNavigate();
 
+  // Get user input and display predicted locations
   const searchLocation = (e) => {
     const { value } = e.target;
     setLocation(value);
     setDisplayMessage("");
 
-    // as user is typing, we will read their value and call the predictive text
-    // api to predict their text
     if (value.length > 1) {
       predictiveText(value);
       setCloseDropDown(false);
@@ -60,13 +59,11 @@ function Location({
         } else {
           setDisplayMessage("No valid results...");
           setTogglePopup(true);
-          // togglePopup();
         }
       })
       .catch((err) => {
         setDisplayMessage(`There is something wrong. ${err.message}`);
         setTogglePopup(true);
-        // togglePopup();
       });
   };
 
@@ -97,13 +94,13 @@ function Location({
       });
   }
 
+  // Convert search location into longitude/latitude coordinates
   const getGeoLocation = (location) => {
-    // we need to set the country, lets strict to canada &  us only
-    // String to store for the user's current location
 
-    setLoadingState(true); // after clicking enter, loading animation starts
+    // Enable loading animation and close predictive dropdown
+    setLoadingState(true);
+    setCloseDropDown(true); 
 
-    // API call for getGeoLocation; convert user's input into coordinates
     if (location !== "") {
       axios({
         url: `https://www.mapquestapi.com/geocoding/v1/address`,
@@ -113,68 +110,57 @@ function Location({
         },
       })
         .then((response) => {
-          // added catch thing ( setLoadingState= false, error message )
           if (response.data.results) {
+            // loading screen for 0.5s
             setTimeout(() => {
               setLoadingState(false);
-            }, 500); // loading page time = 0.5s+ api response time  (<0.2s)
+            }, 500);
 
             // An array of the possible locations best matching the query
             const locationsArray = response.data.results[0].locations;
 
-            const selectedLocationIndex = 0; // THIS VARIABLE CAN STORE THE USER'S SELECTED LOCATION INDEX
+            // Update map with the location, and navigate to next screen
+            const currentLongitude = locationsArray[0].latLng.lng;
+            const currentLatitutde = locationsArray[0].latLng.lat;
 
-            if (response.data.results[0].length < 1) {
-              // implement the error handlikng for when user types random string of letters
-            } else {
-              const currentLongitude =
-                locationsArray[selectedLocationIndex].latLng.lng;
-
-              const currentLatitutde =
-                locationsArray[selectedLocationIndex].latLng.lat;
-
-              setLocationMarker(currentLatitutde, currentLongitude);
-
-              navigate(`/location/${currentLongitude}, ${currentLatitutde}`);
-            }
+            setLocationMarker(currentLatitutde, currentLongitude);
+            navigate(`/location/${currentLongitude}, ${currentLatitutde}`);
+            
           } else {
             setDisplayMessage("No results found.");
             setTogglePopup(true);
-
-            // togglePopup();
           }
         })
         .catch((err) => {
           setLoadingState(false);
           setDisplayMessage(`${err.message}, please try again later...`);
           setTogglePopup(true);
-
-          // togglePopup();
         });
     } else {
       setLoadingState(false);
       setDisplayMessage("Please enter your address.");
       setTogglePopup(true);
-
-      // togglePopup();
     }
   };
 
+  // Handle submission of location input
   const handleSubmit = (e, location) => {
     e.preventDefault();
     getGeoLocation(location);
   };
 
+  // Get user's current longitude/latitude location automatically
   const getLocation = () => {
     sessionStorage.removeItem("reloading");
     setLoadingState(true);
+
+    // Ask user for their current location
     navigator.geolocation.getCurrentPosition(
-      // if location is enabled by user, otherwise
-      // run second call back function
       (pos) => {
+        // Add a 0.5s delay
         setTimeout(() => {
           setLoadingState(false);
-        }, 500); // loading page time = 0.5s+ api response time  (<0.2s)
+        }, 500);
         navigate(`/location/${pos.coords.longitude}, ${pos.coords.latitude}`);
         setLocationMarker(pos.coords.latitude, pos.coords.longitude);
       },
@@ -184,17 +170,12 @@ function Location({
         );
         setTogglePopup(true);
 
-        // togglePopup();
         setLoadingState(false);
       }
     );
   };
 
-  // const togglePopup = () => {
-  //   const locationPopup = document.querySelector(".locationPopup");
-  //   locationPopup.classList.toggle("active");
-  // };
-
+  // Reset the map when mounting Location.js
   useEffect(() => {
     clearAllLayers();
   }, [clearAllLayers]);
@@ -260,7 +241,7 @@ function Location({
                       placeholder="Enter Your Location"
                       required
                     />
-                    <div onClick={(e) => handleSubmit(e, location)}>
+                    <div onClick={(e) => handleSubmit(e, location)} tabIndex="0">
                       <FontAwesomeIcon className="searchIcon" icon={faSearch} />
                       <span className="sr-only">Submit your location</span>
                     </div>

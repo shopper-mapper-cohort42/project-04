@@ -73,7 +73,13 @@
 .userLocationDiv div,
 .searchShopDiv div {
   margin: 0 auto;
-  padding: 5px 10px;
+  padding: var(--spacing);
+  cursor: pointer;
+}
+
+.userLocationDiv div:hover .searchIcon,
+.searchShopDiv div:hover .searchIcon {
+  color: var(--blue);
 }
 
 .userLocationDiv form,
@@ -177,6 +183,7 @@
 }
 .searchIcon {
   transition: 0.3s color;
+    cursor: pointer;
 }
 .searchIcon:hover,
 .searchIcon:focus {
