@@ -41,7 +41,7 @@ function Location({
   // API call for predictive text
   const predictiveText = (location) => {
     axios({
-      url: `http://www.mapquestapi.com/search/v3/prediction`,
+      url: `https://www.mapquestapi.com/search/v3/prediction`,
       params: {
         key: apiKey,
         q: location,

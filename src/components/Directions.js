@@ -94,8 +94,17 @@ export default function Directions({
   };
 
   useEffect(() => {
+    const routeOptions2 = {
+      start: `${currentLocation.latitude},${currentLocation.longitude}`,
+      end: destinationCoords,
+      options: {
+        key: apiKey,
+        unit: "k",
+        routeType: routeTypeInput,
+      },
+    };
     window.L.mapquest.key = apiKey;
-    window.L.mapquest.directions().route(routeOptions, (error, response) => {
+    window.L.mapquest.directions().route(routeOptions2, (error, response) => {
       try {
         if (!directionsLayerDefined) {
           setDirectionsLayerDefined(true);
@@ -119,8 +128,8 @@ export default function Directions({
     apiKey,
     directionsLayer,
     directionsLayerDefined,
+    destinationCoords,
     mapState,
-    routeOptions,
     setDirectionsLayer,
     setDirectionsLayerDefined,
   ]); //Update the directions when mounted and whenever the destination changes
