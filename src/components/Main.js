@@ -7,6 +7,8 @@ import Results from "./Results";
 import SearchItems from "./SearchItems";
 import Directions from "./Directions";
 import MapComponent from "./MapComponent";
+import ErrorPage from "./ErrorPage";
+
 const apiKey = "Ec7TSyWXk6cW6FQ77hjgDQLnjMMxGfHf";
 
 function Main() {
@@ -141,6 +143,7 @@ function Main() {
               />
             }
           />
+          <Route path="*" element={<ErrorPage />} />
         </Routes>
         <MapComponent mapState={mapState} />
       </main>
