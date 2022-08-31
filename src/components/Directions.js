@@ -12,7 +12,6 @@ import {
   faAngleRight,
 } from "@fortawesome/free-solid-svg-icons";
 
-// Placeholder values for current location and destination, should comes from route params
 const currentLocation = {
   longitude: -78.9441,
   latitude: 44.105,

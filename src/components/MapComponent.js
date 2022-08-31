@@ -18,7 +18,6 @@ export default function MapComponent({ mapState }) {
       }
     } catch (err) {
       navigate("/location");
-      // console.log("Error in MapComponent.js", err);
     }
   }, [reactRouterLocation.pathname, mapState, navigate]);
 

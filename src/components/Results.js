@@ -156,8 +156,6 @@ export default function Results({
 
           const responseArray = response.results;
 
-          console.log(responseArray);
-
           if (!responseArray.length) {
             setLoadingState(false);
             setShopResults(false);
@@ -187,7 +185,7 @@ export default function Results({
           setResultsArray(responseArray);
         });
       } catch (error) {
-        console.log("ERROR:");
+        navigate(`/location/`);
       }
     },
     [
@@ -199,7 +197,6 @@ export default function Results({
       searchResultsLayerDefined,
       setSearchResultsLayer,
       setSearchResultsLayerDefined,
-      navigate,
     ]
   ); // SUGGESTION: We can also make the list update live as the user changes the search radius, but it could be more laggy.
 
