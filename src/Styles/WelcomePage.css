@@ -1,5 +1,5 @@
 .subHeaderBox {
-  margin: 0 20px 20px;
+  margin: 20px;
   display: flex;
   flex-direction: column;
 }
