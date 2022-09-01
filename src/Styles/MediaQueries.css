@@ -1,4 +1,14 @@
-@media (min-width: 1000px) {
+@media (min-height: 900px) {
+  .imageSlide {
+    height: 300px;
+    width: 300px;
+  }
+  .image {
+    animation: slideShow600 20s infinite;
+  }
+}
+
+@media (min-width: 1100px) {
   .App {
     display: flex;
   }
@@ -14,7 +24,7 @@
     display: none;
   }
   .heroImageDiv {
-    margin-top: 25%;
+    margin: auto;
   }
   .imageSlide {
     height: 500px;
@@ -41,7 +51,15 @@
     display: block;
   }
   .welcomePageDiv .wrapper {
-    margin-top: 25%;
+    height: 90vh;
+  }
+
+  .subHeaderBox {
+    margin: auto;
+  }
+
+  .subHeaderBox h1 {
+    margin-top: 0;
   }
   /* results section */
   .extraButtonsDiv {
@@ -165,15 +183,5 @@
   }
   .changeRadiusBtn {
     transform: translateX(50%);
-  }
-}
-
-@media (min-height: 900px) {
-  .imageSlide {
-    height: 300px;
-    width: 300px;
-  }
-  .image {
-    animation: slideShow600 20s infinite;
   }
 }
