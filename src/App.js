@@ -11,15 +11,13 @@ function App() {
   return (
     <>
       <div className="App">
-        <DarkModeProvider>
-          <Routes>
-            <Route path="/" element={<Header />} />
-          </Routes>
+        <Routes>
+          <Route path="/" element={<Header />} />
+        </Routes>
 
-          <Main />
-          {/* mapState={mapState}  */}
-          <Footer />
-        </DarkModeProvider>
+        <Main />
+        {/* mapState={mapState}  */}
+        <Footer />
       </div>
     </>
   );

@@ -5,7 +5,6 @@ h1 {
 
 header {
   padding: 10px;
-  background-color: var(--orange);
 }
 
 header .wrapper {
@@ -89,6 +88,36 @@ header .wrapper {
   }
   75% {
     transform: translateX(-1500px);
+  }
+  80% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideShow600 {
+  0% {
+    transform: translateX(0);
+  }
+  5% {
+    transform: translateX(-300px);
+  }
+  25% {
+    transform: translateX(-300px);
+  }
+  30% {
+    transform: translateX(-600px);
+  }
+  50% {
+    transform: translateX(-600px);
+  }
+  55% {
+    transform: translateX(-900px);
+  }
+  75% {
+    transform: translateX(-900px);
   }
   80% {
     transform: translateX(0);

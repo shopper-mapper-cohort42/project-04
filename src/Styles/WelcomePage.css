@@ -21,6 +21,10 @@
   padding: 10px;
 }
 
+.welcomePageDiv h1 {
+  display: none;
+}
+
 .welcomePageDiv .wrapper {
   display: flex;
   flex-direction: column;
