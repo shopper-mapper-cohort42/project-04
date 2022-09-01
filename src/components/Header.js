@@ -19,6 +19,7 @@ function Header() {
                   key={index}
                   alt="Isometric illustration of a store"
                   className="image"
+                  draggable="false"
                 />
               );
             })}
