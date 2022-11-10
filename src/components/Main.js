@@ -9,7 +9,7 @@ import Directions from "./Directions";
 import MapComponent from "./MapComponent";
 import ErrorPage from "./ErrorPage";
 
-const apiKey = "Ec7TSyWXk6cW6FQ77hjgDQLnjMMxGfHf";
+const apiKey = "YGKkXOWHFsQAhi9UbSYDFnOAwmdk841X";
 
 function Main() {
   // Geocoding Layer States and Clear Function
